@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.AfterSaleItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.AfterSaleItemDO">
+        <id column="id" property="id"/>
+        <result column="as_id" property="asId"/>
+        <result column="order_item_id" property="orderItemId"/>
+        <result column="product_id" property="productId"/>
+        <result column="color_id" property="colorId"/>
+        <result column="real_sku_id" property="realSkuId"/>
+        <result column="ship_sku_id" property="shipSkuId"/>
+        <result column="qty" property="qty"/>
+        <result column="op_type" property="opType"/>
+        <result column="new_sku_id" property="newSkuId"/>
+        <result column="new_qty" property="newQty"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="confirm_real_sku_id" property="confirmRealSkuId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, as_id, order_item_id, product_id, color_id, real_sku_id, ship_sku_id, qty, op_type, new_sku_id, new_qty, warehouse_id, confirm_real_sku_id, create_time
+    </sql>
+
+</mapper>

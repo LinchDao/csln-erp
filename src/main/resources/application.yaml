@@ -1,0 +1,44 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /api
+
+# JWT??
+jwt:
+  secret: your-secret-key-1234567890abcdefg-2026 # ???????????
+  tokenKey: csln_token
+  expire:
+    normal: 7200000 # ???????2??????
+    remember: 604800000 # ??????7?????
+
+# SpringDoc??
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+spring:
+  application:
+    name: csln-erp
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/csln_erp?allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    com.dormitory.dormitory_backend.mapper: DEBUG..
+
+
+app:
+  security:
+    password-salt: dev-salt-123456
+    salt-enabled: true

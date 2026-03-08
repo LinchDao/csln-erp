@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.OrderMasterMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.OrderMasterDO">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="total_qty" property="totalQty"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="order_type" property="orderType"/>
+        <result column="price_from" property="priceFrom"/>
+        <result column="audit_status" property="auditStatus"/>
+        <result column="audit_user_id" property="auditUserId"/>
+        <result column="audit_time" property="auditTime"/>
+        <result column="sales_user_id" property="salesUserId"/>
+        <result column="delivery_type" property="deliveryType"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="driver_phone" property="driverPhone"/>
+        <result column="delivery_remark" property="deliveryRemark"/>
+        <result column="expect_send_date" property="expectSendDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="remark" property="remark"/>
+        <result column="is_ar" property="isAr"/>
+        <result column="allow_replace" property="allowReplace"/>
+        <result column="is_draft" property="isDraft"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_no, shop_id, customer_id, total_qty, total_amount, order_type, price_from, audit_status, audit_user_id, audit_time, sales_user_id, delivery_type, express_no, driver_phone, delivery_remark, expect_send_date, create_time, status, create_user_id, remark, is_ar, allow_replace, is_draft
+    </sql>
+
+</mapper>

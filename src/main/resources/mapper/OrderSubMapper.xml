@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.OrderSubMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.OrderSubDO">
+        <id column="id" property="id"/>
+        <result column="sub_order_no" property="subOrderNo"/>
+        <result column="master_id" property="masterId"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="qty" property="qty"/>
+        <result column="amount" property="amount"/>
+        <result column="send_type" property="sendType"/>
+        <result column="from_warehouse_id" property="fromWarehouseId"/>
+        <result column="status" property="status"/>
+        <result column="delivery_type" property="deliveryType"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="driver_phone" property="driverPhone"/>
+        <result column="delivery_remark" property="deliveryRemark"/>
+        <result column="expect_send_date" property="expectSendDate"/>
+        <result column="actual_send_date" property="actualSendDate"/>
+        <result column="picker_user_id" property="pickerUserId"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, sub_order_no, master_id, warehouse_id, qty, amount, send_type, from_warehouse_id, status, delivery_type, express_no, driver_phone, delivery_remark, expect_send_date, actual_send_date, picker_user_id, remark
+    </sql>
+
+</mapper>

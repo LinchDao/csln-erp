@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.ProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.ProductDO">
+        <id column="id" property="id"/>
+        <result column="product_no" property="productNo"/>
+        <result column="name" property="name"/>
+        <result column="brand" property="brand"/>
+        <result column="season" property="season"/>
+        <result column="year" property="year"/>
+        <result column="series" property="series"/>
+        <result column="cost_price" property="costPrice"/>
+        <result column="wholesale_price" property="wholesalePrice"/>
+        <result column="image" property="image"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, product_no, name, brand, season, year, series, cost_price, wholesale_price, image, status, create_time
+    </sql>
+
+</mapper>

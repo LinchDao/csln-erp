@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.DeliveryNoteMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.DeliveryNoteDO">
+        <id column="id" property="id"/>
+        <result column="delivery_no" property="deliveryNo"/>
+        <result column="sub_order_id" property="subOrderId"/>
+        <result column="delivery_type" property="deliveryType"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="driver_phone" property="driverPhone"/>
+        <result column="remark" property="remark"/>
+        <result column="actual_send_time" property="actualSendTime"/>
+        <result column="send_user_id" property="sendUserId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, delivery_no, sub_order_id, delivery_type, express_no, driver_phone, remark, actual_send_time, send_user_id
+    </sql>
+
+</mapper>

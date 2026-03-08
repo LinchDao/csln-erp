@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.OrderItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.OrderItemDO">
+        <id column="id" property="id"/>
+        <result column="master_id" property="masterId"/>
+        <result column="sub_id" property="subId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="qty" property="qty"/>
+        <result column="price" property="price"/>
+        <result column="amount" property="amount"/>
+        <result column="actual_qty" property="actualQty"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, master_id, sub_id, sku_id, qty, price, amount, actual_qty
+    </sql>
+
+</mapper>
