@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lin.csln.dto.user.UserInfoDTO;
+import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.entity.RoleDO;
 import com.lin.csln.entity.UserDO;
 import com.lin.csln.mapper.UserMapper;

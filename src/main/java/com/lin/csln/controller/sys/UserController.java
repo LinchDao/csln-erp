@@ -1,9 +1,10 @@
-package com.lin.csln.controller.user;
+package com.lin.csln.controller.sys;
 
 
+import com.lin.csln.common.cache.UserCache;
 import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.dto.Result;
-import com.lin.csln.dto.user.UserInfoDTO;
+import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,12 +32,18 @@ public class UserController {
 
         Long userId = JwtTokenUtil.getUserId();
         if (userId != null) {
-            UserInfoDTO userInfoDTO = userService.getUserInfoById(userId);
+            UserInfoDTO userInfoDTO = UserCache.getUserInfo(userId);
+            if (userInfoDTO == null) {
+                userInfoDTO = userService.getUserInfoById(userId);
+                if (userInfoDTO != null) {
+                    UserCache.saveUserInfo(userInfoDTO);
+                } else {
+                    return Result.fail(ResultCode.USER_NOT_EXIST);
+                }
+            }
             return Result.success(userInfoDTO);
         }
         return Result.fail(ResultCode.UNAUTHORIZED);
-
-
     }
 
 

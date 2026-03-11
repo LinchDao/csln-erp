@@ -1,0 +1,16 @@
+package com.lin.csln.service.impl;
+
+import com.lin.csln.entity.RoleMenuDO;
+import com.lin.csln.mapper.RoleMenuMapper;
+import com.lin.csln.service.RoleMenuService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
+
+/**
+ * 角色菜单关联表 服务实现类
+ * @author 系统生成器
+ */
+@Service
+public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenuDO> implements RoleMenuService {
+
+}

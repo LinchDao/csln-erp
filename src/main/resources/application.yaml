@@ -21,7 +21,6 @@ springdoc:
 spring:
   application:
     name: csln-erp
-
   datasource:
     url: jdbc:mysql://localhost:3306/csln_erp?allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
@@ -42,3 +41,8 @@ app:
   security:
     password-salt: dev-salt-123456
     salt-enabled: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379

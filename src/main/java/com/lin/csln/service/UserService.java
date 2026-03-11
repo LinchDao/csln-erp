@@ -1,7 +1,7 @@
 package com.lin.csln.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lin.csln.dto.user.UserInfoDTO;
+import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.entity.UserDO;
 
 /**

@@ -1,4 +1,4 @@
-package com.lin.csln.dto.user;
+package com.lin.csln.common.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
