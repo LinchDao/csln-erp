@@ -14,7 +14,7 @@ import com.lin.csln.common.constants.ResultCode;
  */
 public class BusinessException extends RuntimeException {
 
-    private final int code;
+    private int code;
 
     public int getCode() {
         return code;
@@ -28,6 +28,11 @@ public class BusinessException extends RuntimeException {
     public BusinessException(int code, String message) {
         super(message);
         this.code = code;
+    }
+
+    public BusinessException(String message) {
+        super(message);
+        int code = ResultCode.FAIL.getCode();
     }
 
     public BusinessException(ResultCode resultCode, String message) {

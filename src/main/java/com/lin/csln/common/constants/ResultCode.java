@@ -22,7 +22,13 @@ public enum ResultCode {
     // 业务自定义状态码（可根据项目扩展）
     USER_NOT_EXIST(10001, "用户不存在"),
     PASSWORD_ERROR(10002, "密码错误"),
-    USER_DISABLED(10003, "账号已禁用");
+    USER_DISABLED(10003, "账号已禁用"),
+
+    FILE_NOT_EXISTS(20001, "账号已禁用"),
+
+    ;
+
+
 
     private final int code;
     private final String message;
