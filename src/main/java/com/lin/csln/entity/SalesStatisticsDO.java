@@ -17,7 +17,7 @@ public class SalesStatisticsDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 统计日期
@@ -32,12 +32,12 @@ public class SalesStatisticsDO {
     /**
      * 门店ID
      */
-    private Long shopId;
+    private String shopId;
 
     /**
      * 销售ID
      */
-    private Long salesUserId;
+    private String salesUserId;
 
     /**
      * 订单数

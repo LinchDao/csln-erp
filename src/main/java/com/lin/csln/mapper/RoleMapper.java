@@ -23,7 +23,7 @@ public interface RoleMapper extends BaseMapper<RoleDO> {
     @Select("SELECT r.* FROM sys_role r " +
             "INNER JOIN sys_user_role ur ON r.id = ur.role_id " +
             "WHERE ur.user_id = #{userId}")
-    List<RoleDO> selectRolesByUserId(@Param("userId") Long userId);
+    List<RoleDO> selectRolesByUserId(@Param("userId") String userId);
 
     /**
      * 根据用户ID查询角色列表（带缓存配置）
@@ -34,6 +34,6 @@ public interface RoleMapper extends BaseMapper<RoleDO> {
             "FROM sys_role r " +
             "LEFT JOIN sys_user_role ur ON r.id = ur.role_id " +
             "WHERE ur.user_id = #{userId}")
-    List<RoleDO> listRolesByUserId(@Param("userId") Long userId);
+    List<RoleDO> listRolesByUserId(@Param("userId") String userId);
 
 }

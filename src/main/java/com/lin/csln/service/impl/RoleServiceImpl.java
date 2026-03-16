@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.csln.entity.RoleDO;
 import com.lin.csln.mapper.RoleMapper;
 import com.lin.csln.service.RoleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -18,8 +19,8 @@ import java.util.List;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements RoleService {
 
     @Override
-    public List<RoleDO> listRolesByUserId(Long userId) {
-        if (userId == null || userId <= 0) {
+    public List<RoleDO> listRolesByUserId(String userId) {
+        if (StringUtils.isBlank(userId)) {
             return Collections.emptyList();
         }
 

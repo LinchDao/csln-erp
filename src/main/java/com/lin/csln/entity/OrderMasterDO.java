@@ -17,7 +17,7 @@ public class OrderMasterDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 订单号
@@ -27,12 +27,12 @@ public class OrderMasterDO {
     /**
      * 门店ID
      */
-    private Long shopId;
+    private String shopId;
 
     /**
      * 客户ID
      */
-    private Long customerId;
+    private String customerId;
 
     /**
      * 总数量
@@ -62,7 +62,7 @@ public class OrderMasterDO {
     /**
      * 审核人
      */
-    private Long auditUserId;
+    private String auditUserId;
 
     /**
      * 审核时间
@@ -72,7 +72,7 @@ public class OrderMasterDO {
     /**
      * 业绩归属销售ID
      */
-    private Long salesUserId;
+    private String salesUserId;
 
     /**
      * 1快递 2司机 3自提
@@ -112,7 +112,7 @@ public class OrderMasterDO {
     /**
      * 开单人
      */
-    private Long createUserId;
+    private String createUserId;
 
     /**
      * 备注

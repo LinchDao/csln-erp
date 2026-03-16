@@ -16,7 +16,7 @@ public class PurchaseInDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 入库单号
@@ -26,17 +26,17 @@ public class PurchaseInDO {
     /**
      * 来源采购单
      */
-    private Long purchaseId;
+    private String purchaseId;
 
     /**
      * 供应商ID
      */
-    private Long supplierId;
+    private String supplierId;
 
     /**
      * 入库仓库
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * 0待审核 1已审核
@@ -46,7 +46,7 @@ public class PurchaseInDO {
     /**
      * 操作人
      */
-    private Long createUserId;
+    private String createUserId;
 
     /**
      * 入库时间

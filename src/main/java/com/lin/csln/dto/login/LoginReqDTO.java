@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Schema(name = "LoginRequestDTO", description = "登录请求参数")
-public class LoginRequestDTO {
+public class LoginReqDTO {
     @NotBlank(message = "账号不能为空")
     @Schema(description = "用户名/手机号", example = "admin")
     private String username;

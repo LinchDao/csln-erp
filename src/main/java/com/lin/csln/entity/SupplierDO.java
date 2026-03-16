@@ -16,7 +16,7 @@ public class SupplierDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 供应商名称

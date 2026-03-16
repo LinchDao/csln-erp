@@ -16,17 +16,17 @@ public class PriceLevelDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 商品ID
      */
-    private Long productId;
+    private String productId;
 
     /**
      * 等级ID
      */
-    private Long levelId;
+    private String levelId;
 
     /**
      * 价格

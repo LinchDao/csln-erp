@@ -16,7 +16,7 @@ public class DeliveryNoteDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 发货单号
@@ -26,7 +26,7 @@ public class DeliveryNoteDO {
     /**
      * 子单ID
      */
-    private Long subOrderId;
+    private String subOrderId;
 
     /**
      * 配送方式
@@ -56,6 +56,6 @@ public class DeliveryNoteDO {
     /**
      * 发货人
      */
-    private Long sendUserId;
+    private String sendUserId;
 
 }

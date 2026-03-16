@@ -64,7 +64,7 @@ public class SysFileController {
 
             String originalFilename = file.getOriginalFilename();
             String fileExt = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String uniqueFileName = UUID.randomUUID() + fileExt;
+            String uniqueFileName = UUID.randomUUID().toString().replace("-", "");
             Path filePath = Paths.get(fullDirPath.toString(), uniqueFileName);
 
             file.transferTo(filePath.toFile());

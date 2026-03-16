@@ -16,17 +16,17 @@ public class StockLockLogDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 仓库ID
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * SKU_ID
      */
-    private Long skuId;
+    private String skuId;
 
     /**
      * 订单号

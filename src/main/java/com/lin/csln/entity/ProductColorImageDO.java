@@ -16,22 +16,22 @@ public class ProductColorImageDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 商品ID
      */
-    private Long productId;
+    private String productId;
 
     /**
      * 颜色ID
      */
-    private Long colorId;
+    private String colorId;
 
     /**
-     * 颜色图片
+     * 颜色图片文件ID（关联file表）
      */
-    private String image;
+    private String colorFileId;
 
     /**
      * 创建时间

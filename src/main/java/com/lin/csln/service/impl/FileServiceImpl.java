@@ -20,7 +20,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileDO> implements 
     @Override
     public long saveFile(String fileName, String uniqueFileName, String fileExt,
                          String dateDir, String fullpath, long size,
-                         String contentType, Long userId) {
+                         String contentType, String userId) {
         FileDO file = new FileDO();
 
         file.setFileName(fileName);

@@ -17,7 +17,7 @@ public class PurchaseOrderDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 采购单号
@@ -27,7 +27,7 @@ public class PurchaseOrderDO {
     /**
      * 供应商ID
      */
-    private Long supplierId;
+    private String supplierId;
 
     /**
      * 总数量
@@ -47,7 +47,7 @@ public class PurchaseOrderDO {
     /**
      * 制单人
      */
-    private Long createUserId;
+    private String createUserId;
 
     /**
      * 下单时间

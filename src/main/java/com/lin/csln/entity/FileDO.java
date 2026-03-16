@@ -16,7 +16,7 @@ public class FileDO {
      * 主键ID
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 文件原始名称
@@ -44,11 +44,6 @@ public class FileDO {
     private Long fileSize;
 
     /**
-     * 文件大类（1-图片，2-其他，枚举FileCategoryEnum）
-     */
-    private Integer fileType;
-
-    /**
      * 文件扩展名（小写，如jpg/png/pdf）
      */
     private String fileExtension;
@@ -66,7 +61,7 @@ public class FileDO {
     /**
      * 创建人ID
      */
-    private Long createUser;
+    private String createUser;
 
     /**
      * 是否删除（0-未删，1-已删）

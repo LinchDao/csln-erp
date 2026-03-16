@@ -1,12 +1,16 @@
 package com.lin.csln.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * 商品表 实体类
+ *
  * @author 系统生成器
  */
 @Data
@@ -17,7 +21,7 @@ public class ProductDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 款号
@@ -60,9 +64,14 @@ public class ProductDO {
     private BigDecimal wholesalePrice;
 
     /**
-     * 商品主图
+     * 零售价
      */
-    private String image;
+    private BigDecimal retailPrice;
+
+    /**
+     * 商品主图文件ID（关联file表）
+     */
+    private String mainImageId;
 
     /**
      * 状态
@@ -73,5 +82,7 @@ public class ProductDO {
      * 创建时间
      */
     private Date createTime;
+
+    private Integer isDelete;
 
 }

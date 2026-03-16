@@ -16,7 +16,7 @@ public class WarehouseDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 仓库名称
@@ -26,7 +26,7 @@ public class WarehouseDO {
     /**
      * 仓管ID
      */
-    private Long managerUserId;
+    private String managerUserId;
 
     /**
      * 地址

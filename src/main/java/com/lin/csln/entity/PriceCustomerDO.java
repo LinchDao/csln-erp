@@ -16,17 +16,17 @@ public class PriceCustomerDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 商品ID
      */
-    private Long productId;
+    private String productId;
 
     /**
      * 客户ID
      */
-    private Long customerId;
+    private String customerId;
 
     /**
      * 价格

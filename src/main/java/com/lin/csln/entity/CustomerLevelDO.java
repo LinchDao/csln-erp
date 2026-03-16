@@ -16,7 +16,7 @@ public class CustomerLevelDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 等级名称

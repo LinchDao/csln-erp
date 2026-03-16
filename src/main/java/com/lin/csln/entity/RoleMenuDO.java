@@ -16,17 +16,17 @@ public class RoleMenuDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 角色ID
      */
-    private Long roleId;
+    private String roleId;
 
     /**
      * 菜单ID
      */
-    private Long menuId;
+    private String menuId;
 
     /**
      * 创建时间

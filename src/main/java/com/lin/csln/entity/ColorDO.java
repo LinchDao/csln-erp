@@ -15,7 +15,7 @@ public class ColorDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 颜色名称

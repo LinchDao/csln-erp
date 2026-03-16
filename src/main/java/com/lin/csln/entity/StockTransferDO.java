@@ -16,7 +16,7 @@ public class StockTransferDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 调货单号
@@ -26,12 +26,12 @@ public class StockTransferDO {
     /**
      * 调出仓
      */
-    private Long fromWareId;
+    private String fromWareId;
 
     /**
      * 调入仓
      */
-    private Long toWareId;
+    private String toWareId;
 
     /**
      * 0待发货 1已发货 2已收货 3取消
@@ -46,7 +46,7 @@ public class StockTransferDO {
     /**
      * 创建人
      */
-    private Long createUserId;
+    private String createUserId;
 
     /**
      * 创建时间

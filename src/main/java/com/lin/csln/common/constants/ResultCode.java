@@ -24,7 +24,7 @@ public enum ResultCode {
     PASSWORD_ERROR(10002, "密码错误"),
     USER_DISABLED(10003, "账号已禁用"),
 
-    FILE_NOT_EXISTS(20001, "账号已禁用"),
+    FILE_NOT_EXISTS(20001, "文件不存在"),
 
     ;
 

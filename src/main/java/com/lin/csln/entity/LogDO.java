@@ -16,12 +16,12 @@ public class LogDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 操作人
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 模块

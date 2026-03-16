@@ -16,17 +16,17 @@ public class OrderChangeLogDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 母单ID
      */
-    private Long masterId;
+    private String masterId;
 
     /**
      * 子单ID
      */
-    private Long subId;
+    private String subId;
 
     /**
      * 修改前
@@ -41,12 +41,12 @@ public class OrderChangeLogDO {
     /**
      * 申请人
      */
-    private Long applyUserId;
+    private String applyUserId;
 
     /**
      * 审批人
      */
-    private Long approveUserId;
+    private String approveUserId;
 
     /**
      * 0待审批 1通过 2拒绝

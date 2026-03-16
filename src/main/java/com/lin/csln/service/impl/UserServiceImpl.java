@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
      * @return 用户信息DTO
      */
     @Override
-    public UserInfoDTO getUserInfoById(Long id) {
+    public UserInfoDTO getUserInfoById(String id) {
         if (id == null) {
             return null;
         }

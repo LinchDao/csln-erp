@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/info")
     public Result<UserInfoDTO> getUserInfo() {
 
-        Long userId = JwtTokenUtil.getUserId();
+        String userId = JwtTokenUtil.getUserId();
         if (userId != null) {
             UserInfoDTO userInfoDTO = UserCache.getUserInfo(userId);
             if (userInfoDTO == null) {

@@ -15,16 +15,16 @@ public class UserRoleDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 用户ID
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 角色ID
      */
-    private Long roleId;
+    private String roleId;
 
 }

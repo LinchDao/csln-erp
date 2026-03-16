@@ -15,17 +15,17 @@ public class OrderHelpSendDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 子单ID
      */
-    private Long orderSubId;
+    private String orderSubId;
 
     /**
      * 代发仓库
      */
-    private Long fromWareId;
+    private String fromWareId;
 
     /**
      * 状态

@@ -16,37 +16,37 @@ public class AfterSaleItemDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 退换货单ID
      */
-    private Long asId;
+    private String asId;
 
     /**
      * 原订单明细ID
      */
-    private Long orderItemId;
+    private String orderItemId;
 
     /**
      * 商品ID
      */
-    private Long productId;
+    private String productId;
 
     /**
      * 颜色ID
      */
-    private Long colorId;
+    private String colorId;
 
     /**
      * 原真实SKU（参考）
      */
-    private Long realSkuId;
+    private String realSkuId;
 
     /**
      * 原发货SKU
      */
-    private Long shipSkuId;
+    private String shipSkuId;
 
     /**
      * 退货/换货数量
@@ -61,7 +61,7 @@ public class AfterSaleItemDO {
     /**
      * 换货目标SKU
      */
-    private Long newSkuId;
+    private String newSkuId;
 
     /**
      * 换货发出数量
@@ -71,12 +71,12 @@ public class AfterSaleItemDO {
     /**
      * 仓库ID
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * 仓管确认的真实SKU（最终入库用）
      */
-    private Long confirmRealSkuId;
+    private String confirmRealSkuId;
 
     /**
      * 创建时间

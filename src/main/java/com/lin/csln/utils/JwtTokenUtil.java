@@ -85,13 +85,13 @@ public class JwtTokenUtil {
     /**
      * 从Token中获取用户ID
      */
-    public Long getUserIdFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return Long.valueOf(claims.getSubject());
+        return String.valueOf(claims.getSubject());
     }
 
     private static String getTokenFromRequest() {
@@ -113,7 +113,7 @@ public class JwtTokenUtil {
         return null;
     }
 
-    public static Long getUserId() {
+    public static String getUserId() {
         String token = getTokenFromRequest();
         if (StringUtils.hasLength(token)) {
             return jwtTokenUtil.getUserIdFromToken(token);

@@ -15,16 +15,16 @@ public class RolePermissionDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 角色ID
      */
-    private Long roleId;
+    private String roleId;
 
     /**
      * 权限ID
      */
-    private Long permId;
+    private String permId;
 
 }

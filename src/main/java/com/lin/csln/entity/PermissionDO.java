@@ -15,7 +15,7 @@ public class PermissionDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 权限编码

@@ -16,17 +16,17 @@ public class PurchaseInItemDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 入库单ID
      */
-    private Long inId;
+    private String inId;
 
     /**
      * SKU_ID
      */
-    private Long skuId;
+    private String skuId;
 
     /**
      * 入库数量

@@ -3,7 +3,7 @@ package com.lin.csln.controller.login;
 import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.config.AppSecurityProperties;
-import com.lin.csln.dto.login.LoginRequestDTO;
+import com.lin.csln.dto.login.LoginReqDTO;
 import com.lin.csln.entity.UserDO;
 import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
@@ -36,7 +36,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @Operation(summary = "用户登录", description = "账号密码登录，返回JWT Token")
-    public Result<String> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
+    public Result<String> login(@Valid @RequestBody LoginReqDTO loginRequest) {
 
         UserDO user = userService.getUserByUsername(loginRequest.getUsername());
         if (user == null) {

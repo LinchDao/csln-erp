@@ -16,32 +16,32 @@ public class OrderReplaceDetailDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 订单明细ID
      */
-    private Long orderItemId;
+    private String orderItemId;
 
     /**
      * 商品ID
      */
-    private Long productId;
+    private String productId;
 
     /**
      * 颜色ID
      */
-    private Long colorId;
+    private String colorId;
 
     /**
      * 客户要的SKU（目标码）
      */
-    private Long targetSkuId;
+    private String targetSkuId;
 
     /**
      * 实际发货SKU（真实库存码）
      */
-    private Long realSkuId;
+    private String realSkuId;
 
     /**
      * 数量
@@ -51,7 +51,7 @@ public class OrderReplaceDetailDO {
     /**
      * 仓库ID
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * 创建时间

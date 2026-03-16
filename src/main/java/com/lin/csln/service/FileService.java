@@ -9,5 +9,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface FileService extends IService<FileDO> {
 
-    long saveFile(String fileName, String uniqueFileName, String fileExt, String dateDir, String string, long size, String contentType, Long userId);
+    long saveFile(String fileName, String uniqueFileName, String fileExt, String dateDir, String string, long size, String contentType, String userId);
 }

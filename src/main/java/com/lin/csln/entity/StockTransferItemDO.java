@@ -15,17 +15,17 @@ public class StockTransferItemDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 调货单ID
      */
-    private Long transferId;
+    private String transferId;
 
     /**
      * SKU_ID
      */
-    private Long skuId;
+    private String skuId;
 
     /**
      * 申请数量

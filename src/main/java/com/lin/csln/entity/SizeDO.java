@@ -15,7 +15,7 @@ public class SizeDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 尺码名称

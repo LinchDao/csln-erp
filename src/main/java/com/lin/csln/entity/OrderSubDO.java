@@ -17,7 +17,7 @@ public class OrderSubDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 子订单号
@@ -27,12 +27,12 @@ public class OrderSubDO {
     /**
      * 母单ID
      */
-    private Long masterId;
+    private String masterId;
 
     /**
      * 发货仓库
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * 子单数量
@@ -52,7 +52,7 @@ public class OrderSubDO {
     /**
      * 来源仓
      */
-    private Long fromWarehouseId;
+    private String fromWarehouseId;
 
     /**
      * 子单状态
@@ -92,7 +92,7 @@ public class OrderSubDO {
     /**
      * 配货员
      */
-    private Long pickerUserId;
+    private String pickerUserId;
 
     /**
      * 备注

@@ -11,18 +11,11 @@ jwt:
     normal: 7200000 # ???????2??????
     remember: 604800000 # ??????7?????
 
-# SpringDoc??
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    path: /swagger-ui.html
-    enabled: true
 spring:
   application:
     name: csln-erp
   datasource:
-    url: jdbc:mysql://localhost:3306/csln_erp?allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://localhost:3306/erp2?allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -35,7 +28,6 @@ mybatis-plus:
 logging:
   level:
     com.dormitory.dormitory_backend.mapper: DEBUG..
-
 
 app:
   security:
@@ -50,9 +42,25 @@ app:
 file:
   upload:
     base-path: E:/stuspeace/csln-erp/data/upload/
-    temp-path: /data/csln_erp/temp/
+    temp-path: E:/stuspeace/csln-erp/data/data/csln_erp/temp/
     max-size: 100
     allow-override: false
     support-types:
       image: jpg,jpeg,png,gif,bmp,webp
       other: pdf,doc,docx,xls,xlsx,zip,rar,txt,csv,ppt,pptx
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.lin.csln.controller
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

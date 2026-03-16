@@ -1,10 +1,10 @@
 package com.lin.csln.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.dto.product.ProductDTO;
-import com.lin.csln.dto.product.ProductQueryDTO;
+import com.lin.csln.dto.product.ProductPageRespDTO;
+import com.lin.csln.dto.product.ProductQueryParamDTO;
 import com.lin.csln.entity.ProductDO;
 import jakarta.validation.Valid;
 
@@ -19,9 +19,9 @@ public interface ProductService extends IService<ProductDO> {
 
     boolean updateProduct(@Valid ProductDTO productDTO);
 
-    boolean deleteProduct(Long id);
+    boolean deleteProduct(Long id, String userId);
 
     ProductDTO getProductById(Long id);
 
-    IPage<ProductDTO> pageProduct(Page<ProductDTO> page, ProductQueryDTO queryDTO);
+    PageRespDTO<ProductPageRespDTO> pageProduct(ProductQueryParamDTO queryDTO);
 }

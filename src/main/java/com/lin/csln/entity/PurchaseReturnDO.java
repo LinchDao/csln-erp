@@ -16,7 +16,7 @@ public class PurchaseReturnDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 退货单号
@@ -26,17 +26,17 @@ public class PurchaseReturnDO {
     /**
      * 采购单ID
      */
-    private Long purchaseId;
+    private String purchaseId;
 
     /**
      * 供应商ID
      */
-    private Long supplierId;
+    private String supplierId;
 
     /**
      * 退货仓库
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * 0待审核 1已审核

@@ -16,17 +16,17 @@ public class StockRecoveryDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * SKU_ID
      */
-    private Long skuId;
+    private String skuId;
 
     /**
      * 仓库ID
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * 数量
@@ -51,7 +51,7 @@ public class StockRecoveryDO {
     /**
      * 占用子单ID
      */
-    private Long usedSubOrderId;
+    private String usedSubOrderId;
 
     /**
      * 占用时间

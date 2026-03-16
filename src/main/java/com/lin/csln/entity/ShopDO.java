@@ -16,7 +16,7 @@ public class ShopDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 门店名称
@@ -26,12 +26,12 @@ public class ShopDO {
     /**
      * 店长ID
      */
-    private Long managerUserId;
+    private String managerUserId;
 
     /**
      * 默认送单仓
      */
-    private Long defaultWarehouseId;
+    private String defaultWarehouseId;
 
     /**
      * 状态

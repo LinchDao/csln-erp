@@ -15,5 +15,5 @@ public interface UserService extends IService<UserDO> {
 
     UserInfoDTO getUserInfoByUsername(String username);
 
-    UserInfoDTO getUserInfoById(Long userId);
+    UserInfoDTO getUserInfoById(String userId);
 }

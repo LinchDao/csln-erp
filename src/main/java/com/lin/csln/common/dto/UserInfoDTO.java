@@ -17,7 +17,7 @@ import java.util.List;
 public class UserInfoDTO {
 
     @Schema(description = "用户ID")
-    private Long id;
+    private String id;
 
     @Schema(description = "登录账号")
     private String username;

@@ -16,7 +16,7 @@ public class AfterSaleDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 退换货单号
@@ -26,7 +26,7 @@ public class AfterSaleDO {
     /**
      * 原母单ID
      */
-    private Long orderId;
+    private String orderId;
 
     /**
      * 原订单号
@@ -36,17 +36,17 @@ public class AfterSaleDO {
     /**
      * 客户ID
      */
-    private Long customerId;
+    private String customerId;
 
     /**
      * 门店ID
      */
-    private Long shopId;
+    private String shopId;
 
     /**
      * 制单销售
      */
-    private Long salesUserId;
+    private String salesUserId;
 
     /**
      * 1仅退货 2仅换货 3退+换

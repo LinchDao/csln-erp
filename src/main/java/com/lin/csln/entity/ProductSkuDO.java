@@ -15,22 +15,22 @@ public class ProductSkuDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 商品ID
      */
-    private Long productId;
+    private String productId;
 
     /**
      * 颜色ID
      */
-    private Long colorId;
+    private String colorId;
 
     /**
      * 尺码ID
      */
-    private Long sizeId;
+    private String sizeId;
 
     /**
      * 条码

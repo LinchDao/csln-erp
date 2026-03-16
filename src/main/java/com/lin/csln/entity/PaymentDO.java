@@ -17,7 +17,7 @@ public class PaymentDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 收款单号
@@ -32,7 +32,7 @@ public class PaymentDO {
     /**
      * 客户ID
      */
-    private Long customerId;
+    private String customerId;
 
     /**
      * 收款金额
@@ -52,7 +52,7 @@ public class PaymentDO {
     /**
      * 操作人
      */
-    private Long createUserId;
+    private String createUserId;
 
     /**
      * 收款时间

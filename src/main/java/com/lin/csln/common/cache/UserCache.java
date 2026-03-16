@@ -71,7 +71,7 @@ public class UserCache {
      * @param userId 用户ID
      * @return 用户信息
      */
-    public static UserInfoDTO getUserInfo(Long userId) {
+    public static UserInfoDTO getUserInfo(String userId) {
         if (userId == null) {
             return null;
         }
@@ -89,7 +89,7 @@ public class UserCache {
      * @return 用户信息
      */
     public static UserInfoDTO getUserInfo() {
-        Long userId = JwtTokenUtil.getUserId();
+        String userId = JwtTokenUtil.getUserId();
         return getUserInfo(userId);
     }
 

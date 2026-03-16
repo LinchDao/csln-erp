@@ -16,7 +16,7 @@ public class UserDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 登录账号
@@ -41,12 +41,12 @@ public class UserDO {
     /**
      * 所属门店ID
      */
-    private Long shopId;
+    private String shopId;
 
     /**
      * 所属仓库ID
      */
-    private Long warehouseId;
+    private String warehouseId;
 
     /**
      * 状态 1正常 0禁用

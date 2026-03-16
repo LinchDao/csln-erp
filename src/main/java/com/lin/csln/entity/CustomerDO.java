@@ -16,7 +16,7 @@ public class CustomerDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 客户名称
@@ -31,7 +31,7 @@ public class CustomerDO {
     /**
      * 等级ID
      */
-    private Long levelId;
+    private String levelId;
 
     /**
      * 地址

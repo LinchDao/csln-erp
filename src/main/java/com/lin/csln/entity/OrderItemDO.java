@@ -16,22 +16,22 @@ public class OrderItemDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 母单ID
      */
-    private Long masterId;
+    private String masterId;
 
     /**
      * 子单ID
      */
-    private Long subId;
+    private String subId;
 
     /**
      * SKU_ID
      */
-    private Long skuId;
+    private String skuId;
 
     /**
      * 下单数量

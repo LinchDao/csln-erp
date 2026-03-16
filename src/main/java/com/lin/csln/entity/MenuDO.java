@@ -1,11 +1,15 @@
 package com.lin.csln.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
 import java.util.Date;
 
 /**
  * 菜单表 实体类
+ *
  * @author 系统生成器
  */
 @Data
@@ -16,12 +20,12 @@ public class MenuDO {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 父菜单ID，顶级菜单为0
      */
-    private Long parentId;
+    private String parentId;
 
     /**
      * 菜单类型 1目录 2菜单 3按钮
@@ -107,5 +111,6 @@ public class MenuDO {
      * 更新时间
      */
     private Date updateTime;
+    private Integer isDelete;
 
 }

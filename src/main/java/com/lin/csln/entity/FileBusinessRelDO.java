@@ -16,12 +16,12 @@ public class FileBusinessRelDO {
      * 主键ID
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 关联文件ID（关联sys_file.id）
      */
-    private Long fileId;
+    private String fileId;
 
     /**
      * 业务类型（枚举BusinessTypeEnum，如product_main_image）
@@ -31,7 +31,7 @@ public class FileBusinessRelDO {
     /**
      * 关联业务主键ID（如商品ID/订单ID）
      */
-    private Long businessId;
+    private String businessId;
 
     /**
      * 排序号（同业务下文件排序）
