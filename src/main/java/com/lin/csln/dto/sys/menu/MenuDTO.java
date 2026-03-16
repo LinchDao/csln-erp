@@ -1,13 +1,13 @@
 package com.lin.csln.dto.sys.menu;
 
 import lombok.Data;
+
 import java.util.List;
 
 /**
  * @Description:
  * @Author: linch
  */
-
 
 
 @Data
@@ -21,5 +21,6 @@ public class MenuDTO {
     private String title;
     private String icon;
     private Integer sort;
+    private Integer hidden;
     private List<MenuDTO> children;
 }
