@@ -5,6 +5,7 @@ import com.lin.csln.entity.FileDO;
 import com.lin.csln.mapper.FileMapper;
 import com.lin.csln.service.FileService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -14,13 +15,15 @@ import java.util.Date;
  * @author 系统生成器
  */
 @Service
+@Transactional(readOnly = true)
 public class FileServiceImpl extends ServiceImpl<FileMapper, FileDO> implements FileService {
 
 
     @Override
-    public long saveFile(String fileName, String uniqueFileName, String fileExt,
-                         String dateDir, String fullpath, long size,
-                         String contentType, String userId) {
+    @Transactional(rollbackFor = Exception.class)
+    public String saveFile(String fileName, String uniqueFileName, String fileExt,
+                           String dateDir, String fullpath, long size,
+                           String contentType, String userId) {
         FileDO file = new FileDO();
 
         file.setFileName(fileName);
@@ -33,7 +36,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileDO> implements 
         file.setCreateTime(new Date());
         file.setCreateUser(userId);
         file.setIsDelete(0);
-        return baseMapper.insert(file);
+        baseMapper.insert(file);
+        return file.getId();
     }
 
 

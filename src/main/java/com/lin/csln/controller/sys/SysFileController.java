@@ -50,7 +50,7 @@ public class SysFileController {
 
     @PostMapping("/upload")
     @Operation(summary = "文件上传", description = "上传文件")
-    public Result<Long> upload(@RequestParam("file") MultipartFile file) {
+    public Result<String> upload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             throw new BusinessException(ResultCode.FILE_NOT_EXISTS);
         }
@@ -69,7 +69,7 @@ public class SysFileController {
 
             file.transferTo(filePath.toFile());
 
-            long fileId = fileService.saveFile(originalFilename
+            String fileId = fileService.saveFile(originalFilename
                     , uniqueFileName
                     , fileExt
                     , dateDir
