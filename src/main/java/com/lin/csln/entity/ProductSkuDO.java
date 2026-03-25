@@ -1,10 +1,13 @@
 package com.lin.csln.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * SKU表 实体类
+ *
  * @author 系统生成器
  */
 @Data
@@ -25,12 +28,12 @@ public class ProductSkuDO {
     /**
      * 颜色ID
      */
-    private String colorId;
+    private String colorName;
 
     /**
      * 尺码ID
      */
-    private String sizeId;
+    private String sizeName;
 
     /**
      * 条码

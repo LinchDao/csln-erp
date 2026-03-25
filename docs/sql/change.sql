@@ -49,3 +49,28 @@ CREATE TABLE sys_dict (
                           update_time DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                           PRIMARY KEY (id) USING BTREE,
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '系统数据字典表';
+
+
+-- 1. 删除旧的唯一索引
+ALTER TABLE product_sku DROP INDEX uk_sku;
+
+-- 2. 删除 color_id、size_id
+ALTER TABLE product_sku
+DROP COLUMN color_id,
+    DROP COLUMN size_id;
+
+-- 3. 增加颜色名称、尺码名称
+ALTER TABLE product_sku
+    ADD COLUMN color_name VARCHAR(50) NOT NULL COMMENT '颜色名称' AFTER product_id,
+    ADD COLUMN size_name  VARCHAR(50) NOT NULL COMMENT '尺码名称' AFTER color_name;
+
+-- 1. 删除旧唯一索引
+ALTER TABLE product_color_image DROP INDEX uk_prod_color;
+
+-- 2. 删除 color_id
+ALTER TABLE product_color_image DROP COLUMN color_id;
+
+-- 3. 增加 color_name
+ALTER TABLE product_color_image
+    ADD COLUMN color_name VARCHAR(50) NOT NULL COMMENT '颜色名称' AFTER product_id;
+

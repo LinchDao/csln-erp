@@ -26,7 +26,7 @@ public class ProductColorImageDO {
     /**
      * 颜色ID
      */
-    private String colorId;
+    private String colorName;
 
     /**
      * 颜色图片文件ID（关联file表）
