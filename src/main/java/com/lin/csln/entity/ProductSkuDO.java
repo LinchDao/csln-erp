@@ -39,5 +39,6 @@ public class ProductSkuDO {
      * 条码
      */
     private String barcode;
+    private Integer isDelete;
 
 }

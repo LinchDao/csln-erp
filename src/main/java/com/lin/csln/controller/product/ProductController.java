@@ -1,10 +1,10 @@
 package com.lin.csln.controller.product;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.dto.product.ProductDTO;
+import com.lin.csln.dto.product.ProductDetailRespDTO;
 import com.lin.csln.dto.product.ProductPageRespDTO;
 import com.lin.csln.dto.product.ProductQueryParamDTO;
 import com.lin.csln.service.ProductService;
@@ -34,9 +34,9 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "新增商品", description = "新增商品基础信息及关联的颜色图片、SKU信息")
-    public Result<Long> addProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public Result<String> addProduct(@Valid @RequestBody ProductDTO productDTO) {
         try {
-            Long productId = productService.saveProduct(productDTO);
+            String productId = productService.addProduct(productDTO);
             return Result.success(productId);
         } catch (Exception e) {
             return Result.fail("新增商品失败：" + e.getMessage());
@@ -46,11 +46,10 @@ public class ProductController {
     @PutMapping("/{id}")
     @Operation(summary = "修改商品", description = "根据ID修改商品信息及关联的颜色图片、SKU信息")
     public Result<Boolean> updateProduct(
-            @Parameter(description = "商品ID", required = true, example = "1") @PathVariable Long id,
+            @Parameter(description = "商品ID", required = true) @PathVariable String productId,
             @Valid @RequestBody ProductDTO productDTO) {
         try {
-            productDTO.setId(id);
-            boolean success = productService.updateProduct(productDTO);
+            boolean success = productService.updateProduct(productId, productDTO);
             return Result.success(success);
         } catch (Exception e) {
             return Result.fail("修改商品失败：" + e.getMessage());
@@ -59,10 +58,10 @@ public class ProductController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除商品", description = "根据ID删除商品（级联删除关联的颜色图片、SKU）")
-    public Result<Boolean> deleteProduct(@Parameter(description = "商品ID", required = true, example = "1") @PathVariable Long id) {
+    public Result<Boolean> deleteProduct(@Parameter(description = "商品ID", required = true) @PathVariable Long id) {
         try {
             String userId = JwtTokenUtil.getUserId();
-            boolean success = productService.deleteProduct(id,userId);
+            boolean success = productService.deleteProduct(id, userId);
             return Result.success(success);
         } catch (Exception e) {
             return Result.fail("删除商品失败：" + e.getMessage());
@@ -71,9 +70,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @Operation(summary = "查询商品详情", description = "根据ID查询商品基础信息及关联的颜色图片、SKU信息")
-    public Result<ProductDTO> getProductById(@Parameter(description = "商品ID", required = true, example = "1") @PathVariable Long id) {
+    public Result<ProductDetailRespDTO> getProductById(@Parameter(description = "商品ID", required = true) @PathVariable String id) {
         try {
-            ProductDTO productDTO = productService.getProductById(id);
+            ProductDetailRespDTO productDTO = productService.getProductById(id);
             return Result.success(productDTO);
         } catch (Exception e) {
             return Result.fail("查询商品失败：" + e.getMessage());

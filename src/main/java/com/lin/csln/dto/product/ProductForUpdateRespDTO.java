@@ -4,7 +4,6 @@ package com.lin.csln.dto.product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -14,14 +13,13 @@ import java.util.List;
  */
 
 @Data
-@Schema(name = "ProductDTO", description = "商品DTO")
-public class ProductDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Schema(description = "商品修改详情响应DTO")
+public class ProductForUpdateRespDTO {
 
     @Schema(description = "商品ID")
     private String id;
 
-    @Schema(description = "商品编号")
+    @Schema(description = "款号")
     private String productNo;
 
     @Schema(description = "商品名称")
@@ -48,15 +46,14 @@ public class ProductDTO implements Serializable {
     @Schema(description = "零售价")
     private BigDecimal retailPrice;
 
-    @Schema(description = "状态 0-禁用 1-启用")
+    @Schema(description = "状态 1-启用 0-禁用")
     private Integer status;
 
     @Schema(description = "主图ID")
     private String mainImageId;
+    @Schema(description = "产品SKU信息列表")
+    private List<ProductSkuDTO> skuList;
 
-    @Schema(description = "选中的尺码名称列表")
-    private List<String> sizeNameList;
-
-    @Schema(description = "颜色信息列表")
-    private List<ProductColorDTO> colorList;
+    @Schema(description = "颜色图片列表")
+    private List<ProductColorImageDTO> productColorImageList;
 }

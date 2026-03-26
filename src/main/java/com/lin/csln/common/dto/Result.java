@@ -28,13 +28,13 @@ public class Result<T> implements Serializable {
     /**
      * 状态码
      */
-    @Schema(description = "状态码", example = "200")
+    @Schema(description = "状态码")
     private int code;
 
     /**
      * 提示信息
      */
-    @Schema(description = "提示信息", example = "操作成功")
+    @Schema(description = "提示信息")
     private String message;
 
     /**
@@ -46,7 +46,7 @@ public class Result<T> implements Serializable {
     /**
      * 响应时间戳（格式：yyyy-MM-dd HH:mm:ss）
      */
-    @Schema(description = "响应时间戳", example = "2026-03-05 15:30:00")
+    @Schema(description = "响应时间戳")
     private String timestamp;
 
     // 私有化构造方法，通过静态方法创建

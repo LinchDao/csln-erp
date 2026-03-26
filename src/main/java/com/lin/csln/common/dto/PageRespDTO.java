@@ -22,7 +22,7 @@ public class PageRespDTO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "总记录数", example = "100", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "总记录数", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "总记录数不能为空")
     private long total;
 
@@ -30,13 +30,13 @@ public class PageRespDTO<T> implements Serializable {
     @NotNull(message = "数据列表不能为空")
     private List<T> rows;
 
-    @Schema(description = "每页条数", example = "10", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "每页条数", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer limit;
 
-    @Schema(description = "当前页码", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "当前页码", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer page;
 
-    @Schema(description = "总页数", example = "10", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "总页数", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Long totalPages;
 
     public static <T> PageRespDTO<T> of(long total, List<T> rows) {

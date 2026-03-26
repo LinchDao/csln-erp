@@ -35,7 +35,7 @@ public class UserInfoDTO {
     private Long shopId;
 
     @Schema(description = "所属仓库ID")
-    private Long warehouseId;
+    private String warehouseId;
 
     @Schema(description = "状态 1正常 0禁用")
     private Integer status;

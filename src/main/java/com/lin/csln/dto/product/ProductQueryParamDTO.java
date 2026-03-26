@@ -19,12 +19,12 @@ import java.io.Serializable;
 public class ProductQueryParamDTO extends PageQueryParamDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "款号（模糊查询）", example = "PROD2026")
+    @Schema(description = "款号（模糊查询）")
     private String productNo;
 
-    @Schema(description = "商品名称（模糊查询）", example = "T恤")
+    @Schema(description = "商品名称（模糊查询）")
     private String name;
 
-    @Schema(description = "状态（1：启用，0：禁用）", example = "1")
+    @Schema(description = "状态（1：启用，0：禁用）")
     private Integer status;
 }

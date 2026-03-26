@@ -19,24 +19,24 @@ import java.io.Serializable;
 public class ProductSkuDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "主键ID", example = "1")
-    private Long id;
-
-    @Schema(description = "商品ID", example = "1")
-    private Long productId;
-
-    @Schema(description = "颜色ID", example = "2")
-    private Long colorId;
-
-    @Schema(description = "颜色名称（冗余字段）", example = "黑色")
+    @Schema(description = "主键ID")
+    private String id;
+    @Schema(description = "商品ID")
+    private String productId;
+    @Schema(description = "颜色名称（冗余字段）")
     private String colorName;
-
-    @Schema(description = "尺码ID", example = "3")
-    private Long sizeId;
-
-    @Schema(description = "尺码名称（冗余字段）", example = "XL")
+    @Schema(description = "尺码名称（冗余字段）")
     private String sizeName;
-
-    @Schema(description = "条码", example = "6971234567890")
+    @Schema(description = "条码")
     private String barcode;
+    @Schema(description = "'可用库存'")
+    private Integer qty;
+    @Schema(description = "''锁定库存''")
+    private Integer lockQty;
+    @Schema(description = "'追回货预占'")
+    private Integer recoveryQty;
+    @Schema(description = "'预警数量'")
+    private Integer warnQty;
 }
+
+

@@ -22,43 +22,43 @@ import java.util.Date;
 public class ProductPageRespDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "主键ID", example = "1")
-    private Long id;
+    @Schema(description = "主键ID")
+    private String id;
 
-    @Schema(description = "款号", requiredMode = Schema.RequiredMode.REQUIRED, example = "PROD20260310001")
+    @Schema(description = "款号", requiredMode = Schema.RequiredMode.REQUIRED)
     private String productNo;
 
-    @Schema(description = "商品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "春季纯棉T恤")
+    @Schema(description = "商品名称", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
-    @Schema(description = "品牌", example = "XX服饰")
+    @Schema(description = "品牌")
     private String brand;
 
-    @Schema(description = "季节", example = "春季")
+    @Schema(description = "季节")
     private String season;
 
-    @Schema(description = "年份", example = "2026")
+    @Schema(description = "年份")
     private String year;
 
-    @Schema(description = "系列", example = "休闲系列")
+    @Schema(description = "系列")
     private String series;
 
-    @Schema(description = "成本价", example = "59.90")
+    @Schema(description = "成本价")
     private BigDecimal costPrice;
 
-    @Schema(description = "默认批发价", example = "89.90")
+    @Schema(description = "默认批发价")
     private BigDecimal wholesalePrice;
 
-    @Schema(description = "零售价", example = "159.90")
+    @Schema(description = "零售价")
     private BigDecimal retailPrice;
 
-    @Schema(description = "商品主图", example = "1")
-    private Long mainImageId;
+    @Schema(description = "商品主图")
+    private String mainImageId;
 
-    @Schema(description = "状态（1：启用，0：禁用）", example = "1")
+    @Schema(description = "状态（1：启用，0：禁用）")
     private Integer status;
 
-    @Schema(description = "创建时间", example = "2026-03-10 10:00:00")
+    @Schema(description = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date createTime;
 }

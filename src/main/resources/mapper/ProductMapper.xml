@@ -3,11 +3,14 @@
 <mapper namespace="com.lin.csln.mapper.ProductMapper">
 
     <select id="pageProduct" parameterType="com.lin.csln.dto.product.ProductQueryParamDTO" resultType="com.lin.csln.dto.product.ProductPageRespDTO">
-        SELECT id,
-        product_no,
-        name,
-        brand,
-        season, year, series, cost_price, wholesale_price, retail_price, main_image_id, status, create_time
+        SELECT id id,
+        product_no productNo,
+        name name,
+        brand brand,
+        season season, year year, series series
+        , cost_price costPrice, wholesale_price wholesalePrice
+        , retail_price retailPrice, main_image_id mainImageId
+        , status status, create_time createTime
         FROM product
         <where>
             is_delete = 0

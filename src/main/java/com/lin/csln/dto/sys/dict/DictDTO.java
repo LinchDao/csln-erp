@@ -15,26 +15,26 @@ import java.util.List;
 @Data
 @Schema(description = "数据字典新增请求参数")
 public class DictDTO {
-    @Schema(description = "id", example = "0")
+    @Schema(description = "id")
     private String id;
-    @Schema(description = "parentId", example = "0")
+    @Schema(description = "parentId")
     private String parentId;
-    @Schema(description = "字典名称", required = true, example = "男")
+    @Schema(description = "字典名称", required = true)
     @NotBlank(message = "字典名称不能为空")
     private String dictName;
 
-    @Schema(description = "字典值", example = "1")
+    @Schema(description = "字典值")
     private String dictValue;
 
-    @Schema(description = "排序号（越小越靠前）", required = true, example = "1")
+    @Schema(description = "排序号（越小越靠前）", required = true)
     @NotNull(message = "排序号不能为空")
     private Integer sort;
 
-    @Schema(description = "状态 1-启用 0-禁用", example = "1")
+    @Schema(description = "状态 1-启用 0-禁用")
     @NotNull(message = "状态不能为空")
     private Integer status;
 
-    @Schema(description = "备注", example = "性别枚举")
+    @Schema(description = "备注")
     private String remark;
 
     @Schema(description = "字典列表")

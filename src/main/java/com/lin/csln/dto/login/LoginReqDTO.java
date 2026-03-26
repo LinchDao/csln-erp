@@ -14,13 +14,13 @@ import lombok.Data;
 @Schema(name = "LoginRequestDTO", description = "登录请求参数")
 public class LoginReqDTO {
     @NotBlank(message = "账号不能为空")
-    @Schema(description = "用户名/手机号", example = "admin")
+    @Schema(description = "用户名/手机号")
     private String username;
 
     @NotBlank(message = "密码不能为空")
-    @Schema(description = "密码", example = "123456abc")
+    @Schema(description = "密码")
     private String password;
 
-    @Schema(description = "是否记住我", example = "false", defaultValue = "false")
+    @Schema(description = "是否记住我", defaultValue = "false")
     private Boolean rememberMe = false;
 }

@@ -12,8 +12,8 @@ import java.util.List;
 
 @Data
 public class MenuDTO {
-    private Long id;
-    private Long parentId;
+    private String id;
+    private String parentId;
     private String path;
     private String component;
     private String redirect;

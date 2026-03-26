@@ -36,36 +36,24 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         return menuList;
     }
 
-    /**
-     * 构建菜单树
-     */
     public List<MenuDTO> buildTree(List<MenuDTO> menuList) {
         if (menuList == null || menuList.isEmpty()) {
             return new ArrayList<>();
         }
 
-        Map<Long, MenuDTO> menuMap = menuList.stream()
+        Map<String, MenuDTO> menuMap = menuList.stream()
                 .collect(Collectors.toMap(MenuDTO::getId, menu -> menu));
 
         return menuList.stream()
-                .filter(menu -> menu.getParentId() == null || Objects.equals(menu.getParentId(), 0L))
+                .filter(menu -> menu.getParentId() == null)
                 .peek(menu -> menu.setChildren(getChildren(menu, menuMap)))
-                .sorted(Comparator.comparing(MenuDTO::getSort,
-                                Comparator.nullsLast(Integer::compareTo))
-                        .thenComparing(MenuDTO::getId, Comparator.nullsLast(Long::compareTo)))
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 递归获取子节点
-     */
-    private List<MenuDTO> getChildren(MenuDTO parent, Map<Long, MenuDTO> menuMap) {
+    private List<MenuDTO> getChildren(MenuDTO parent, Map<String, MenuDTO> menuMap) {
         return menuMap.values().stream()
                 .filter(menu -> parent.getId().equals(menu.getParentId()))
                 .peek(menu -> menu.setChildren(getChildren(menu, menuMap)))
-                .sorted(Comparator.comparing(MenuDTO::getSort,
-                                Comparator.nullsLast(Integer::compareTo))
-                        .thenComparing(MenuDTO::getId, Comparator.nullsLast(Long::compareTo)))
                 .collect(Collectors.toList());
     }
 }

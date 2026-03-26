@@ -11,18 +11,18 @@ import lombok.Data;
 @Data
 @Schema(name = "DictPageRespDTO", description = "字典分页DTO")
 public class DictPageRespDTO {
-    @Schema(description = "id", example = "0")
+    @Schema(description = "id")
     private String id;
 
-    @Schema(description = "字典名称", required = true, example = "男")
+    @Schema(description = "字典名称", required = true)
     private String dictName;
 
-    @Schema(description = "字典值", example = "1")
+    @Schema(description = "字典值")
     private String dictValue;
 
-    @Schema(description = "状态 1-启用 0-禁用", example = "1")
+    @Schema(description = "状态 1-启用 0-禁用")
     private Integer status;
 
-    @Schema(description = "备注", example = "性别枚举")
+    @Schema(description = "备注")
     private String remark;
 }
