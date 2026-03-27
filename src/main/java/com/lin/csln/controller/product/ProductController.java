@@ -32,7 +32,7 @@ public class ProductController {
     @Resource
     private ProductService productService;
 
-    @PostMapping
+    @PostMapping("/add")
     @Operation(summary = "新增商品", description = "新增商品基础信息及关联的颜色图片、SKU信息")
     public Result<String> addProduct(@Valid @RequestBody ProductDTO productDTO) {
         try {

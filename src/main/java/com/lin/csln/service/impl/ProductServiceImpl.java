@@ -34,7 +34,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
     private ProductSkuService productSkuService;
 
     @Override
-    @Transactional(rollbackFor = Exception.class) // 事务：失败全部回滚
+    @Transactional(rollbackFor = Exception.class)
     public String addProduct(ProductDTO productDTO) {
         ProductDO product = new ProductDO();
         BeanUtils.copyProperties(productDTO, product);
