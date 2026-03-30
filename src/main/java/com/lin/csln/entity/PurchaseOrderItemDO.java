@@ -1,11 +1,15 @@
 package com.lin.csln.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
 import java.math.BigDecimal;
 
 /**
  * 采购明细表 实体类
+ *
  * @author 系统生成器
  */
 @Data
@@ -42,5 +46,6 @@ public class PurchaseOrderItemDO {
      * 金额
      */
     private BigDecimal amount;
+    private Integer isDelete;
 
 }

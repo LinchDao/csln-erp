@@ -1,12 +1,16 @@
 package com.lin.csln.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * 采购订单 实体类
+ *
  * @author 系统生成器
  */
 @Data
@@ -58,5 +62,8 @@ public class PurchaseOrderDO {
      * 备注
      */
     private String remark;
+    private Date orderTime;
+    private Date arrivalTime;
+    private Integer isDelete;
 
 }

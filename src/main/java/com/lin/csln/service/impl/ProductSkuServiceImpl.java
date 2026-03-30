@@ -2,15 +2,18 @@ package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.dto.product.ProductSkuListDTO;
 import com.lin.csln.dto.product.ProductColorDTO;
 import com.lin.csln.dto.product.ProductSkuDTO;
 import com.lin.csln.entity.ProductSkuDO;
 import com.lin.csln.enums.GlobalEnums;
 import com.lin.csln.mapper.ProductSkuMapper;
 import com.lin.csln.service.ProductSkuService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * SKU表 服务实现类
@@ -92,5 +95,21 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         if (!deleteList.isEmpty()) {
             this.updateBatchById(deleteList);
         }
+    }
+
+    @Override
+    public List<ProductSkuListDTO> getSkuByProductId(String productId) {
+
+        LambdaQueryWrapper<ProductSkuDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ProductSkuDO::getProductId, productId);
+        wrapper.eq(ProductSkuDO::getIsDelete, GlobalEnums.NO.getCode());
+        List<ProductSkuDO> skuList = baseMapper.selectList(wrapper);
+
+        // 转VO
+        return skuList.stream().map(sku -> {
+            ProductSkuListDTO dto = new ProductSkuListDTO();
+            BeanUtils.copyProperties(sku, dto);
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

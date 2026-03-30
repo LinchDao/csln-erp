@@ -1,6 +1,7 @@
 package com.lin.csln.common.dto;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -58,5 +59,17 @@ public class PageRespDTO<T> implements Serializable {
 
     public static <T> PageRespDTO<T> empty() {
         return of(0L, List.of());
+    }
+
+    public static <T, P extends PageQueryParamDTO> PageRespDTO<T> build(IPage<T> resultPage, P queryDTO) {
+        PageRespDTO<T> pageResp = new PageRespDTO<>();
+        pageResp.setTotal(resultPage.getTotal());
+        pageResp.setRows(resultPage.getRecords());
+        pageResp.setPage(queryDTO.getPage());
+        pageResp.setLimit(queryDTO.getLimit());
+        pageResp.setTotalPages(resultPage.getTotal() % queryDTO.getLimit() == 0
+                ? resultPage.getTotal() / queryDTO.getLimit() : resultPage.getTotal() / queryDTO.getLimit() + 1);
+        return pageResp;
+
     }
 }

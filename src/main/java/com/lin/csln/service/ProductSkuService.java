@@ -1,6 +1,7 @@
 package com.lin.csln.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.dto.product.ProductSkuListDTO;
 import com.lin.csln.dto.product.ProductColorDTO;
 import com.lin.csln.dto.product.ProductSkuDTO;
 import com.lin.csln.entity.ProductSkuDO;
@@ -18,4 +19,6 @@ public interface ProductSkuService extends IService<ProductSkuDO> {
 
 
     void saveProductSku(String productId, List<ProductColorDTO> colorList, List<String> sizeNameList);
+
+    List<ProductSkuListDTO> getSkuByProductId(String productId);
 }

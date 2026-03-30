@@ -15,9 +15,65 @@
         <result column="remark" property="remark"/>
     </resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, purchase_no, supplier_id, total_qty, total_amount, status, create_user_id, create_time, remark
-    </sql>
+    <select id="pagePurchaseOrder" resultType="com.lin.csln.dto.purchase.PurchaseOrderPageRespDTO">
+        SELECT
+        po.id,
+        po.purchase_no AS purchaseNo,
+        po.supplier_id AS supplierId,
+        s.name AS supplierName,          <!-- 供应商名称 -->
+        po.total_qty AS totalQty,
+        po.total_amount AS totalAmount,
+        po.status,
+        po.create_user_id AS createUserId,
+        u.real_name AS createUserName,   <!-- 制单人姓名 -->
+        DATE_FORMAT(po.order_time, '%Y-%m-%d') AS orderTime,
+        DATE_FORMAT(po.arrival_time, '%Y-%m-%d') AS arrivalTime,
+        po.remark
+        FROM purchase_order po
+        LEFT JOIN supplier s ON po.supplier_id = s.id
+        LEFT JOIN sys_user u ON po.create_user_id = u.id
+        WHERE po.is_delete = 0
+
+        <!-- 动态查询条件 -->
+        <if test="query.purchaseNo != null and query.purchaseNo != ''">
+            AND po.purchase_no LIKE CONCAT('%', #{query.purchaseNo}, '%')
+        </if>
+        <if test="query.supplierId != null and query.supplierId != ''">
+            AND po.supplier_id = #{query.supplierId}
+        </if>
+        <if test="query.status != null">
+            AND po.status = #{query.status}
+        </if>
+        <if test="query.startTime != null">
+            AND po.order_time >= #{query.startTime}
+        </if>
+        <if test="query.endTime != null">
+            AND po.order_time &lt;= #{query.endTime}
+        </if>
+        ORDER BY po.create_time DESC
+    </select>
+
+    <select id="getPurchaseDetailById" resultType="com.lin.csln.dto.purchase.PurchaseOrderDTO">
+        SELECT
+            po.id,
+            po.purchase_no AS purchaseNo,
+            po.supplier_id AS supplierId,
+            s.name AS supplierName,
+            po.total_qty AS totalQty,
+            po.total_amount AS totalAmount,
+            po.status,
+            po.create_user_id AS createUserId,
+            u.real_name AS createUserName,
+            DATE_FORMAT(po.order_time, '%Y-%m-%d') AS orderTime,
+            DATE_FORMAT(po.arrival_time, '%Y-%m-%d') AS arrivalTime,
+            DATE_FORMAT(po.create_time, '%Y-%m-%d') AS createTime,
+            po.remark,
+            po.is_delete AS isDelete
+        FROM erp2.purchase_order po
+                 LEFT JOIN erp2.supplier s ON po.supplier_id = s.id
+                 LEFT JOIN erp2.sys_user u ON po.create_user_id = u.id
+        WHERE po.id = #{id}
+          AND po.is_delete = 0
+    </select>
 
 </mapper>

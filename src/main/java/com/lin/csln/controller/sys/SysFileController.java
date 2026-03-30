@@ -90,7 +90,7 @@ public class SysFileController {
     @Operation(summary = "文件下载", description = "根据文件ID下载文件（附件形式）")
     public ResponseEntity<byte[]> download(
             @Parameter(description = "文件ID", required = true)
-            @PathVariable Long fileId) {
+            @PathVariable String fileId) {
 
         FileDO fileDO = fileService.getById(fileId);
         if (fileDO == null) {

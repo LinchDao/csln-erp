@@ -12,9 +12,23 @@
         <result column="amount" property="amount"/>
     </resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, purchase_id, sku_id, qty, price, amount
-    </sql>
-
+    <select id="listPurchaseOrderItemSku" resultType="com.lin.csln.dto.purchase.PurchaseOrderItemDTO">
+        SELECT poi.id,
+               poi.purchase_id AS purchaseId,
+               poi.sku_id      AS skuId,
+               p.id            AS productId,
+               p.product_no    AS productNo,
+               p.name          AS productName,
+               poi.price,
+               poi.qty,
+               poi.amount,
+               poi.is_delete   AS isDelete,
+               sku.color_name  AS colorName,
+               sku.size_name   AS sizeName
+        FROM purchase_order_item poi
+                 LEFT JOIN product_sku sku ON poi.sku_id = sku.id
+                 LEFT JOIN product p ON sku.product_id = p.id
+        WHERE poi.purchase_id = #{purchaseId}
+          and poi.is_delete = 0
+    </select>
 </mapper>

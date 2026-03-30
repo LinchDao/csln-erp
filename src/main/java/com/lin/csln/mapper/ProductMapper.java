@@ -1,7 +1,7 @@
 package com.lin.csln.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lin.csln.dto.product.ProductPageRespDTO;
 import com.lin.csln.dto.product.ProductQueryParamDTO;
 import com.lin.csln.entity.ProductDO;
@@ -16,5 +16,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ProductMapper extends BaseMapper<ProductDO> {
 
-    Page<ProductPageRespDTO> pageProduct(Page<ProductPageRespDTO> page, @Param("params") ProductQueryParamDTO queryDTO);
+    IPage<ProductPageRespDTO> pageProduct(IPage<ProductPageRespDTO> page, @Param("params") ProductQueryParamDTO queryDTO);
 }

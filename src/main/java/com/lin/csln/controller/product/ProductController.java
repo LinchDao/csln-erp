@@ -3,11 +3,9 @@ package com.lin.csln.controller.product;
 
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
-import com.lin.csln.dto.product.ProductDTO;
-import com.lin.csln.dto.product.ProductDetailRespDTO;
-import com.lin.csln.dto.product.ProductPageRespDTO;
-import com.lin.csln.dto.product.ProductQueryParamDTO;
+import com.lin.csln.dto.product.*;
 import com.lin.csln.service.ProductService;
+import com.lin.csln.service.ProductSkuService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 商品管理控制器
@@ -31,6 +31,8 @@ public class ProductController {
 
     @Resource
     private ProductService productService;
+    @Resource
+    private ProductSkuService productSkuService;
 
     @PostMapping("/add")
     @Operation(summary = "新增商品", description = "新增商品基础信息及关联的颜色图片、SKU信息")
@@ -43,7 +45,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     @Operation(summary = "修改商品", description = "根据ID修改商品信息及关联的颜色图片、SKU信息")
     public Result<Boolean> updateProduct(
             @Parameter(description = "商品ID", required = true) @PathVariable String productId,
@@ -58,24 +60,13 @@ public class ProductController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除商品", description = "根据ID删除商品（级联删除关联的颜色图片、SKU）")
-    public Result<Boolean> deleteProduct(@Parameter(description = "商品ID", required = true) @PathVariable Long id) {
+    public Result<Boolean> deleteProduct(@Parameter(description = "商品ID", required = true) @PathVariable String id) {
         try {
             String userId = JwtTokenUtil.getUserId();
             boolean success = productService.deleteProduct(id, userId);
             return Result.success(success);
         } catch (Exception e) {
             return Result.fail("删除商品失败：" + e.getMessage());
-        }
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "查询商品详情", description = "根据ID查询商品基础信息及关联的颜色图片、SKU信息")
-    public Result<ProductDetailRespDTO> getProductById(@Parameter(description = "商品ID", required = true) @PathVariable String id) {
-        try {
-            ProductDetailRespDTO productDTO = productService.getProductById(id);
-            return Result.success(productDTO);
-        } catch (Exception e) {
-            return Result.fail("查询商品失败：" + e.getMessage());
         }
     }
 
@@ -87,6 +78,30 @@ public class ProductController {
             return Result.success(productPage);
         } catch (Exception e) {
             return Result.fail("分页查询商品失败：" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/no/name/list")
+    @Operation(summary = "商品款号-名称下拉列表", description = "商品款号-名称下拉列表")
+    public Result<List<ProductSelectDTO>> listProduct() {
+        return Result.success(productService.listProductSelect());
+    }
+
+    @GetMapping("/get/sku/by/{productId}")
+    @Operation(summary = "商品款号-名称下拉列表", description = "商品款号-名称下拉列表")
+    public Result<List<ProductSkuListDTO>> getSkuByProductId(@PathVariable String productId) {
+        return Result.success(productSkuService.getSkuByProductId(productId));
+    }
+
+
+    @GetMapping("/{id}")
+    @Operation(summary = "查询商品详情", description = "根据ID查询商品基础信息及关联的颜色图片、SKU信息")
+    public Result<ProductDetailRespDTO> getProductById(@Parameter(description = "商品ID", required = true) @PathVariable String id) {
+        try {
+            ProductDetailRespDTO productDTO = productService.getProductById(id);
+            return Result.success(productDTO);
+        } catch (Exception e) {
+            return Result.fail("查询商品失败：" + e.getMessage());
         }
     }
 }

@@ -32,7 +32,7 @@ public class UserInfoDTO {
     private String phone;
 
     @Schema(description = "所属门店ID")
-    private Long shopId;
+    private String shopId;
 
     @Schema(description = "所属仓库ID")
     private String warehouseId;

@@ -1,5 +1,7 @@
 package com.lin.csln.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.csln.common.dto.PageRespDTO;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 商品表 服务实现类
@@ -75,7 +78,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
     }
 
     @Override
-    public boolean deleteProduct(Long id, String userId) {
+    public boolean deleteProduct(String id, String userId) {
         return false;
     }
 
@@ -102,9 +105,24 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
 
     @Override
     public PageRespDTO<ProductPageRespDTO> pageProduct(ProductQueryParamDTO queryDTO) {
-        Page<ProductPageRespDTO> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
-        Page<ProductPageRespDTO> result = baseMapper.pageProduct(page, queryDTO);
-        return PageRespDTO.of(result.getTotal(), result.getRecords(), queryDTO.getPage(), queryDTO.getLimit());
+        IPage<ProductPageRespDTO> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
+        IPage<ProductPageRespDTO> result = baseMapper.pageProduct(page, queryDTO);
+        return PageRespDTO.build(result, queryDTO);
+    }
+
+    @Override
+    public List<ProductSelectDTO> listProductSelect() {
+        LambdaQueryWrapper<ProductDO> wrapper = new LambdaQueryWrapper<>();
+
+        wrapper.select(ProductDO::getId, ProductDO::getProductNo, ProductDO::getName, ProductDO::getMainImageId);
+
+        List<ProductDO> products = baseMapper.selectList(wrapper);
+
+        return products.stream().map(p -> {
+            ProductSelectDTO vo = new ProductSelectDTO();
+            BeanUtils.copyProperties(p, vo);
+            return vo;
+        }).collect(Collectors.toList());
     }
 
 
