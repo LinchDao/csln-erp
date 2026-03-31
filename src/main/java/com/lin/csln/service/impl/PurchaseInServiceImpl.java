@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 @Transactional(readOnly = true)
 public class PurchaseInServiceImpl extends ServiceImpl<PurchaseInMapper, PurchaseInDO> implements PurchaseInService {
 
-    private final String IN_CONNECT = "-IN-";
+    private static final String IN_CONNECT = "-IN-";
 
     @Resource
     private PurchaseInItemService purchaseInItemService;
@@ -93,7 +93,6 @@ public class PurchaseInServiceImpl extends ServiceImpl<PurchaseInMapper, Purchas
 
         IPage<PurchaseInPageRespDTO> resultPage = baseMapper.selectPurchaseInPage(page, dto);
 
-
         //  批量获取用户名并回填
         Set<String> userIds = resultPage.getRecords().stream()
                 .flatMap(o -> Stream.of(o.getCreateUserId(), o.getAuditUserId()))
@@ -142,7 +141,7 @@ public class PurchaseInServiceImpl extends ServiceImpl<PurchaseInMapper, Purchas
         if (purchaseIn == null) {
             throw new BusinessException("入库单不存在");
         }
-        if (!Objects.equals(purchaseIn.getStatus(), 0)) {
+        if (!Objects.equals(purchaseIn.getStatus(), PurchaseInStatusEnums.WAIT_AUDIT.getCode())) {
             throw new BusinessException("只能审核【待审核】状态的单据");
         }
 
@@ -164,7 +163,7 @@ public class PurchaseInServiceImpl extends ServiceImpl<PurchaseInMapper, Purchas
         if (purchaseIn == null) {
             throw new BusinessException("入库单不存在");
         }
-        if (!Objects.equals(purchaseIn.getStatus(), 0)) {
+        if (!Objects.equals(purchaseIn.getStatus(), PurchaseInStatusEnums.WAIT_AUDIT.getCode())) {
             throw new BusinessException("只能审核【待审核】状态的单据");
         }
 
