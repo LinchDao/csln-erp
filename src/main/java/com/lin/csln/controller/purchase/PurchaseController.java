@@ -3,7 +3,7 @@ package com.lin.csln.controller.purchase;
 
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
-import com.lin.csln.dto.purchase.*;
+import com.lin.csln.dto.purchase.order.*;
 import com.lin.csln.service.PurchaseOrderService;
 import com.lin.csln.service.SupplierService;
 import com.lin.csln.utils.JwtTokenUtil;

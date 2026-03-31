@@ -2,19 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lin.csln.mapper.PurchaseInItemMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.lin.csln.entity.PurchaseInItemDO">
-        <id column="id" property="id"/>
-        <result column="in_id" property="inId"/>
-        <result column="sku_id" property="skuId"/>
-        <result column="qty" property="qty"/>
-        <result column="price" property="price"/>
-        <result column="amount" property="amount"/>
-    </resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, in_id, sku_id, qty, price, amount
-    </sql>
-
+    <select id="listPurchaseInItem" resultType="com.lin.csln.dto.purchase.in.PurchaseInItemRespDTO">
+        SELECT pi.sku_id     AS skuId,
+               p.product_no  AS productNo,
+               p.name        AS productName,
+               ps.color_name AS colorName,
+               ps.size_name  AS sizeName,
+               poi.qty       AS purchaseQty,
+               pi.qty        AS qty
+        FROM erp2.purchase_in_item pi
+                 LEFT JOIN erp2.product_sku ps ON pi.sku_id = ps.id
+                 LEFT JOIN erp2.product p ON ps.product_id = p.id
+                 LEFT JOIN erp2.purchase_order_item poi ON poi.purchase_id = #{purchaseId}
+            AND poi.sku_id = pi.sku_id
+        WHERE pi.in_id = #{inId}
+    </select>
 </mapper>

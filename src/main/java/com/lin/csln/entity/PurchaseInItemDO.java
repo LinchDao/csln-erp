@@ -33,14 +33,4 @@ public class PurchaseInItemDO {
      */
     private Integer qty;
 
-    /**
-     * 单价
-     */
-    private BigDecimal price;
-
-    /**
-     * 金额
-     */
-    private BigDecimal amount;
-
 }

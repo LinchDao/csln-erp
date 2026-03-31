@@ -1,6 +1,6 @@
 package com.lin.csln.service.impl;
 
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -8,21 +8,24 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
-import com.lin.csln.dto.purchase.PurchaseOrderDTO;
-import com.lin.csln.dto.purchase.PurchaseOrderItemDTO;
-import com.lin.csln.dto.purchase.PurchaseOrderPageRespDTO;
-import com.lin.csln.dto.purchase.PurchaseOrderQueryParamDTO;
+import com.lin.csln.dto.purchase.in.PurchaseInstockedQtyDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderItemDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderPageRespDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderQueryParamDTO;
 import com.lin.csln.entity.PurchaseOrderDO;
+import com.lin.csln.entity.PurchaseOrderItemDO;
 import com.lin.csln.enums.GlobalEnums;
 import com.lin.csln.enums.PurchaseOrderStatusEnums;
 import com.lin.csln.mapper.PurchaseOrderMapper;
+import com.lin.csln.service.PurchaseInItemService;
+import com.lin.csln.service.PurchaseInService;
 import com.lin.csln.service.PurchaseOrderItemService;
 import com.lin.csln.service.PurchaseOrderService;
-import com.lin.csln.service.SupplierService;
-import com.lin.csln.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,14 +37,13 @@ import java.util.Objects;
  * @author 系统生成器
  */
 @Service
+@Transactional(readOnly = true)
 public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, PurchaseOrderDO> implements PurchaseOrderService {
 
     @Resource
     private PurchaseOrderItemService purchaseOrderItemService;
     @Resource
-    private SupplierService supplierService;
-    @Resource
-    private UserService userService;
+    private PurchaseInService purchaseInService;
 
     @Override
     public PageRespDTO<PurchaseOrderPageRespDTO> pagePurchaseOrder(PurchaseOrderQueryParamDTO queryDTO) {
@@ -53,6 +55,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createPurchaseOrder(PurchaseOrderDTO dto, String userId) {
         if (Objects.isNull(dto)) {
             throw new BusinessException("采购单信息不能为空");
@@ -88,6 +91,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void editPurchaseOrder(String id, PurchaseOrderDTO dto) {
         if (Objects.isNull(dto)) {
             throw new BusinessException("采购单信息不能为空");
@@ -108,6 +112,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void cancelPurchaseOrder(String id) {
         PurchaseOrderDO purchaseOrder = baseMapper.selectOne(new LambdaQueryWrapper<PurchaseOrderDO>()
                 .eq(PurchaseOrderDO::getId, id)
@@ -123,6 +128,35 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         purchaseOrder.setStatus(PurchaseOrderStatusEnums.CANCELED.getCode());
 
         baseMapper.updateById(purchaseOrder);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePurchaseOrderStatus(String purchaseId) {
+
+        List<PurchaseInstockedQtyDTO> instockedList = purchaseInService.listInstockedQty(purchaseId);
+        if (CollUtil.isEmpty(instockedList)) {
+            return;
+        }
+
+        List<PurchaseOrderItemDO> orderItemList = purchaseOrderItemService.listOrderItemList(purchaseId);
+
+        int totalPurchaseQty = orderItemList.stream().mapToInt(PurchaseOrderItemDO::getQty).sum();
+        int totalInstockedQty = instockedList.stream().mapToInt(PurchaseInstockedQtyDTO::getQty).sum();
+
+        PurchaseOrderStatusEnums status;
+        if (totalInstockedQty >= totalPurchaseQty) {
+            status = PurchaseOrderStatusEnums.FINISHED;
+        } else if (totalInstockedQty > 0) {
+            status = PurchaseOrderStatusEnums.PART_IN;
+        } else {
+            status = PurchaseOrderStatusEnums.WAIT_IN;
+        }
+
+        PurchaseOrderDO updateDO = new PurchaseOrderDO();
+        updateDO.setId(purchaseId);
+        updateDO.setStatus(status.getCode());
+        baseMapper.updateById(updateDO);
     }
 
     /**

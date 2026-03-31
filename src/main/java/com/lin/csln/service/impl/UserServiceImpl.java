@@ -1,5 +1,6 @@
 package com.lin.csln.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,7 +14,7 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -80,6 +81,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         return userInfoDTO;
+    }
+
+    @Override
+    public Map<String, String> getUserNamesByIds(Set<String> userIds) {
+        if (CollUtil.isEmpty(userIds)) {
+            return new HashMap<>();
+        }
+
+        LambdaQueryWrapper<UserDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(UserDO::getId, userIds);
+        wrapper.select(UserDO::getId, UserDO::getRealName);
+
+        List<UserDO> userList = baseMapper.selectList(wrapper);
+
+        // 转成 id -> realName
+        return userList.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(
+                        UserDO::getId,
+                        UserDO::getRealName,
+                        (oldValue, newValue) -> oldValue
+                ));
     }
 
 }

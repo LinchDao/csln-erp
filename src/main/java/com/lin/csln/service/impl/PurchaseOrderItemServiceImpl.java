@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.csln.common.exception.BusinessException;
-import com.lin.csln.dto.purchase.PurchaseOrderItemDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderItemDTO;
 import com.lin.csln.entity.PurchaseOrderItemDO;
 import com.lin.csln.enums.GlobalEnums;
 import com.lin.csln.mapper.PurchaseOrderItemMapper;
@@ -93,5 +93,13 @@ public class PurchaseOrderItemServiceImpl extends ServiceImpl<PurchaseOrderItemM
     public List<PurchaseOrderItemDTO> listPurchaseOrderItemSku(String purchaseId) {
         List<PurchaseOrderItemDTO> itemList = baseMapper.listPurchaseOrderItemSku(purchaseId);
         return itemList;
+    }
+
+    @Override
+    public List<PurchaseOrderItemDO> listOrderItemList(String purchaseId) {
+        LambdaQueryWrapper<PurchaseOrderItemDO> itemQuery = new LambdaQueryWrapper<>();
+        itemQuery.eq(PurchaseOrderItemDO::getPurchaseId, purchaseId);
+        itemQuery.eq(PurchaseOrderItemDO::getIsDelete, GlobalEnums.NO.getCode());
+        return baseMapper.selectList(itemQuery);
     }
 }

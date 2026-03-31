@@ -12,7 +12,7 @@
         <result column="amount" property="amount"/>
     </resultMap>
 
-    <select id="listPurchaseOrderItemSku" resultType="com.lin.csln.dto.purchase.PurchaseOrderItemDTO">
+    <select id="listPurchaseOrderItemSku" resultType="com.lin.csln.dto.purchase.order.PurchaseOrderItemDTO">
         SELECT poi.id,
                poi.purchase_id AS purchaseId,
                poi.sku_id      AS skuId,

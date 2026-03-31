@@ -1,11 +1,15 @@
 package com.lin.csln.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
 import java.util.Date;
 
 /**
  * 采购入库单 实体类
+ *
  * @author 系统生成器
  */
 @Data
@@ -27,11 +31,6 @@ public class PurchaseInDO {
      * 来源采购单
      */
     private String purchaseId;
-
-    /**
-     * 供应商ID
-     */
-    private String supplierId;
 
     /**
      * 入库仓库
@@ -57,5 +56,8 @@ public class PurchaseInDO {
      * 备注
      */
     private String remark;
+
+    private String auditUserId;
+    private Integer totalQty;
 
 }

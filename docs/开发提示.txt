@@ -1,0 +1,185 @@
+1、分页参数继承类
+@Data
+@Schema(name = "PageQueryParamDTO", description = "分页查询DTO")
+public class PageQueryParamDTO {
+    @Schema(description = "页码（默认1）")
+    private Integer page = 1;
+
+    @Schema(description = "页码（默认10）")
+    private Integer limit = 10;
+}
+2、前后端交互都用DTO，如分页结果为XXXPageRespDTO，参数为XXXQueryDTO
+3、分页结果用
+public class PageRespDTO<T> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "总记录数", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "总记录数不能为空")
+    private long total;
+
+    @Schema(description = "当前页数据列表", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "数据列表不能为空")
+    private List<T> rows;
+
+    @Schema(description = "每页条数", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Integer limit;
+
+    @Schema(description = "当前页码", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Integer page;
+
+    @Schema(description = "总页数", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Long totalPages;
+
+    public static <T> PageRespDTO<T> of(long total, List<T> rows, int page, int limit) {
+        PageRespDTO<T> pageResp = new PageRespDTO<>();
+        pageResp.setTotal(total);
+        pageResp.setRows(rows);
+        pageResp.setLimit(limit);
+        pageResp.setPage(page);
+        pageResp.setTotalPages(total % limit == 0 ? total / limit : total / limit + 1);
+        return pageResp;
+    }
+
+    public static <T, P extends PageQueryParamDTO> PageRespDTO<T> build(IPage<T> resultPage, P queryDTO) {
+        PageRespDTO<T> pageResp = new PageRespDTO<>();
+        pageResp.setTotal(resultPage.getTotal());
+        pageResp.setRows(resultPage.getRecords());
+        pageResp.setPage(queryDTO.getPage());
+        pageResp.setLimit(queryDTO.getLimit());
+        pageResp.setTotalPages(resultPage.getTotal() % queryDTO.getLimit() == 0
+                ? resultPage.getTotal() / queryDTO.getLimit() : resultPage.getTotal() / queryDTO.getLimit() + 1);
+        return pageResp;
+
+    }
+4、已定义统一返回类
+@Data
+@Schema(name = "Result", description = "通用返回结果")
+public class Result<T> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 状态码
+     */
+    @Schema(description = "状态码")
+    private int code;
+
+    /**
+     * 提示信息
+     */
+    @Schema(description = "提示信息")
+    private String message;
+
+    /**
+     * 响应数据
+     */
+    @Schema(description = "响应数据")
+    private T data;
+
+    /**
+     * 响应时间戳（格式：yyyy-MM-dd HH:mm:ss）
+     */
+    @Schema(description = "响应时间戳")
+    private String timestamp;
+
+    // 私有化构造方法，通过静态方法创建
+    private Result() {
+        this.timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    private Result(int code, String message, T data) {
+        this();
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
+    // ========== 静态构建方法 ==========
+
+    /**
+     * 成功（无数据）
+     */
+    public static <T> Result<T> success() {
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+    }
+
+    /**
+     * 成功（带数据）
+     */
+    public static <T> Result<T> success(T data) {
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+    }
+
+    /**
+     * 成功（自定义提示信息+数据）
+     */
+    public static <T> Result<T> success(String message, T data) {
+        return new Result<>(ResultCode.SUCCESS.getCode(), message, data);
+    }
+
+    /**
+     * 失败（使用默认失败状态码）
+     */
+    public static <T> Result<T> fail() {
+        return new Result<>(ResultCode.FAIL.getCode(), ResultCode.FAIL.getMessage(), null);
+    }
+
+    /**
+     * 失败（自定义提示信息）
+     */
+    public static <T> Result<T> fail(String message) {
+        return new Result<>(ResultCode.FAIL.getCode(), message, null);
+    }
+
+    /**
+     * 失败（自定义状态码+提示信息）
+     */
+    public static <T> Result<T> fail(int code, String message) {
+        return new Result<>(code, message, null);
+    }
+
+    /**
+     * 失败（使用枚举状态码）
+     */
+    public static <T> Result<T> fail(ResultCode resultCode) {
+        return new Result<>(resultCode.getCode(), resultCode.getMessage(), null);
+    }
+
+    /**
+     * 失败（使用枚举状态码+自定义提示）
+     */
+    public static <T> Result<T> fail(ResultCode resultCode, String message) {
+        return new Result<>(resultCode.getCode(), message, null);
+    }
+}
+5、已定义异常
+public class BusinessException extends RuntimeException {
+
+    private int code;
+
+    public int getCode() {
+        return code;
+    }
+
+    public BusinessException(ResultCode resultCode) {
+        super(resultCode.getMessage());
+        this.code = resultCode.getCode();
+    }
+
+    public BusinessException(int code, String message) {
+        super(message);
+        this.code = code;
+    }
+
+    public BusinessException(String message) {
+        super(message);
+        int code = ResultCode.FAIL.getCode();
+    }
+
+    public BusinessException(ResultCode resultCode, String message) {
+        super(message);
+        this.code = resultCode.getCode();
+    }
+}
+需要拓展的话要给出来

@@ -2,9 +2,9 @@ package com.lin.csln.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lin.csln.dto.purchase.PurchaseOrderDTO;
-import com.lin.csln.dto.purchase.PurchaseOrderPageRespDTO;
-import com.lin.csln.dto.purchase.PurchaseOrderQueryParamDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderPageRespDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderQueryParamDTO;
 import com.lin.csln.entity.PurchaseOrderDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

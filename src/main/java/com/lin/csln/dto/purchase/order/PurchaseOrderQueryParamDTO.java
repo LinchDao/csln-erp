@@ -1,4 +1,4 @@
-package com.lin.csln.dto.purchase;
+package com.lin.csln.dto.purchase.order;
 
 
 import com.lin.csln.common.dto.PageQueryParamDTO;

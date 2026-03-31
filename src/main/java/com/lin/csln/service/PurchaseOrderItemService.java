@@ -1,7 +1,7 @@
 package com.lin.csln.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lin.csln.dto.purchase.PurchaseOrderItemDTO;
+import com.lin.csln.dto.purchase.order.PurchaseOrderItemDTO;
 import com.lin.csln.entity.PurchaseOrderItemDO;
 
 import java.util.List;
@@ -16,4 +16,6 @@ public interface PurchaseOrderItemService extends IService<PurchaseOrderItemDO> 
     void savePurchaseOrderItem(String orderId, List<PurchaseOrderItemDTO> purchaseOrderItem);
 
     List<PurchaseOrderItemDTO> listPurchaseOrderItemSku(String purchaseId);
+
+    List<PurchaseOrderItemDO> listOrderItemList(String purchaseId);
 }

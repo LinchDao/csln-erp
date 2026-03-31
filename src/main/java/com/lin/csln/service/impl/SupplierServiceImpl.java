@@ -2,8 +2,8 @@ package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lin.csln.dto.purchase.SupplierDTO;
-import com.lin.csln.dto.purchase.SupplierQueryDTO;
+import com.lin.csln.dto.purchase.order.SupplierDTO;
+import com.lin.csln.dto.purchase.order.SupplierQueryDTO;
 import com.lin.csln.entity.SupplierDO;
 import com.lin.csln.enums.GlobalEnums;
 import com.lin.csln.mapper.SupplierMapper;
