@@ -65,11 +65,10 @@ public class LoginController {
         return Result.success("登录成功", token);
     }
 
-    // 示例：无数据成功返回
     @PostMapping("/logout")
-    @Operation(summary = "退出登录", description = "清空Token")
+    @Operation(summary = "退出登录", description = "通知客户端清理本地Token；服务端不做Token吊销")
     public Result<String> logout() {
-        // 业务逻辑：清空Token等
+        // 当前系统使用无状态JWT，登出由客户端删除本地token实现
         return Result.success("退出登录成功");
     }
 }
