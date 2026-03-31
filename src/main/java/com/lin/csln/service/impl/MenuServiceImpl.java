@@ -1,7 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.dto.sys.menu.MenuDTO;
 import com.lin.csln.entity.MenuDO;
 import com.lin.csln.mapper.MenuMapper;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
-public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements MenuService {
+public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO> implements MenuService {
 
     @Override
     public List<MenuDTO> treeMenuByRoleCode(List<String> roles) {

@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.product.*;
@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
-@Transactional(readOnly = true)
-public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> implements ProductService {
+public class ProductServiceImpl extends BaseReadonlyServiceImpl<ProductMapper, ProductDO> implements ProductService {
 
     @Resource
     private ProductColorImageService productColorImageService;
@@ -78,6 +77,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteProduct(String id, String userId) {
         return false;
     }

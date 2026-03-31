@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.lin.csln.entity.UserRoleDO;
 import com.lin.csln.mapper.UserRoleMapper;
 import com.lin.csln.service.UserRoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @author 系统生成器
  */
 @Service
-public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRoleDO> implements UserRoleService {
+public class UserRoleServiceImpl extends BaseReadonlyServiceImpl<UserRoleMapper, UserRoleDO> implements UserRoleService {
 
 }

@@ -1,6 +1,6 @@
 package com.lin.csln.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.entity.RoleDO;
 import com.lin.csln.mapper.RoleMapper;
 import com.lin.csln.service.RoleService;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author 系统生成器
  */
 @Service
-public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements RoleService {
+public class RoleServiceImpl extends BaseReadonlyServiceImpl<RoleMapper, RoleDO> implements RoleService {
 
     @Override
     public List<RoleDO> listRolesByUserId(String userId) {

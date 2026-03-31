@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.lin.csln.entity.OrderReplaceDetailDO;
 import com.lin.csln.mapper.OrderReplaceDetailMapper;
 import com.lin.csln.service.OrderReplaceDetailService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @author 系统生成器
  */
 @Service
-public class OrderReplaceDetailServiceImpl extends ServiceImpl<OrderReplaceDetailMapper, OrderReplaceDetailDO> implements OrderReplaceDetailService {
+public class OrderReplaceDetailServiceImpl extends BaseReadonlyServiceImpl<OrderReplaceDetailMapper, OrderReplaceDetailDO> implements OrderReplaceDetailService {
 
 }

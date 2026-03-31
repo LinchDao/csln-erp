@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.lin.csln.entity.FileBusinessRelDO;
 import com.lin.csln.mapper.FileBusinessRelMapper;
 import com.lin.csln.service.FileBusinessRelService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @author 系统生成器
  */
 @Service
-public class FileBusinessRelServiceImpl extends ServiceImpl<FileBusinessRelMapper, FileBusinessRelDO> implements FileBusinessRelService {
+public class FileBusinessRelServiceImpl extends BaseReadonlyServiceImpl<FileBusinessRelMapper, FileBusinessRelDO> implements FileBusinessRelService {
 
 }

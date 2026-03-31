@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.lin.csln.entity.AfterSaleItemDO;
 import com.lin.csln.mapper.AfterSaleItemMapper;
 import com.lin.csln.service.AfterSaleItemService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @author 系统生成器
  */
 @Service
-public class AfterSaleItemServiceImpl extends ServiceImpl<AfterSaleItemMapper, AfterSaleItemDO> implements AfterSaleItemService {
+public class AfterSaleItemServiceImpl extends BaseReadonlyServiceImpl<AfterSaleItemMapper, AfterSaleItemDO> implements AfterSaleItemService {
 
 }

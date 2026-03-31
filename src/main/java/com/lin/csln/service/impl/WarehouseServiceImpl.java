@@ -1,7 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.dto.stock.warehouse.WarehouseListDTO;
 import com.lin.csln.entity.WarehouseDO;
 import com.lin.csln.enums.GlobalEnums;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
-public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, WarehouseDO> implements WarehouseService {
+public class WarehouseServiceImpl extends BaseReadonlyServiceImpl<WarehouseMapper, WarehouseDO> implements WarehouseService {
 
     @Override
     public List<WarehouseListDTO> listWarehouseForSelect() {

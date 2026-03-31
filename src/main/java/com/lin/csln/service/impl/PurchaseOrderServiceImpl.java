@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.purchase.in.PurchaseInstockedQtyDTO;
@@ -37,8 +37,7 @@ import java.util.Objects;
  * @author 系统生成器
  */
 @Service
-@Transactional(readOnly = true)
-public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, PurchaseOrderDO> implements PurchaseOrderService {
+public class PurchaseOrderServiceImpl extends BaseReadonlyServiceImpl<PurchaseOrderMapper, PurchaseOrderDO> implements PurchaseOrderService {
 
     @Resource
     private PurchaseOrderItemService purchaseOrderItemService;

@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.purchase.in.PurchaseInDTO;
@@ -46,8 +45,7 @@ import java.util.stream.Stream;
  * 采购入库单服务实现类
  */
 @Service
-@Transactional(readOnly = true)
-public class PurchaseInServiceImpl extends ServiceImpl<PurchaseInMapper, PurchaseInDO> implements PurchaseInService {
+public class PurchaseInServiceImpl extends BaseReadonlyServiceImpl<PurchaseInMapper, PurchaseInDO> implements PurchaseInService {
 
     private static final String IN_CONNECT = "-IN-";
 

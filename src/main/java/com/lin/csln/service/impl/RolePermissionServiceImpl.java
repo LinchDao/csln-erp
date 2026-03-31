@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.lin.csln.entity.RolePermissionDO;
 import com.lin.csln.mapper.RolePermissionMapper;
 import com.lin.csln.service.RolePermissionService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @author 系统生成器
  */
 @Service
-public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper, RolePermissionDO> implements RolePermissionService {
+public class RolePermissionServiceImpl extends BaseReadonlyServiceImpl<RolePermissionMapper, RolePermissionDO> implements RolePermissionService {
 
 }

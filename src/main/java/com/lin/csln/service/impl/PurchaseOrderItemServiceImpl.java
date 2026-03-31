@@ -2,7 +2,7 @@ package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.purchase.order.PurchaseOrderItemDTO;
 import com.lin.csln.entity.PurchaseOrderItemDO;
@@ -26,8 +26,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
-@Transactional(readOnly = true)
-public class PurchaseOrderItemServiceImpl extends ServiceImpl<PurchaseOrderItemMapper, PurchaseOrderItemDO> implements PurchaseOrderItemService {
+public class PurchaseOrderItemServiceImpl extends BaseReadonlyServiceImpl<PurchaseOrderItemMapper, PurchaseOrderItemDO> implements PurchaseOrderItemService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)

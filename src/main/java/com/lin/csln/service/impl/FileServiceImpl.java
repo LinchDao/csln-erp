@@ -1,6 +1,6 @@
 package com.lin.csln.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.entity.FileDO;
 import com.lin.csln.mapper.FileMapper;
 import com.lin.csln.service.FileService;
@@ -15,8 +15,7 @@ import java.util.Date;
  * @author 系统生成器
  */
 @Service
-@Transactional(readOnly = true)
-public class FileServiceImpl extends ServiceImpl<FileMapper, FileDO> implements FileService {
+public class FileServiceImpl extends BaseReadonlyServiceImpl<FileMapper, FileDO> implements FileService {
 
 
     @Override

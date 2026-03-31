@@ -1,7 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.dto.product.ProductSkuListDTO;
 import com.lin.csln.dto.product.ProductColorDTO;
 import com.lin.csln.dto.product.ProductSkuDTO;
@@ -11,6 +11,7 @@ import com.lin.csln.mapper.ProductSkuMapper;
 import com.lin.csln.service.ProductSkuService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
-public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, ProductSkuDO> implements ProductSkuService {
+public class ProductSkuServiceImpl extends BaseReadonlyServiceImpl<ProductSkuMapper, ProductSkuDO> implements ProductSkuService {
 
     @Override
     public List<ProductSkuDTO> listSkuWithStockByProductId(String productId) {
@@ -30,6 +31,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveProductSku(String productId, List<ProductColorDTO> colorList, List<String> sizeNameList) {
         LambdaQueryWrapper<ProductSkuDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ProductSkuDO::getProductId, productId);

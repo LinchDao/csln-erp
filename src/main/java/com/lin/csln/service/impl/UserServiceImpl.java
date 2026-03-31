@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.entity.RoleDO;
 import com.lin.csln.entity.UserDO;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
+public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO> implements UserService {
 
     @Resource
     private RoleService roleService;

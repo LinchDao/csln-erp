@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.lin.csln.entity.StockTransferItemDO;
 import com.lin.csln.mapper.StockTransferItemMapper;
 import com.lin.csln.service.StockTransferItemService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @author 系统生成器
  */
 @Service
-public class StockTransferItemServiceImpl extends ServiceImpl<StockTransferItemMapper, StockTransferItemDO> implements StockTransferItemService {
+public class StockTransferItemServiceImpl extends BaseReadonlyServiceImpl<StockTransferItemMapper, StockTransferItemDO> implements StockTransferItemService {
 
 }

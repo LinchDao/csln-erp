@@ -3,7 +3,7 @@ package com.lin.csln.service.impl;
 import com.lin.csln.entity.RoleMenuDO;
 import com.lin.csln.mapper.RoleMenuMapper;
 import com.lin.csln.service.RoleMenuService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @author 系统生成器
  */
 @Service
-public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenuDO> implements RoleMenuService {
+public class RoleMenuServiceImpl extends BaseReadonlyServiceImpl<RoleMenuMapper, RoleMenuDO> implements RoleMenuService {
 
 }

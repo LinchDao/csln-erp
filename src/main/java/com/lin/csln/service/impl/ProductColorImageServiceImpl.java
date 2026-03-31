@@ -2,7 +2,7 @@ package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.dto.product.ProductColorDTO;
 import com.lin.csln.dto.product.ProductColorImageDTO;
 import com.lin.csln.entity.ProductColorImageDO;
@@ -11,6 +11,7 @@ import com.lin.csln.mapper.ProductColorImageMapper;
 import com.lin.csln.service.ProductColorImageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
-public class ProductColorImageServiceImpl extends ServiceImpl<ProductColorImageMapper, ProductColorImageDO> implements ProductColorImageService {
+public class ProductColorImageServiceImpl extends BaseReadonlyServiceImpl<ProductColorImageMapper, ProductColorImageDO> implements ProductColorImageService {
 
     @Override
     public List<ProductColorImageDTO> listProductColorImage(String productId) {
@@ -39,6 +40,7 @@ public class ProductColorImageServiceImpl extends ServiceImpl<ProductColorImageM
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveProductColorImage(String productId, List<ProductColorDTO> colorList) {
         LambdaQueryWrapper<ProductColorImageDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ProductColorImageDO::getProductId, productId);

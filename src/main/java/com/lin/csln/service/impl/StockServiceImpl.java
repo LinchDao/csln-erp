@@ -1,7 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.entity.PurchaseInItemDO;
 import com.lin.csln.entity.StockDO;
 import com.lin.csln.mapper.StockMapper;
@@ -19,8 +19,7 @@ import java.util.List;
  * @author 系统生成器
  */
 @Service
-@Transactional(readOnly = true)
-public class StockServiceImpl extends ServiceImpl<StockMapper, StockDO> implements StockService {
+public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, StockDO> implements StockService {
 
     @Resource
     private PurchaseInItemService purchaseInItemService;
