@@ -23,19 +23,14 @@ INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect,
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000023', '00000000000000000000000000000022', 2, '入库单管理', 'in/page', 'views/purchase/in/page', null, null, '入库单管理', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-27 15:39:41', '2026-03-31 05:32:40', 0);
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000024', '00000000000000000000000000000022', 2, '创建入库单', 'in/create/:id', 'views/purchase/in/form', null, null, '创建入库单', null, 0, 1, 0, 1, 0, 2, 1, '2026-03-27 15:39:41', '2026-03-31 05:32:40', 0);
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000025', '00000000000000000000000000000022', 2, '入库单详情', 'in/detail/:id', 'views/purchase/in/detail', null, null, '入库单详情', null, 0, 1, 0, 1, 0, 3, 1, '2026-03-27 15:39:41', '2026-03-31 05:32:40', 0);
--- ====================== 商店管理（一级菜单） ======================
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
 VALUES ('00000000000000000000000000000026', NULL, 1, 'Shop', '/shop', 'Layout', '/shop/order', NULL, '商店管理', NULL, 0, 1, 0, 0, 0, 6, 1, NOW(), NOW(), 0);
--- ====================== 子菜单：订单查询 ======================
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
 VALUES ('00000000000000000000000000000027', '00000000000000000000000000000026', 2, 'OrderList', 'order', 'views/shop/order/list', NULL, NULL, '订单查询', NULL, 0, 1, 0, 0, 0, 1, 1, NOW(), NOW(), 0);
--- ====================== 子菜单：新建订单 ======================
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
 VALUES ('00000000000000000000000000000028', '00000000000000000000000000000026', 2, 'OrderCreate', 'order/create', 'views/shop/order/form', NULL, NULL, '新建订单', NULL, 0, 1, 0, 1, 0, 2, 1, NOW(), NOW(), 0);
--- ====================== 子菜单：订单编辑 ======================
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
 VALUES ('00000000000000000000000000000029', '00000000000000000000000000000026', 2, 'OrderEdit', 'order/edit/:id', 'views/shop/order/form', NULL, NULL, '订单编辑', NULL, 0, 1, 0, 1, 0, 3, 1, NOW(), NOW(), 0);
--- ====================== 子菜单：订单详情 ======================
 INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
 VALUES ('00000000000000000000000000000030', '00000000000000000000000000000026', 2, 'OrderDetail', 'order/detail/:id', 'views/shop/order/detail', NULL, NULL, '订单详情', NULL, 0, 1, 0, 1, 0, 4, 1, NOW(), NOW(), 0);
 
@@ -65,18 +60,32 @@ INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('000000000
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000023', '00000000000000000000000000000001', '00000000000000000000000000000023', '2026-03-27 22:35:40');
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000024', '00000000000000000000000000000001', '00000000000000000000000000000024', '2026-03-27 22:35:40');
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000025', '00000000000000000000000000000001', '00000000000000000000000000000025', '2026-03-27 22:35:40');
--- 关联商店管理一级菜单
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
 VALUES ('00000000000000000000000000000026', '00000000000000000000000000000001', '00000000000000000000000000000026', NOW());
--- 关联订单查询
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
 VALUES ('00000000000000000000000000000027', '00000000000000000000000000000001', '00000000000000000000000000000027', NOW());
--- 关联新建订单
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
 VALUES ('00000000000000000000000000000028', '00000000000000000000000000000001', '00000000000000000000000000000028', NOW());
--- 关联订单编辑
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
 VALUES ('00000000000000000000000000000029', '00000000000000000000000000000001', '00000000000000000000000000000029', NOW());
--- 关联订单详情
 INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
 VALUES ('00000000000000000000000000000030', '00000000000000000000000000000001', '00000000000000000000000000000030', NOW());
+
+
+
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000031', NULL, 1, 'Template', '/template', 'Layout', '/template/list', NULL, '模板管理', NULL, 0, 1, 0, 0, 0, 7, 1, NOW(), NOW(), 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000032', '00000000000000000000000000000031', 2, 'TemplateList', 'list', 'views/template/index', NULL, NULL, '分页查询', NULL, 0, 1, 0, 0, 0, 1, 1, NOW(), NOW(), 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000033', '00000000000000000000000000000031', 2, 'TemplateForm', 'form', 'views/template/form', NULL, NULL, '表单页面', NULL, 0, 1, 0, 0, 0, 2, 1, NOW(), NOW(), 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000034', '00000000000000000000000000000031', 2, 'TemplateDetail', 'detail', 'views/template/detail', NULL, NULL, '详情页面', NULL, 0, 1, 0, 0, 0, 3, 1, NOW(), NOW(), 0);
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000031', '00000000000000000000000000000001', '00000000000000000000000000000031', NOW());
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000032', '00000000000000000000000000000001', '00000000000000000000000000000032', NOW());
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000033', '00000000000000000000000000000001', '00000000000000000000000000000033', NOW());
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000034', '00000000000000000000000000000001', '00000000000000000000000000000034', NOW());
