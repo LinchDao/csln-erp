@@ -1,50 +1,82 @@
-INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000009', '00000000000000000000000000000000', 1, '商品管理', '/product', 'Layout', '/product/page', null, '商品管理', null, 0, 1, 0, 0, 0, 2, 1, '2026-03-10 16:25:19', '2026-03-10 16:25:22', 0);
-INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000010', '00000000000000000000000000000009', 2, '商品列表', 'page', 'views/product', null, null, '商品管理', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-10 16:26:55', '2026-03-10 16:26:57', 0);
-INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000011', '00000000000000000000000000000009', 2, '商品新增', 'create', 'views/product/form', null, null, '商品新增', null, 0, 1, 0, 1, 0, 2, 1, '2026-03-10 16:27:00', '2026-03-10 16:27:00', 0);
-INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000012', '00000000000000000000000000000009', 2, '商品修改', 'edit/:id', 'views/product/form', null, null, '商品修改', null, 0, 1, 0, 1, 0, 3, 1, '2026-03-10 16:27:00', '2026-03-10 16:27:00', 0);
-INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect,
-                      permission, title, icon, no_cache, breadcrumb, affix, hidden,
-                      always_show, sort, status, create_time, update_time, is_delete)
-VALUES ('00000000000000000000000000000013',
-        '0',
-        0,
-        '系统管理',
-        '/system',
-        'Layout',
-        NULL,
-        NULL,
-        '系统管理',
-        'system',
-        0, 1, 0, 0, 1,
-        99, 1, NOW(), NOW(), 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000001', null, 1, 'Nested', '/nested', 'Layout', '/nested/menu1/menu1-1', null, 'Nested', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-09 13:31:18', '2026-03-26 16:17:12', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000002', '00000000000000000000000000000001', 1, 'Menu1', 'menu1', 'views/nested/menu1/index', '/nested/menu1/menu1-1', null, 'Menu1', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-09 13:31:18', '2026-03-09 13:31:18', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000003', '00000000000000000000000000000002', 2, 'Menu1-1', 'menu1-1', 'views/nested/menu1/menu1-1', null, null, 'Menu1-1', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-09 13:31:18', '2026-03-09 13:31:18', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000004', '00000000000000000000000000000002', 1, 'Menu1-2', 'menu1-2', 'views/nested/menu1/menu1-2', '/nested/menu1/menu1-2/menu1-2-1', null, 'Menu1-2', null, 0, 1, 0, 0, 0, 2, 1, '2026-03-09 13:31:18', '2026-03-09 13:31:18', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000005', '00000000000000000000000000000004', 2, 'Menu1-2-1', 'menu1-2-1', 'views/nested/menu1/menu1-2/menu1-2-1', null, null, 'Menu1-2-1', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-09 13:31:18', '2026-03-09 13:31:18', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000006', '00000000000000000000000000000004', 2, 'Menu1-2-2', 'menu1-2-2', 'views/nested/menu1/menu1-2/menu1-2-2', null, null, 'Menu1-2-2', null, 0, 1, 0, 0, 0, 2, 1, '2026-03-09 13:31:18', '2026-03-09 13:31:18', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000007', '00000000000000000000000000000002', 2, 'Menu1-3', 'menu1-3', 'views/nested/menu1/menu1-3', null, null, 'Menu1-3', null, 0, 1, 0, 0, 0, 3, 1, '2026-03-09 13:31:18', '2026-03-09 13:31:18', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000008', '00000000000000000000000000000001', 2, 'Menu2', 'menu2', 'views/nested/menu2/index', null, null, 'Menu2', null, 0, 1, 0, 0, 0, 2, 1, '2026-03-09 13:31:18', '2026-03-09 13:31:18', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000009', null, 1, '商品管理', '/product', 'Layout', '/product/page', null, '商品管理', null, 0, 1, 0, 0, 0, 2, 1, '2026-03-10 16:25:19', '2026-03-26 16:17:12', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000010', '00000000000000000000000000000009', 2, '商品列表', 'page', 'views/product/page', null, null, '商品管理', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-10 16:26:55', '2026-03-16 18:20:40', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000011', '00000000000000000000000000000009', 2, '商品新增', 'create', 'views/product/form', null, null, '商品新增', null, 0, 1, 0, 1, 0, 2, 1, '2026-03-10 16:27:00', '2026-03-24 20:39:09', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000012', '00000000000000000000000000000009', 2, '商品修改', 'edit/:id', 'views/product/form', null, null, '商品修改', null, 0, 1, 0, 1, 0, 3, 1, '2026-03-10 16:27:00', '2026-03-24 20:39:09', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000013', null, 0, '系统管理', '/system', 'Layout', '/system/user', null, '系统管理', null, 0, 1, 0, 0, 1, 3, 1, '2026-03-25 18:36:37', '2026-03-26 16:17:12', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000014', '00000000000000000000000000000013', 2, '用户管理', 'user', 'views/system/user', null, null, '用户管理', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-25 18:36:37', '2026-03-25 18:46:07', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000015', '00000000000000000000000000000013', 2, '数据字典', 'dict', 'views/sys/dict/page', null, null, '数据字典', null, 0, 1, 0, 0, 0, 2, 1, '2026-03-25 18:36:37', '2026-03-25 18:51:46', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000016', '00000000000000000000000000000009', 2, '商品详情', 'detail/:id', 'views/product/detail', null, null, '商品详情', null, 0, 1, 0, 1, 0, 4, 1, '2026-03-27 03:15:37', '2026-03-27 03:15:37', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000017', null, 1, '采购管理', '/purchase', 'Layout', '/purchase/order/page', null, '采购管理', null, 0, 1, 0, 0, 0, 4, 1, '2026-03-27 15:38:25', '2026-03-31 05:12:35', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000018', '00000000000000000000000000000017', 2, '采购单管理', 'order/page', 'views/purchase/order/page', null, null, '采购单管理', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-27 15:39:41', '2026-03-27 22:35:23', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000019', '00000000000000000000000000000017', 2, '新增采购单', 'order/create', 'views/purchase/order/form', null, null, '新增采购单', null, 0, 1, 0, 1, 0, 2, 1, '2026-03-27 15:39:41', '2026-03-27 22:39:48', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000020', '00000000000000000000000000000017', 2, '修改采购单', 'order/edit/:id', 'views/purchase/order/form', null, null, '修改采购单', null, 0, 1, 0, 1, 0, 3, 1, '2026-03-27 15:39:41', '2026-03-30 03:35:35', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000021', '00000000000000000000000000000017', 2, '采购单详情', 'order/detail/:id', 'views/purchase/order/detail', null, null, '采购单详情', null, 0, 1, 0, 1, 0, 4, 1, '2026-03-27 15:39:41', '2026-03-30 03:35:35', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000022', null, 1, '仓库管理', '/stock', 'Layout', null, null, '仓库管理', null, 0, 1, 0, 0, 0, 5, 1, '2026-03-27 15:39:41', '2026-03-30 03:35:35', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000023', '00000000000000000000000000000022', 2, '入库单管理', 'in/page', 'views/purchase/in/page', null, null, '入库单管理', null, 0, 1, 0, 0, 0, 1, 1, '2026-03-27 15:39:41', '2026-03-31 05:32:40', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000024', '00000000000000000000000000000022', 2, '创建入库单', 'in/create/:id', 'views/purchase/in/form', null, null, '创建入库单', null, 0, 1, 0, 1, 0, 2, 1, '2026-03-27 15:39:41', '2026-03-31 05:32:40', 0);
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete) VALUES ('00000000000000000000000000000025', '00000000000000000000000000000022', 2, '入库单详情', 'in/detail/:id', 'views/purchase/in/detail', null, null, '入库单详情', null, 0, 1, 0, 1, 0, 3, 1, '2026-03-27 15:39:41', '2026-03-31 05:32:40', 0);
+-- ====================== 商店管理（一级菜单） ======================
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000026', NULL, 1, 'Shop', '/shop', 'Layout', '/shop/order', NULL, '商店管理', NULL, 0, 1, 0, 0, 0, 6, 1, NOW(), NOW(), 0);
+-- ====================== 子菜单：订单查询 ======================
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000027', '00000000000000000000000000000026', 2, 'OrderList', 'order', 'views/shop/order/list', NULL, NULL, '订单查询', NULL, 0, 1, 0, 0, 0, 1, 1, NOW(), NOW(), 0);
+-- ====================== 子菜单：新建订单 ======================
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000028', '00000000000000000000000000000026', 2, 'OrderCreate', 'order/create', 'views/shop/order/form', NULL, NULL, '新建订单', NULL, 0, 1, 0, 1, 0, 2, 1, NOW(), NOW(), 0);
+-- ====================== 子菜单：订单编辑 ======================
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000029', '00000000000000000000000000000026', 2, 'OrderEdit', 'order/edit/:id', 'views/shop/order/form', NULL, NULL, '订单编辑', NULL, 0, 1, 0, 1, 0, 3, 1, NOW(), NOW(), 0);
+-- ====================== 子菜单：订单详情 ======================
+INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect, permission, title, icon, no_cache, breadcrumb, affix, hidden, always_show, sort, status, create_time, update_time, is_delete)
+VALUES ('00000000000000000000000000000030', '00000000000000000000000000000026', 2, 'OrderDetail', 'order/detail/:id', 'views/shop/order/detail', NULL, NULL, '订单详情', NULL, 0, 1, 0, 1, 0, 4, 1, NOW(), NOW(), 0);
 
-INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect,
-                      permission, title, icon, no_cache, breadcrumb, affix, hidden,
-                      always_show, sort, status, create_time, update_time, is_delete)
-VALUES ('00000000000000000000000000000014',
-        '00000000000000000000000000000013',
-        2,
-        '用户管理',
-        'user',
-        'views/system/user',
-        NULL,
-        NULL,
-        '用户管理',
-        'user',
-        0, 1, 0, 0, 0,
-        1, 1, NOW(), NOW(), 0);
-INSERT INTO sys_menu (id, parent_id, menu_type, name, path, component, redirect,
-                      permission, title, icon, no_cache, breadcrumb, affix, hidden,
-                      always_show, sort, status, create_time, update_time, is_delete)
-VALUES ('00000000000000000000000000000015',
-        '00000000000000000000000000000013',
-        2,
-        '数据字典',
-        'dict',
-        'views/system/dict',
-        NULL,
-        NULL,
-        '数据字典',
-        'dict',
-        0, 1, 0, 0, 0,
-        2, 1, NOW(), NOW(), 0);
+
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000001', '00000000000000000000000000000001', '00000000000000000000000000000001', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000002', '00000000000000000000000000000001', '00000000000000000000000000000002', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000003', '00000000000000000000000000000001', '00000000000000000000000000000003', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000004', '00000000000000000000000000000001', '00000000000000000000000000000004', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000005', '00000000000000000000000000000001', '00000000000000000000000000000005', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000006', '00000000000000000000000000000001', '00000000000000000000000000000006', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000007', '00000000000000000000000000000001', '00000000000000000000000000000007', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000008', '00000000000000000000000000000001', '00000000000000000000000000000008', '2026-03-09 13:31:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000009', '00000000000000000000000000000001', '00000000000000000000000000000009', '2026-03-10 16:28:20');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000010', '00000000000000000000000000000001', '00000000000000000000000000000010', '2026-03-10 16:28:19');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000011', '00000000000000000000000000000001', '00000000000000000000000000000011', '2026-03-16 17:47:27');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000012', '00000000000000000000000000000001', '00000000000000000000000000000012', '2026-03-16 17:47:29');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000013', '00000000000000000000000000000001', '00000000000000000000000000000013', '2026-03-25 18:40:18');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000014', '00000000000000000000000000000001', '00000000000000000000000000000014', '2026-03-25 18:40:22');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000015', '00000000000000000000000000000001', '00000000000000000000000000000015', '2026-03-25 18:40:21');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000016', '00000000000000000000000000000001', '00000000000000000000000000000016', '2026-03-27 03:15:54');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000017', '00000000000000000000000000000001', '00000000000000000000000000000017', '2026-03-27 15:40:14');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000018', '00000000000000000000000000000001', '00000000000000000000000000000018', '2026-03-27 15:40:14');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000019', '00000000000000000000000000000001', '00000000000000000000000000000019', '2026-03-27 22:35:40');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000020', '00000000000000000000000000000001', '00000000000000000000000000000020', '2026-03-27 22:35:40');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000021', '00000000000000000000000000000001', '00000000000000000000000000000021', '2026-03-27 22:35:40');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000022', '00000000000000000000000000000001', '00000000000000000000000000000022', '2026-03-27 22:35:40');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000023', '00000000000000000000000000000001', '00000000000000000000000000000023', '2026-03-27 22:35:40');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000024', '00000000000000000000000000000001', '00000000000000000000000000000024', '2026-03-27 22:35:40');
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time) VALUES ('00000000000000000000000000000025', '00000000000000000000000000000001', '00000000000000000000000000000025', '2026-03-27 22:35:40');
+-- 关联商店管理一级菜单
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000026', '00000000000000000000000000000001', '00000000000000000000000000000026', NOW());
+-- 关联订单查询
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000027', '00000000000000000000000000000001', '00000000000000000000000000000027', NOW());
+-- 关联新建订单
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000028', '00000000000000000000000000000001', '00000000000000000000000000000028', NOW());
+-- 关联订单编辑
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000029', '00000000000000000000000000000001', '00000000000000000000000000000029', NOW());
+-- 关联订单详情
+INSERT INTO sys_role_menu (id, role_id, menu_id, create_time)
+VALUES ('00000000000000000000000000000030', '00000000000000000000000000000001', '00000000000000000000000000000030', NOW());

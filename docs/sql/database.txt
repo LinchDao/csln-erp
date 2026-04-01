@@ -269,6 +269,7 @@ create table product
     series          varchar(100)                             null comment '系列',
     cost_price      decimal(10, 2) default 0.00              null comment '成本价',
     wholesale_price decimal(10, 2) default 0.00              null comment '默认批发价',
+    is_delete       int            default 0                 not null comment '1-已删除 0-存在',
     retail_price    decimal(10, 2) default 0.00              null comment '零售价',
     main_image_id   char(32)                                 null comment '商品主图文件ID（关联file表）',
     status          tinyint        default 1                 null comment '状态',
@@ -283,24 +284,22 @@ create table product_color_image
     id            char(32)                           not null comment '主键'
         primary key,
     product_id    char(32)                           not null comment '商品ID',
-    color_id      char(32)                           not null comment '颜色ID',
+    color_name    varchar(50)                        not null comment '颜色名称',
     color_file_id char(32)                           null comment '颜色图片文件ID（关联file表）',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
-    constraint uk_prod_color
-        unique (product_id, color_id)
+    is_delete     int      default 0                 not null
 )
     comment '商品颜色图片表' charset = utf8mb4;
 
 create table product_sku
 (
-    id         char(32)     not null comment '主键'
+    id         char(32)      not null comment '主键'
         primary key,
-    product_id char(32)     not null comment '商品ID',
-    color_id   char(32)     not null comment '颜色ID',
-    size_id    char(32)     not null comment '尺码ID',
-    barcode    varchar(100) null comment '条码',
-    constraint uk_sku
-        unique (product_id, color_id, size_id)
+    product_id char(32)      not null comment '商品ID',
+    color_name varchar(50)   not null comment '颜色名称',
+    size_name  varchar(50)   not null comment '尺码名称',
+    barcode    varchar(100)  null comment '条码',
+    is_delete  int default 0 not null
 )
     comment 'SKU表' charset = utf8mb4;
 
@@ -310,10 +309,11 @@ create table purchase_in
         primary key,
     in_no          varchar(50)                        not null comment '入库单号',
     purchase_id    char(32)                           null comment '来源采购单',
-    supplier_id    char(32)                           not null comment '供应商ID',
     warehouse_id   char(32)                           not null comment '入库仓库',
+    total_qty      int      default 0                 not null comment '入库总数量',
     status         tinyint  default 0                 null comment '0待审核 1已审核',
     create_user_id char(32)                           null comment '操作人',
+    audit_user_id  char(32)                           null comment '审核人ID',
     create_time    datetime default CURRENT_TIMESTAMP null comment '入库时间',
     remark         varchar(255)                       null comment '备注',
     constraint uk_in_no
@@ -323,13 +323,11 @@ create table purchase_in
 
 create table purchase_in_item
 (
-    id     char(32)       not null comment '主键'
+    id     char(32) not null comment '主键'
         primary key,
-    in_id  char(32)       not null comment '入库单ID',
-    sku_id char(32)       not null comment 'SKU_ID',
-    qty    int            not null comment '入库数量',
-    price  decimal(10, 2) not null comment '单价',
-    amount decimal(12, 2) not null comment '金额'
+    in_id  char(32) not null comment '入库单ID',
+    sku_id char(32) not null comment 'SKU_ID',
+    qty    int      not null comment '入库数量'
 )
     comment '入库明细表' charset = utf8mb4;
 
@@ -343,8 +341,11 @@ create table purchase_order
     total_amount   decimal(12, 2) default 0.00              null comment '总金额',
     status         tinyint        default 0                 null comment '0待入库 1部分入库 2已完成 3取消',
     create_user_id char(32)                                 null comment '制单人',
+    order_time     datetime                                 null comment '下单时间',
+    arrival_time   datetime                                 null comment '到货时间',
     create_time    datetime       default CURRENT_TIMESTAMP null comment '下单时间',
     remark         varchar(255)                             null comment '备注',
+    is_delete      int            default 0                 not null,
     constraint uk_purchase_no
         unique (purchase_no)
 )
@@ -358,7 +359,8 @@ create table purchase_order_item
     sku_id      char(32)       not null comment 'SKU_ID',
     qty         int            not null comment '采购数量',
     price       decimal(10, 2) not null comment '单价',
-    amount      decimal(12, 2) not null comment '金额'
+    amount      decimal(12, 2) not null comment '金额',
+    is_delete   int default 0  not null
 )
     comment '采购明细表' charset = utf8mb4;
 
@@ -518,6 +520,21 @@ create table supplier
 )
     comment '供应商表' charset = utf8mb4;
 
+create table sys_dict
+(
+    id          char(32)                               not null comment '字典主键',
+    parent_id   char(32)     default '0'               not null comment '父级ID，顶级节点为0',
+    dict_name   varchar(50)                            not null comment '字典名称/标签',
+    dict_value  varchar(255) default ''                null comment '字典值（存储实际使用的编码/值）',
+    sort        int          default 0                 not null comment '排序号，数字越小越靠前',
+    status      tinyint(1)   default 1                 not null comment '状态：1-启用 0-禁用',
+    is_delete   tinyint(1)   default 0                 not null comment '删除标识：0-未删除 1-已删除',
+    remark      varchar(255) default ''                null comment '备注说明',
+    create_time datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间'
+)
+    comment '系统数据字典表' charset = utf8mb4;
+
 create table sys_file
 (
     id                char(32)                           not null comment '主键ID'
@@ -567,7 +584,7 @@ create table sys_menu
 (
     id          char(32)                           not null comment '主键'
         primary key,
-    parent_id   char(32) default '0'               not null comment '父菜单ID，顶级菜单为0',
+    parent_id   char(32)                           null comment '父菜单ID，顶级菜单为null',
     menu_type   tinyint  default 1                 not null comment '菜单类型 1目录 2菜单 3按钮',
     name        varchar(100)                       not null comment '路由名称',
     path        varchar(200)                       null comment '路由路径',
@@ -585,6 +602,7 @@ create table sys_menu
     status      tinyint  default 1                 not null comment '状态 1正常 0禁用',
     create_time datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    is_delete   int      default 0                 not null,
     constraint uk_menu_name
         unique (name)
 )
@@ -666,6 +684,7 @@ create table warehouse
     address         varchar(255)                       null comment '地址',
     status          tinyint  default 1                 not null comment '状态',
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
+    is_delete       int      default 0                 not null,
     constraint uk_wh_manager
         unique (manager_user_id)
 )

@@ -33,3 +33,4 @@ build/
 .vscode/
 src/test/
 data/upload/
+docs/sql/sql_tables/*

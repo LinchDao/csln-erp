@@ -1,47 +1,27 @@
--- =============================================
--- 系统数据字典：尺码（顶级字典）
--- =============================================
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('DICT_SIZE', '0', '尺码', 'SIZE', 1, 1, 0, '服装尺码');
-
--- 尺码子项
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('SIZE_S', 'DICT_SIZE', 'S', 'S', 1, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('SIZE_M', 'DICT_SIZE', 'M', 'M', 2, 1, 1, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('SIZE_L', 'DICT_SIZE', 'L', 'L', 3, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('SIZE_XL', 'DICT_SIZE', 'XL', 'XL', 4, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('SIZE_XXL', 'DICT_SIZE', 'XXL', 'XXL', 5, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('SIZE_XXXL', 'DICT_SIZE', 'XXXL', 'XXXL', 6, 1, 0, '');
-
--- =============================================
--- 系统数据字典：颜色（顶级字典）
--- =============================================
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('DICT_COLOR', '0', '颜色', 'COLOR', 2, 1, 0, '服装颜色');
-
--- 颜色子项（10种）
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_WHITE', 'DICT_COLOR', '白色', '白色', 1, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_BLACK', 'DICT_COLOR', '黑色', '黑色', 2, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_RED', 'DICT_COLOR', '红色', '红色', 3, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_BLUE', 'DICT_COLOR', '蓝色', '蓝色', 4, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_YELLOW', 'DICT_COLOR', '黄色', '黄色', 5, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_GREEN', 'DICT_COLOR', '绿色', '绿色', 6, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_GRAY', 'DICT_COLOR', '灰色', '灰色', 7, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_PINK', 'DICT_COLOR', '粉色', '粉色', 8, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_PURPLE', 'DICT_COLOR', '紫色', '紫色', 9, 1, 0, '');
-INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark)
-VALUES ('COLOR_BROWN', 'DICT_COLOR', '棕色', '棕色', 10, 1, 0, '');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('DICT_SIZE', '0', '尺码', 'SIZE', 1, 1, 0, '服装尺码', '2026-03-25 18:55:14', '2026-03-25 19:21:32');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('SIZE_S', 'DICT_SIZE', 'S', 'S', 1, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('SIZE_M', 'DICT_SIZE', 'M', 'M', 2, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 19:16:40');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('SIZE_L', 'DICT_SIZE', 'L', 'L', 3, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('SIZE_XL', 'DICT_SIZE', 'XL', 'XL', 4, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('SIZE_XXL', 'DICT_SIZE', 'XXL', 'XXL', 5, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('SIZE_XXXL', 'DICT_SIZE', 'XXXL', 'XXXL', 6, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('DICT_COLOR', '0', '颜色', 'COLOR', 2, 1, 0, '服装颜色', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_WHITE', 'DICT_COLOR', '白色', '白色', 1, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_BLACK', 'DICT_COLOR', '黑色', '黑色', 2, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_RED', 'DICT_COLOR', '红色', '红色', 3, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_BLUE', 'DICT_COLOR', '蓝色', '蓝色', 4, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_YELLOW', 'DICT_COLOR', '黄色', '黄色', 5, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_GREEN', 'DICT_COLOR', '绿色', '绿色', 6, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_GRAY', 'DICT_COLOR', '灰色', '灰色', 7, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_PINK', 'DICT_COLOR', '粉色', '粉色', 8, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_PURPLE', 'DICT_COLOR', '紫色', '紫色', 9, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('COLOR_BROWN', 'DICT_COLOR', '棕色', '棕色', 10, 1, 0, '', '2026-03-25 18:55:14', '2026-03-25 18:55:14');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2037432276712738817', '0', '采购订单状态', '采购订单状态', 0, 1, 0, '采购订单状态0待入库 1部分入库 2已完成 3取消', '2026-03-27 15:31:23', '2026-03-27 15:31:23');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2037432276725321729', '2037432276712738817', '待入库', '0', 1, 1, 0, '', '2026-03-27 15:31:23', '2026-03-27 15:31:23');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2037432276737904641', '2037432276712738817', '部分入库', '1', 2, 1, 0, '', '2026-03-27 15:31:23', '2026-03-27 15:31:23');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2037432276746293250', '2037432276712738817', '已完成', '2', 3, 1, 0, '', '2026-03-27 15:31:23', '2026-03-27 15:31:23');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2037432276750487554', '2037432276712738817', '取消', '3', 4, 1, 0, '', '2026-03-27 15:31:23', '2026-03-27 15:31:23');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2038736390310621186', '0', '入库单状态枚举', '入库单状态枚举', 0, 1, 0, '入库单状态枚举 0未审核 1已审核', '2026-03-31 05:53:27', '2026-03-31 05:53:27');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2038736390319009794', '2038736390310621186', '未审核', '0', 1, 1, 0, '', '2026-03-31 05:53:28', '2026-03-31 05:53:28');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2038736390319009795', '2038736390310621186', '已审核', '1', 2, 1, 0, '', '2026-03-31 05:53:28', '2026-03-31 05:53:28');
+INSERT INTO sys_dict (id, parent_id, dict_name, dict_value, sort, status, is_delete, remark, create_time, update_time) VALUES ('2038740515551232001', '2038736390310621186', '未通过', '2', 3, 1, 0, '', '2026-03-31 06:09:51', '2026-03-31 06:09:51');
