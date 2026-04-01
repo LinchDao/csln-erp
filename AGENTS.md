@@ -32,6 +32,13 @@ Use Java 17 and Maven wrapper from repo root.
   - service classes default to read-only;
   - write methods must use `@Transactional(rollbackFor = Exception.class)`.
 
+## Chinese Encoding Safety (AI Editing Rules)
+- All newly created or modified text files must use `UTF-8` (no BOM) unless a file already has a different required encoding.
+- Do not change existing line-ending policy; keep LF for source/text files and CRLF only where explicitly configured.
+- When reading/writing Chinese content on Windows PowerShell, use explicit UTF-8 commands/options to avoid mojibake.
+- If garbled characters are detected, stop editing that file and re-open/re-read it with explicit UTF-8 before making any change.
+- Prefer minimal edits and avoid unnecessary rewrites of large files containing Chinese text.
+
 ## Testing Guidelines
 - Framework: Spring Boot Test (`spring-boot-starter-test`).
 - Place tests under `src/test/java` mirroring production package paths.
