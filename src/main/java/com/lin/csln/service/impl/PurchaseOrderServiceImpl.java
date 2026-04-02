@@ -1,11 +1,11 @@
 package com.lin.csln.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.purchase.in.PurchaseInstockedQtyDTO;
@@ -18,7 +18,6 @@ import com.lin.csln.entity.PurchaseOrderItemDO;
 import com.lin.csln.enums.GlobalEnums;
 import com.lin.csln.enums.PurchaseOrderStatusEnums;
 import com.lin.csln.mapper.PurchaseOrderMapper;
-import com.lin.csln.service.PurchaseInItemService;
 import com.lin.csln.service.PurchaseInService;
 import com.lin.csln.service.PurchaseOrderItemService;
 import com.lin.csln.service.PurchaseOrderService;
@@ -69,6 +68,7 @@ public class PurchaseOrderServiceImpl extends BaseReadonlyServiceImpl<PurchaseOr
         PurchaseOrderDO order = new PurchaseOrderDO();
         BeanUtils.copyProperties(dto, order);
         order.setCreateUserId(userId);
+        order.setOrderTime(DateUtil.date());
         this.save(order);
 
         purchaseOrderItemService.savePurchaseOrderItem(order.getId(), itemList);
@@ -143,16 +143,18 @@ public class PurchaseOrderServiceImpl extends BaseReadonlyServiceImpl<PurchaseOr
         int totalPurchaseQty = orderItemList.stream().mapToInt(PurchaseOrderItemDO::getQty).sum();
         int totalInstockedQty = instockedList.stream().mapToInt(PurchaseInstockedQtyDTO::getQty).sum();
 
+        PurchaseOrderDO updateDO = new PurchaseOrderDO();
         PurchaseOrderStatusEnums status;
         if (totalInstockedQty >= totalPurchaseQty) {
             status = PurchaseOrderStatusEnums.FINISHED;
+            updateDO.setArrivalTime(DateUtil.date());
         } else if (totalInstockedQty > 0) {
             status = PurchaseOrderStatusEnums.PART_IN;
         } else {
             status = PurchaseOrderStatusEnums.WAIT_IN;
         }
 
-        PurchaseOrderDO updateDO = new PurchaseOrderDO();
+
         updateDO.setId(purchaseId);
         updateDO.setStatus(status.getCode());
         baseMapper.updateById(updateDO);
