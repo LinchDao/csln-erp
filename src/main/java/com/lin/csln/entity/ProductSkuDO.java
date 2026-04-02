@@ -26,12 +26,12 @@ public class ProductSkuDO {
     private String productId;
 
     /**
-     * 颜色ID
+     * 颜色
      */
     private String colorName;
 
     /**
-     * 尺码ID
+     * 尺码
      */
     private String sizeName;
 

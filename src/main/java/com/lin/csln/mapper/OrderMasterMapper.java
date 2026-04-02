@@ -2,6 +2,7 @@ package com.lin.csln.mapper;
 
 import com.lin.csln.entity.OrderMasterDO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lin.csln.dto.order.OrderMasterDetailRespDTO;
 import com.lin.csln.dto.order.OrderMasterPageRespDTO;
 import com.lin.csln.dto.order.OrderMasterQueryParamDTO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -19,4 +20,6 @@ public interface OrderMasterMapper extends BaseMapper<OrderMasterDO> {
                                                   @Param("query") OrderMasterQueryParamDTO query);
 
     String selectMaxOrderNoByPrefix(@Param("orderNoPrefix") String orderNoPrefix);
+
+    OrderMasterDetailRespDTO selectOrderMasterDetail(@Param("id") String id);
 }

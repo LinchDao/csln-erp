@@ -1,9 +1,12 @@
 package com.lin.csln.mapper;
 
+import com.lin.csln.dto.order.OrderSubDetailRespDTO;
 import com.lin.csln.entity.OrderSubDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 子订单表 Mapper接口
@@ -14,4 +17,6 @@ public interface OrderSubMapper extends BaseMapper<OrderSubDO> {
 
     String selectMaxSubOrderNoByMasterIdAndPrefix(@Param("masterId") String masterId,
                                                   @Param("subOrderPrefix") String subOrderPrefix);
+
+    List<OrderSubDetailRespDTO> selectDetailListByMasterId(@Param("masterId") String masterId);
 }

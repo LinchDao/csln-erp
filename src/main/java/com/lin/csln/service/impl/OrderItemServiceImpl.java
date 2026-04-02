@@ -3,6 +3,7 @@ package com.lin.csln.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lin.csln.common.exception.BusinessException;
+import com.lin.csln.dto.order.OrderItemDetailRespDTO;
 import com.lin.csln.dto.order.OrderItemDTO;
 import com.lin.csln.entity.OrderItemDO;
 import com.lin.csln.entity.OrderSubDO;
@@ -168,5 +169,13 @@ public class OrderItemServiceImpl extends BaseReadonlyServiceImpl<OrderItemMappe
                 stockService.adjustLockQty(subOrder.getWarehouseId(), itemDO.getSkuId(), itemDO.getQty());
             }
         }
+    }
+
+    @Override
+    public List<OrderItemDetailRespDTO> listDetailByMasterId(String masterId) {
+        if (!StringUtils.hasText(masterId)) {
+            throw new BusinessException("母单ID不能为空");
+        }
+        return baseMapper.selectDetailListByMasterId(masterId);
     }
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.order.OrderItemDTO;
+import com.lin.csln.dto.order.OrderSubDetailRespDTO;
 import com.lin.csln.dto.order.OrderSubDTO;
 import com.lin.csln.entity.OrderSubDO;
 import com.lin.csln.enums.GlobalEnums;
@@ -121,6 +122,14 @@ public class OrderSubServiceImpl extends BaseReadonlyServiceImpl<OrderSubMapper,
             }
             orderItemService.saveItems(masterId, subId, ref.items, isDraft);
         }
+    }
+
+    @Override
+    public List<OrderSubDetailRespDTO> listDetailByMasterId(String masterId) {
+        if (!StringUtils.hasText(masterId)) {
+            throw new BusinessException("母单ID不能为空");
+        }
+        return baseMapper.selectDetailListByMasterId(masterId);
     }
 
     private int parseSubOrderSeq(String subOrderNo, String orderNo) {

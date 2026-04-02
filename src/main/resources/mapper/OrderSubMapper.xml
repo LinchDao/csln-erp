@@ -35,4 +35,18 @@
           AND sub_order_no LIKE CONCAT(#{subOrderPrefix}, '%')
     </select>
 
+    <select id="selectDetailListByMasterId" resultType="com.lin.csln.dto.order.OrderSubDetailRespDTO">
+        SELECT
+            os.id,
+            os.warehouse_id AS warehouseId,
+            os.amount,
+            os.delivery_type AS deliveryType,
+            os.delivery_remark AS deliveryRemark,
+            DATE_FORMAT(os.expect_send_date, '%Y-%m-%d') AS expectSendDate
+        FROM order_sub os
+        WHERE os.master_id = #{masterId}
+          AND os.is_delete = 0
+        ORDER BY os.sub_order_no ASC
+    </select>
+
 </mapper>

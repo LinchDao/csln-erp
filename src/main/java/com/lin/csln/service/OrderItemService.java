@@ -2,6 +2,7 @@ package com.lin.csln.service;
 
 import com.lin.csln.entity.OrderItemDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.dto.order.OrderItemDetailRespDTO;
 import com.lin.csln.dto.order.OrderItemDTO;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface OrderItemService extends IService<OrderItemDO> {
     void restoreLockQtyWhenDeleteSubOrder(String subId, String warehouseId);
 
     void lockDraftItemsByMasterId(String masterId);
+
+    List<OrderItemDetailRespDTO> listDetailByMasterId(String masterId);
 
 }

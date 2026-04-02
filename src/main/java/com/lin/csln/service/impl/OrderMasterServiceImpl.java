@@ -1,9 +1,12 @@
 package com.lin.csln.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lin.csln.common.cache.UserCache;
 import com.lin.csln.common.dto.PageRespDTO;
+import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.order.*;
 import com.lin.csln.entity.OrderItemDO;
@@ -19,17 +22,13 @@ import com.lin.csln.service.OrderSubService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 订单主表 服务实现类
@@ -55,6 +54,26 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
     }
 
     @Override
+    public OrderMasterDetailRespDTO getOrderMasterDetail(String id) {
+        OrderMasterDetailRespDTO detail = baseMapper.selectOrderMasterDetail(id);
+        if (detail == null) {
+            throw new BusinessException("订单不存在");
+        }
+        List<OrderSubDetailRespDTO> subOrders = orderSubService.listDetailByMasterId(id);
+        List<OrderItemDetailRespDTO> items = orderItemService.listDetailByMasterId(id);
+
+        Map<String, List<OrderItemDetailRespDTO>> itemMap = new HashMap<>();
+        for (OrderItemDetailRespDTO item : items) {
+            itemMap.computeIfAbsent(item.getSubId(), k -> new ArrayList<>()).add(item);
+        }
+        for (OrderSubDetailRespDTO sub : subOrders) {
+            sub.setItems(itemMap.getOrDefault(sub.getId(), new ArrayList<>()));
+        }
+        detail.setSubOrders(subOrders);
+        return detail;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public String createOrderMaster(OrderMasterDTO dto, String userId) {
         validateOrderMaster(dto);
@@ -62,9 +81,11 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
         if (!StringUtils.hasText(userId)) {
             throw new BusinessException("未获取到当前用户，请重新登录");
         }
+        UserInfoDTO userinfo = UserCache.getUserInfo(userId);
 
         OrderMasterDO orderMasterDO = new OrderMasterDO();
         BeanUtil.copyProperties(dto, orderMasterDO);
+        orderMasterDO.setShopId(userinfo.getShopId());
         orderMasterDO.setAuditStatus(OrderAuditStatusEnums.WAIT_AUDIT.getCode());
         orderMasterDO.setIsAr(GlobalEnums.YES.getCode());
         orderMasterDO.setAllowReplace(GlobalEnums.NO.getCode());
@@ -72,7 +93,13 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
         String orderNo = generateOrderNo();
         orderMasterDO.setOrderNo(orderNo);
         orderMasterDO.setCreateUserId(userId);
+        orderMasterDO.setSalesUserId(userId);
         this.save(orderMasterDO);
+
+        //todo 后续改为前端传参
+        dto.getSubOrders().forEach(orderSubDO -> {
+            orderSubDO.setWarehouseId(userinfo.getWarehouseId());
+        });
 
         orderSubService.saveSubOrder(orderMasterDO.getId(), orderNo, dto.getSubOrders(), dto.getIsDraft());
         return orderMasterDO.getId();

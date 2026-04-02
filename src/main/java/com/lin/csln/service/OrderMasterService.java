@@ -3,6 +3,7 @@ package com.lin.csln.service;
 import com.lin.csln.entity.OrderMasterDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lin.csln.common.dto.PageRespDTO;
+import com.lin.csln.dto.order.OrderMasterDetailRespDTO;
 import com.lin.csln.dto.order.OrderMasterDTO;
 import com.lin.csln.dto.order.OrderMasterPageRespDTO;
 import com.lin.csln.dto.order.OrderMasterQueryParamDTO;
@@ -14,6 +15,8 @@ import com.lin.csln.dto.order.OrderMasterQueryParamDTO;
 public interface OrderMasterService extends IService<OrderMasterDO> {
 
     PageRespDTO<OrderMasterPageRespDTO> pageOrderMaster(OrderMasterQueryParamDTO queryParamDTO);
+
+    OrderMasterDetailRespDTO getOrderMasterDetail(String id);
 
     String createOrderMaster(OrderMasterDTO dto, String userId);
 

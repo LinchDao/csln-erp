@@ -3,6 +3,7 @@ package com.lin.csln.controller.order;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.dto.order.CustomerDTO;
+import com.lin.csln.dto.order.OrderMasterDetailRespDTO;
 import com.lin.csln.dto.order.OrderMasterDTO;
 import com.lin.csln.dto.order.OrderMasterPageRespDTO;
 import com.lin.csln.dto.order.OrderMasterQueryParamDTO;
@@ -38,6 +39,12 @@ public class OrderMasterController {
     public Result<String> create(@RequestBody OrderMasterDTO dto) {
         String userId = JwtTokenUtil.getUserId();
         return Result.success(orderMasterService.createOrderMaster(dto, userId));
+    }
+
+    @GetMapping("/{id}/detail")
+    @Operation(summary = "订单主单详情")
+    public Result<OrderMasterDetailRespDTO> detail(@Parameter(description = "订单主单ID", required = true) @PathVariable String id) {
+        return Result.success(orderMasterService.getOrderMasterDetail(id));
     }
 
     @GetMapping("/customer/list")

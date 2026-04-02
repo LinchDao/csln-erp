@@ -19,4 +19,24 @@
         id, master_id, sub_id, sku_id, qty, price, amount, actual_qty
     </sql>
 
+    <select id="selectDetailListByMasterId" resultType="com.lin.csln.dto.order.OrderItemDetailRespDTO">
+        SELECT
+            oi.id,
+            oi.sub_id AS subId,
+            ps.product_id AS productId,
+            oi.sku_id AS skuId,
+            p.product_no AS productNo,
+            p.name AS productName,
+            ps.color_name AS colorName,
+            ps.size_name AS sizeName,
+            oi.qty,
+            oi.price,
+            oi.amount
+        FROM order_item oi
+                 LEFT JOIN product_sku ps ON oi.sku_id = ps.id AND ps.is_delete = 0
+                 LEFT JOIN product p ON ps.product_id = p.id AND p.is_delete = 0
+        WHERE oi.master_id = #{masterId}
+        ORDER BY oi.sub_id ASC, oi.id ASC
+    </select>
+
 </mapper>

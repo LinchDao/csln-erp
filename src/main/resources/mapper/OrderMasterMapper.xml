@@ -51,4 +51,25 @@
         WHERE order_no LIKE CONCAT(#{orderNoPrefix}, '%')
     </select>
 
+    <select id="selectOrderMasterDetail" resultType="com.lin.csln.dto.order.OrderMasterDetailRespDTO">
+        SELECT
+            om.id,
+            om.order_no AS orderNo,
+            om.customer_id AS customerId,
+            c.name AS customerName,
+            c.phone AS customerPhone,
+            om.order_type AS orderType,
+            om.status,
+            om.total_qty AS totalQty,
+            om.total_amount AS totalAmount,
+            om.is_draft AS isDraft,
+            om.is_ar AS isAr,
+            om.allow_replace AS allowReplace,
+            om.remark,
+            DATE_FORMAT(om.create_time, '%Y-%m-%d %H:%i:%s') AS createTime
+        FROM order_master om
+                 LEFT JOIN customer c ON om.customer_id = c.id
+        WHERE om.id = #{id}
+    </select>
+
 </mapper>

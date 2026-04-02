@@ -46,6 +46,21 @@ Use Java 17 and Maven wrapper from repo root.
   - Caller services should only prepare inputs and invoke domain services; they must not re-implement decomposed domain logic.
 - Reuse First:
   - Keep one authoritative implementation for the same behavior; prefer reuse over parallel implementations across services.
+- Read/Write Ownership:
+  - Entity ownership applies to both reads and writes. Any query/update touching `order_sub` must be implemented in `OrderSubService`; any query/update touching `order_item` must be implemented in `OrderItemService`.
+- Orchestrator Access Boundary:
+  - Orchestration services (for example, `OrderMasterServiceImpl`) may only compose by calling domain services and must not directly issue mapper queries for other entities, including read-only DTO/detail queries.
+- Mapper Responsibility Boundary:
+  - `OrderMasterMapper` should contain only `order_master`-owned persistence logic. Cross-entity detail fetching must be exposed by the owning domain services and then assembled by the orchestrator.
+- No Read Exception:
+  - "Read-only" is not an exception to ownership rules.
+
+### Review Checklist (Decomposition)
+- Does orchestrator service call other domain services instead of foreign-entity mapper SQL?
+- Is each entity's query/update implemented in its owning service?
+- Is there a single authoritative implementation for the same behavior?
+- Are decomposition method parameters lightweight (IDs/scalars first)?
+- Did interface changes happen before implementation and caller migration?
 
 ## Chinese Encoding Safety (AI Editing Rules)
 - All newly created or modified text files must use `UTF-8` (no BOM) unless a file already has a different required encoding.
