@@ -35,11 +35,6 @@ public class OrderSubDO {
     private String warehouseId;
 
     /**
-     * 子单数量
-     */
-    private Integer qty;
-
-    /**
      * 子单金额
      */
     private BigDecimal amount;
@@ -98,5 +93,10 @@ public class OrderSubDO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 是否删除 0-未删除 1-已删除
+     */
+    private Integer isDelete;
 
 }

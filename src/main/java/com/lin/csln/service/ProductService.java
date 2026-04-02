@@ -24,5 +24,5 @@ public interface ProductService extends IService<ProductDO> {
 
     PageRespDTO<ProductPageRespDTO> pageProduct(ProductQueryParamDTO queryDTO);
 
-    List<ProductSelectDTO> listProductSelect();
+    List<ProductSelectDTO> listProductSelect(String productNo);
 }

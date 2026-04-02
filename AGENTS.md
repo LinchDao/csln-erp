@@ -28,9 +28,24 @@ Use Java 17 and Maven wrapper from repo root.
 - Java style: 4-space indentation, UTF-8 encoding, LF line endings (`.editorconfig`).
 - Class naming:
   - `*Controller`, `*Service`, `*ServiceImpl`, `*Mapper`, `*DO`, `*DTO`.
+- Entity data access rule:
+  - CRUD for each entity must be implemented in its corresponding service (`*Service`/`*ServiceImpl`).
+  - Orchestration services must not directly manipulate other entities' mapper/query/update details.
 - Keep transaction rules explicit:
   - service classes default to read-only;
   - write methods must use `@Transactional(rollbackFor = Exception.class)`.
+
+## Service Decomposition Style
+- Single Responsibility:
+  - Shared domain behaviors (for example, stock lock adjustments) must be implemented in their domain service (for example, `StockService`), not duplicated in orchestration services.
+- Lightweight Parameters:
+  - Decomposed/reused service methods should prefer lightweight parameters (IDs and required scalar fields), and avoid passing heavy `*DO` aggregates unless strictly necessary.
+- Interface First:
+  - For decomposition refactors, define/adjust the service interface first, then implement in `service/impl`, then update callers and remove obsolete logic.
+- Minimal Caller Changes:
+  - Caller services should only prepare inputs and invoke domain services; they must not re-implement decomposed domain logic.
+- Reuse First:
+  - Keep one authoritative implementation for the same behavior; prefer reuse over parallel implementations across services.
 
 ## Chinese Encoding Safety (AI Editing Rules)
 - All newly created or modified text files must use `UTF-8` (no BOM) unless a file already has a different required encoding.
@@ -46,6 +61,10 @@ Use Java 17 and Maven wrapper from repo root.
 - Minimum expectation for new features:
   - service-level logic test for core branch/validation;
   - mapper/API integration test when SQL or contract changes.
+
+- Agent execution preference:
+  - Do not run compile/test commands by default when modifying code.
+  - Only run build/compile/test commands when the user explicitly asks for them.
 
 ## Commit & Pull Request Guidelines
 Recent history uses concise type-prefixed messages, e.g.:

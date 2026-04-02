@@ -8,7 +8,6 @@
         <result column="sub_order_no" property="subOrderNo"/>
         <result column="master_id" property="masterId"/>
         <result column="warehouse_id" property="warehouseId"/>
-        <result column="qty" property="qty"/>
         <result column="amount" property="amount"/>
         <result column="send_type" property="sendType"/>
         <result column="from_warehouse_id" property="fromWarehouseId"/>
@@ -21,11 +20,19 @@
         <result column="actual_send_date" property="actualSendDate"/>
         <result column="picker_user_id" property="pickerUserId"/>
         <result column="remark" property="remark"/>
+        <result column="is_delete" property="isDelete"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, sub_order_no, master_id, warehouse_id, qty, amount, send_type, from_warehouse_id, status, delivery_type, express_no, driver_phone, delivery_remark, expect_send_date, actual_send_date, picker_user_id, remark
+        id, sub_order_no, master_id, warehouse_id, amount, send_type, from_warehouse_id, status, delivery_type, express_no, driver_phone, delivery_remark, expect_send_date, actual_send_date, picker_user_id, remark, is_delete
     </sql>
+
+    <select id="selectMaxSubOrderNoByMasterIdAndPrefix" resultType="java.lang.String">
+        SELECT MAX(sub_order_no)
+        FROM order_sub
+        WHERE master_id = #{masterId}
+          AND sub_order_no LIKE CONCAT(#{subOrderPrefix}, '%')
+    </select>
 
 </mapper>

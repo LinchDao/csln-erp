@@ -34,3 +34,4 @@ build/
 src/test/
 data/upload/
 docs/sql/sql_tables/*
+AGENTS.md

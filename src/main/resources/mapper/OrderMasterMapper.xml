@@ -2,37 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lin.csln.mapper.OrderMasterMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.lin.csln.entity.OrderMasterDO">
-        <id column="id" property="id"/>
-        <result column="order_no" property="orderNo"/>
-        <result column="shop_id" property="shopId"/>
-        <result column="customer_id" property="customerId"/>
-        <result column="total_qty" property="totalQty"/>
-        <result column="total_amount" property="totalAmount"/>
-        <result column="order_type" property="orderType"/>
-        <result column="price_from" property="priceFrom"/>
-        <result column="audit_status" property="auditStatus"/>
-        <result column="audit_user_id" property="auditUserId"/>
-        <result column="audit_time" property="auditTime"/>
-        <result column="sales_user_id" property="salesUserId"/>
-        <result column="delivery_type" property="deliveryType"/>
-        <result column="express_no" property="expressNo"/>
-        <result column="driver_phone" property="driverPhone"/>
-        <result column="delivery_remark" property="deliveryRemark"/>
-        <result column="expect_send_date" property="expectSendDate"/>
-        <result column="create_time" property="createTime"/>
-        <result column="status" property="status"/>
-        <result column="create_user_id" property="createUserId"/>
-        <result column="remark" property="remark"/>
-        <result column="is_ar" property="isAr"/>
-        <result column="allow_replace" property="allowReplace"/>
-        <result column="is_draft" property="isDraft"/>
-    </resultMap>
+    <select id="pageOrderMaster" resultType="com.lin.csln.dto.order.OrderMasterPageRespDTO">
+        SELECT
+            om.id,
+            om.order_no AS orderNo,
+            om.shop_id AS shopId,
+            s.shop_name AS shopName,
+            om.customer_id AS customerId,
+            c.name AS customerName,
+            om.total_qty AS totalQty,
+            om.total_amount AS totalAmount,
+            om.order_type AS orderType,
+            om.status,
+            om.is_draft AS isDraft,
+            DATE_FORMAT(om.create_time, '%Y-%m-%d %H:%i:%s') AS createTime,
+            wh.warehouseNames
+        FROM order_master om
+                 LEFT JOIN shop s ON om.shop_id = s.id
+                 LEFT JOIN customer c ON om.customer_id = c.id
+                 LEFT JOIN (
+            SELECT
+                os.master_id,
+                GROUP_CONCAT(DISTINCT w.warehouse_name ORDER BY w.warehouse_name SEPARATOR ',') AS warehouseNames
+            FROM order_sub os
+                     LEFT JOIN warehouse w ON os.warehouse_id = w.id AND w.is_delete = 0
+            WHERE os.is_delete = 0
+            GROUP BY os.master_id
+        ) wh ON wh.master_id = om.id
+        WHERE 1 = 1
+        <if test="query.orderNo != null and query.orderNo != ''">
+            AND om.order_no LIKE CONCAT('%', #{query.orderNo}, '%')
+        </if>
+        <if test="query.orderType != null">
+            AND om.order_type = #{query.orderType}
+        </if>
+        <if test="query.status != null">
+            AND om.status = #{query.status}
+        </if>
+        <if test="query.isDraft != null">
+            AND om.is_draft = #{query.isDraft}
+        </if>
+        ORDER BY om.create_time DESC
+    </select>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, order_no, shop_id, customer_id, total_qty, total_amount, order_type, price_from, audit_status, audit_user_id, audit_time, sales_user_id, delivery_type, express_no, driver_phone, delivery_remark, expect_send_date, create_time, status, create_user_id, remark, is_ar, allow_replace, is_draft
-    </sql>
+    <select id="selectMaxOrderNoByPrefix" resultType="java.lang.String">
+        SELECT MAX(order_no)
+        FROM order_master
+        WHERE order_no LIKE CONCAT(#{orderNoPrefix}, '%')
+    </select>
 
 </mapper>

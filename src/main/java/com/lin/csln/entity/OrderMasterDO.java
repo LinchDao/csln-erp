@@ -75,31 +75,6 @@ public class OrderMasterDO {
     private String salesUserId;
 
     /**
-     * 1快递 2司机 3自提
-     */
-    private Integer deliveryType;
-
-    /**
-     * 快递单号
-     */
-    private String expressNo;
-
-    /**
-     * 司机/自提手机号
-     */
-    private String driverPhone;
-
-    /**
-     * 配送备注
-     */
-    private String deliveryRemark;
-
-    /**
-     * 期望发货日期
-     */
-    private Date expectSendDate;
-
-    /**
      * 开单时间
      */
     private Date createTime;

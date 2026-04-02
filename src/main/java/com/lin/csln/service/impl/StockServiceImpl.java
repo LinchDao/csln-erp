@@ -1,6 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
 import com.lin.csln.entity.PurchaseInItemDO;
 import com.lin.csln.entity.StockDO;
@@ -56,5 +57,28 @@ public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, Stock
             }
         }
 
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void adjustLockQty(String warehouseId, String skuId, int delta) {
+        if (delta == 0) {
+            return;
+        }
+        StockDO stock = baseMapper.selectOne(new LambdaQueryWrapper<StockDO>()
+                .eq(StockDO::getWarehouseId, warehouseId)
+                .eq(StockDO::getSkuId, skuId));
+        if (stock == null) {
+            throw new BusinessException("库存记录不存在，仓库：" + warehouseId + "，SKU：" + skuId);
+        }
+        int currentLockQty = stock.getLockQty() == null ? 0 : stock.getLockQty();
+        int targetLockQty = currentLockQty + delta;
+        if (targetLockQty < 0) {
+            throw new BusinessException("锁定库存不足，仓库：" + warehouseId + "，SKU：" + skuId);
+        }
+        StockDO updateStock = new StockDO();
+        updateStock.setId(stock.getId());
+        updateStock.setLockQty(targetLockQty);
+        baseMapper.updateById(updateStock);
     }
 }

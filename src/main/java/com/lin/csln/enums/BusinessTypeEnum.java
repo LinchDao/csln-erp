@@ -1,16 +1,13 @@
 package com.lin.csln.enums;
 
-
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 
 /**
- * @Description:
- * @Author: linch
+ * 文件业务类型枚举
  */
-
 @Getter
 public enum BusinessTypeEnum {
     /**
@@ -53,7 +50,6 @@ public enum BusinessTypeEnum {
         this.desc = desc;
     }
 
-
     /**
      * 根据数据库存储的code获取枚举
      */
@@ -66,5 +62,4 @@ public enum BusinessTypeEnum {
                 .findFirst()
                 .orElse(null);
     }
-
 }

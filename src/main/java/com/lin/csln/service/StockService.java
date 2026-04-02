@@ -11,4 +11,6 @@ import com.lin.csln.entity.StockDO;
 public interface StockService extends IService<StockDO> {
 
     void purchaseIn(String inId, String warehouseId);
+
+    void adjustLockQty(String warehouseId, String skuId, int delta);
 }

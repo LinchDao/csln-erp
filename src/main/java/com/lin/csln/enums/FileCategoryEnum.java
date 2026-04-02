@@ -1,20 +1,16 @@
 package com.lin.csln.enums;
 
-
-
-
-
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Description: 文件类枚举
- * @Author: linch
+ * 文件分类枚举
  */
 @Getter
 public enum FileCategoryEnum {
@@ -53,8 +49,6 @@ public enum FileCategoryEnum {
         this.desc = desc;
         this.supportExtensions = supportExtensions;
     }
-
-    // ==================== 核心方法 ====================
 
     /**
      * 根据数据库存储的int值获取枚举
@@ -112,9 +106,10 @@ public enum FileCategoryEnum {
 
     /**
      * 从yaml配置加载支持的扩展名（项目启动时调用）
+     *
      * @param configMap key: bizCode（image/other），value: 逗号分隔的扩展名
      */
-    public static void loadSupportExtensions(java.util.Map<String, String> configMap) {
+    public static void loadSupportExtensions(Map<String, String> configMap) {
         if (configMap == null || configMap.isEmpty()) {
             return;
         }

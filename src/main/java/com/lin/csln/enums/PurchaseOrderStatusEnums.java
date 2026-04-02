@@ -1,16 +1,11 @@
 package com.lin.csln.enums;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @Description:
- * @Author: linch
+ * 采购单状态枚举
  */
-
 @Getter
-@AllArgsConstructor
 public enum PurchaseOrderStatusEnums {
 
     WAIT_IN(0, "待入库"),
@@ -21,10 +16,18 @@ public enum PurchaseOrderStatusEnums {
     private final Integer code;
     private final String desc;
 
+    PurchaseOrderStatusEnums(Integer code, String desc) {
+        this.code = code;
+        this.desc = desc;
+    }
+
     public static PurchaseOrderStatusEnums getByCode(Integer code) {
-        for (PurchaseOrderStatusEnums enums : values()) {
-            if (enums.getCode().equals(code)) {
-                return enums;
+        if (code == null) {
+            return null;
+        }
+        for (PurchaseOrderStatusEnums item : values()) {
+            if (item.getCode().equals(code)) {
+                return item;
             }
         }
         return null;

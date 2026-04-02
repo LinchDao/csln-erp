@@ -1,18 +1,13 @@
 package com.lin.csln.enums;
 
-
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @Description:
- * @Author: linch
+ * 采购入库审核状态枚举
  */
-
 @Getter
-@AllArgsConstructor
 public enum PurchaseInStatusEnums {
 
     WAIT_AUDIT(0, "待审核"),
@@ -31,13 +26,21 @@ public enum PurchaseInStatusEnums {
     @JsonValue
     private final String desc;
 
+    PurchaseInStatusEnums(Integer code, String desc) {
+        this.code = code;
+        this.desc = desc;
+    }
+
     /**
      * 根据code获取枚举
      */
     public static PurchaseInStatusEnums getByCode(Integer code) {
-        for (PurchaseInStatusEnums enums : PurchaseInStatusEnums.values()) {
-            if (enums.getCode().equals(code)) {
-                return enums;
+        if (code == null) {
+            return null;
+        }
+        for (PurchaseInStatusEnums item : values()) {
+            if (item.getCode().equals(code)) {
+                return item;
             }
         }
         return null;

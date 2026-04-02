@@ -3,27 +3,29 @@ package com.lin.csln.enums;
 import lombok.Getter;
 
 /**
- * 全局二值枚举（是/否）
+ * 订单审核状态枚举
  */
 @Getter
-public enum GlobalEnums {
+public enum OrderAuditStatusEnums {
 
-    NO(0, "否"),
-    YES(1, "是");
+    NO(0, "无需审核"),
+    WAIT_AUDIT(1, "待审核"),
+    AUDITED(2, "已审核"),
+    REJECTED(3, "未通过");
 
     private final Integer code;
     private final String desc;
 
-    GlobalEnums(Integer code, String desc) {
+    OrderAuditStatusEnums(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public static GlobalEnums getByCode(Integer code) {
+    public static OrderAuditStatusEnums getByCode(Integer code) {
         if (code == null) {
             return null;
         }
-        for (GlobalEnums item : values()) {
+        for (OrderAuditStatusEnums item : values()) {
             if (item.getCode().equals(code)) {
                 return item;
             }
@@ -32,7 +34,7 @@ public enum GlobalEnums {
     }
 
     public static String getDescByCode(Integer code) {
-        GlobalEnums enums = getByCode(code);
+        OrderAuditStatusEnums enums = getByCode(code);
         return enums != null ? enums.getDesc() : "未知";
     }
 }

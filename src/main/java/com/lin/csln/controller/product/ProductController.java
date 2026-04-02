@@ -81,14 +81,16 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/no/name/list")
+    @PostMapping("/no/name/list")
     @Operation(summary = "商品款号-名称下拉列表", description = "商品款号-名称下拉列表")
-    public Result<List<ProductSelectDTO>> listProduct() {
-        return Result.success(productService.listProductSelect());
+    public Result<List<ProductSelectDTO>> listProduct(
+            @RequestBody(required = false) ProductSelectQueryDTO queryDTO) {
+        String productNo = queryDTO == null ? null : queryDTO.getProductNo();
+        return Result.success(productService.listProductSelect(productNo));
     }
 
     @GetMapping("/get/sku/by/{productId}")
-    @Operation(summary = "商品款号-名称下拉列表", description = "商品款号-名称下拉列表")
+    @Operation(summary = "商品SKU下拉列表", description = "商品SKU下拉列表")
     public Result<List<ProductSkuListDTO>> getSkuByProductId(@PathVariable String productId) {
         return Result.success(productSkuService.getSkuByProductId(productId));
     }

@@ -17,6 +17,7 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -111,10 +112,11 @@ public class ProductServiceImpl extends BaseReadonlyServiceImpl<ProductMapper, P
     }
 
     @Override
-    public List<ProductSelectDTO> listProductSelect() {
+    public List<ProductSelectDTO> listProductSelect(String productNo) {
         LambdaQueryWrapper<ProductDO> wrapper = new LambdaQueryWrapper<>();
 
         wrapper.select(ProductDO::getId, ProductDO::getProductNo, ProductDO::getName, ProductDO::getMainImageId);
+        wrapper.like(StringUtils.hasText(productNo), ProductDO::getProductNo, productNo);
 
         List<ProductDO> products = baseMapper.selectList(wrapper);
 
