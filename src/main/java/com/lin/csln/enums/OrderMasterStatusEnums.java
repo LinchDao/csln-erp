@@ -9,9 +9,10 @@ import lombok.Getter;
 public enum OrderMasterStatusEnums {
 
     WAIT_AUDIT(0, "待审核"),
-    WAREHOUSE_PREPARING(1, "仓库准备中"),
-    PART_SHIPPED(2, "部分已发货"),
-    FINISHED(3, "订单已完成"), DRAFT(8, "草稿");
+    WAREHOUSE_PREPARING(2, "仓库准备中"),
+    PART_SHIPPED(3, "部分已发货"),
+    FINISHED(5, "订单已完成"),
+    DRAFT(4, "草稿");
 
     private final Integer code;
     private final String desc;

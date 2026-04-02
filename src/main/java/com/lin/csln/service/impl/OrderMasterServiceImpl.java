@@ -89,7 +89,11 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
         orderMasterDO.setAuditStatus(OrderAuditStatusEnums.WAIT_AUDIT.getCode());
         orderMasterDO.setIsAr(GlobalEnums.YES.getCode());
         orderMasterDO.setAllowReplace(GlobalEnums.NO.getCode());
-        orderMasterDO.setStatus(OrderMasterStatusEnums.WAREHOUSE_PREPARING.getCode());
+        if (GlobalEnums.YES.getCode().equals(dto.getIsDraft())) {
+            orderMasterDO.setStatus(OrderMasterStatusEnums.DRAFT.getCode());
+        } else {
+            orderMasterDO.setStatus(OrderMasterStatusEnums.WAREHOUSE_PREPARING.getCode());
+        }
         String orderNo = generateOrderNo();
         orderMasterDO.setOrderNo(orderNo);
         orderMasterDO.setCreateUserId(userId);
@@ -145,6 +149,7 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
 
         BeanUtil.copyProperties(dto, dbOrder);
         dbOrder.setIsDraft(GlobalEnums.YES.getCode());
+        dbOrder.setStatus(OrderMasterStatusEnums.DRAFT.getCode());
         baseMapper.updateById(dbOrder);
         orderSubService.saveSubOrder(id, dbOrder.getOrderNo(), dto.getSubOrders(), GlobalEnums.YES.getCode());
     }
@@ -164,6 +169,7 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
             validateAmountAndQty(dto);
             BeanUtil.copyProperties(dto, dbOrder);
             dbOrder.setIsDraft(GlobalEnums.YES.getCode());
+            dbOrder.setStatus(OrderMasterStatusEnums.DRAFT.getCode());
             baseMapper.updateById(dbOrder);
             submitDTO = dto;
         } else {
