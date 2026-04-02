@@ -39,11 +39,13 @@
         SELECT
             os.id,
             os.warehouse_id AS warehouseId,
+            w.warehouse_name AS warehouseName,
             os.amount,
             os.delivery_type AS deliveryType,
             os.delivery_remark AS deliveryRemark,
             DATE_FORMAT(os.expect_send_date, '%Y-%m-%d') AS expectSendDate
         FROM order_sub os
+                 LEFT JOIN warehouse w ON os.warehouse_id = w.id
         WHERE os.master_id = #{masterId}
           AND os.is_delete = 0
         ORDER BY os.sub_order_no ASC

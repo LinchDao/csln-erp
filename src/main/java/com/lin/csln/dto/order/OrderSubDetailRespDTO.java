@@ -16,6 +16,9 @@ public class OrderSubDetailRespDTO {
     @Schema(description = "仓库 ID")
     private String warehouseId;
 
+    @Schema(description = "仓库名称")
+    private String warehouseName;
+
     @Schema(description = "子订单金额")
     private BigDecimal amount;
 
