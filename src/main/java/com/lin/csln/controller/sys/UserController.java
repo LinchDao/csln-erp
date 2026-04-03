@@ -3,15 +3,17 @@ package com.lin.csln.controller.sys;
 
 import com.lin.csln.common.cache.UserCache;
 import com.lin.csln.common.constants.ResultCode;
+import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.common.dto.UserInfoDTO;
+import com.lin.csln.dto.sys.user.UserPageRespDTO;
+import com.lin.csln.dto.sys.user.UserQueryParamDTO;
 import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description: 用户信息
@@ -28,6 +30,7 @@ public class UserController {
 
 
     @GetMapping("/info")
+    @Operation(summary = "获取当前登录用户信息")
     public Result<UserInfoDTO> getUserInfo() {
 
         String userId = JwtTokenUtil.getUserId();
@@ -44,6 +47,12 @@ public class UserController {
             return Result.success(userInfoDTO);
         }
         return Result.fail(ResultCode.UNAUTHORIZED);
+    }
+
+    @PostMapping("/page")
+    @Operation(summary = "分页查询用户", description = "按姓名条件分页查询用户（仅返回启用状态用户）")
+    public Result<PageRespDTO<UserPageRespDTO>> pageUser(@RequestBody UserQueryParamDTO queryDto) {
+        return Result.success(userService.pageUser(queryDto));
     }
 
 

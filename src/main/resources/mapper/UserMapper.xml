@@ -21,4 +21,21 @@
         id, username, password, real_name, phone, shop_id, warehouse_id, status, create_time, update_time
     </sql>
 
+    <select id="pageUser" parameterType="com.lin.csln.dto.sys.user.UserQueryParamDTO"
+            resultType="com.lin.csln.dto.sys.user.UserPageRespDTO">
+        SELECT
+            id,
+            username,
+            real_name AS realName,
+            phone
+        FROM sys_user
+        <where>
+            status = 1
+            <if test="params.realName != null and params.realName != ''">
+                AND real_name LIKE CONCAT('%', #{params.realName}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
 </mapper>

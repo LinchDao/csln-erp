@@ -1,7 +1,10 @@
 package com.lin.csln.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.UserInfoDTO;
+import com.lin.csln.dto.sys.user.UserPageRespDTO;
+import com.lin.csln.dto.sys.user.UserQueryParamDTO;
 import com.lin.csln.entity.UserDO;
 
 import java.util.Map;
@@ -21,4 +24,6 @@ public interface UserService extends IService<UserDO> {
     UserInfoDTO getUserInfoById(String userId);
 
     Map<String, String> getUserNamesByIds(Set<String> userIds);
+
+    PageRespDTO<UserPageRespDTO> pageUser(UserQueryParamDTO queryDTO);
 }

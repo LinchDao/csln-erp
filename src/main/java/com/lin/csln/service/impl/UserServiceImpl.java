@@ -2,9 +2,14 @@ package com.lin.csln.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
+import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.UserInfoDTO;
+import com.lin.csln.dto.sys.user.UserPageRespDTO;
+import com.lin.csln.dto.sys.user.UserQueryParamDTO;
 import com.lin.csln.entity.RoleDO;
 import com.lin.csln.entity.UserDO;
 import com.lin.csln.mapper.UserMapper;
@@ -103,6 +108,13 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
                         UserDO::getRealName,
                         (oldValue, newValue) -> oldValue
                 ));
+    }
+
+    @Override
+    public PageRespDTO<UserPageRespDTO> pageUser(UserQueryParamDTO queryDTO) {
+        IPage<UserPageRespDTO> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
+        IPage<UserPageRespDTO> result = baseMapper.pageUser(page, queryDTO);
+        return PageRespDTO.build(result, queryDTO);
     }
 
 }
