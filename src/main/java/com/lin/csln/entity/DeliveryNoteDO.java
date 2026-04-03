@@ -29,7 +29,7 @@ public class DeliveryNoteDO {
     private String subOrderId;
 
     /**
-     * 配送方式
+     * 配送方式 0快递 1即时货运 3自提
      */
     private Integer deliveryType;
 
@@ -39,7 +39,7 @@ public class DeliveryNoteDO {
     private String expressNo;
 
     /**
-     * 司机/自提手机号
+     * 即时货运/自提手机号
      */
     private String driverPhone;
 

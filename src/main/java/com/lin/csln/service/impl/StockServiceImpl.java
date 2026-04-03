@@ -81,4 +81,35 @@ public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, Stock
         updateStock.setLockQty(targetLockQty);
         baseMapper.updateById(updateStock);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void consumeLockedStock(String warehouseId, String skuId, int qty) {
+        if (qty <= 0) {
+            return;
+        }
+        StockDO stock = baseMapper.selectOne(new LambdaQueryWrapper<StockDO>()
+                .eq(StockDO::getWarehouseId, warehouseId)
+                .eq(StockDO::getSkuId, skuId));
+        if (stock == null) {
+            throw new BusinessException("库存记录不存在，仓库：" + warehouseId + "，SKU：" + skuId);
+        }
+
+        int currentQty = stock.getQty() == null ? 0 : stock.getQty();
+        int currentLockQty = stock.getLockQty() == null ? 0 : stock.getLockQty();
+        int targetQty = currentQty - qty;
+        int targetLockQty = currentLockQty - qty;
+        if (targetQty < 0) {
+            throw new BusinessException("可用库存不足，仓库：" + warehouseId + "，SKU：" + skuId);
+        }
+        if (targetLockQty < 0) {
+            throw new BusinessException("锁定库存不足，仓库：" + warehouseId + "，SKU：" + skuId);
+        }
+
+        StockDO updateStock = new StockDO();
+        updateStock.setId(stock.getId());
+        updateStock.setQty(targetQty);
+        updateStock.setLockQty(targetLockQty);
+        baseMapper.updateById(updateStock);
+    }
 }

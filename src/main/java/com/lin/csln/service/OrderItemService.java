@@ -6,6 +6,7 @@ import com.lin.csln.dto.order.OrderItemDetailRespDTO;
 import com.lin.csln.dto.order.OrderItemDTO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单明细表 服务接口
@@ -22,5 +23,9 @@ public interface OrderItemService extends IService<OrderItemDO> {
     void lockDraftItemsByMasterId(String masterId);
 
     List<OrderItemDetailRespDTO> listDetailByMasterId(String masterId);
+
+    List<OrderItemDetailRespDTO> listDetailBySubId(String subId);
+
+    Map<String, Integer> completePickingAndGetActualQtyMap(String subId);
 
 }

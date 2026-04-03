@@ -3,23 +3,32 @@ package com.lin.csln.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
-import com.lin.csln.dto.order.OrderItemDTO;
-import com.lin.csln.dto.order.OrderSubDetailRespDTO;
-import com.lin.csln.dto.order.OrderSubDTO;
+import com.lin.csln.dto.order.*;
+import com.lin.csln.enums.DeliveryTypeEnums;
 import com.lin.csln.entity.OrderSubDO;
 import com.lin.csln.enums.GlobalEnums;
 import com.lin.csln.enums.OrderSubStatusEnums;
 import com.lin.csln.mapper.OrderSubMapper;
 import com.lin.csln.service.OrderItemService;
+import com.lin.csln.service.OrderMasterService;
 import com.lin.csln.service.OrderSubService;
+import com.lin.csln.service.StockService;
+import com.lin.csln.service.UserService;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +46,13 @@ public class OrderSubServiceImpl extends BaseReadonlyServiceImpl<OrderSubMapper,
 
     @Resource
     private OrderItemService orderItemService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private StockService stockService;
+    @Lazy
+    @Resource
+    private OrderMasterService orderMasterService;
 
 
     @Override
@@ -132,6 +148,181 @@ public class OrderSubServiceImpl extends BaseReadonlyServiceImpl<OrderSubMapper,
         return baseMapper.selectDetailListByMasterId(masterId);
     }
 
+    @Override
+    public PageRespDTO<OrderSubPageRespDTO> pageQuery(OrderSubQueryParamDTO queryDTO) {
+        IPage<OrderSubPageRespDTO> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
+        IPage<OrderSubPageRespDTO> resultPage = baseMapper.pageQuery(page, queryDTO);
+
+        Set<String> userIds = new HashSet<>();
+        for (OrderSubPageRespDTO respDTO : resultPage.getRecords()) {
+            if (StringUtils.hasText(respDTO.getCreateUserId())) {
+                userIds.add(respDTO.getCreateUserId());
+            }
+            if (StringUtils.hasText(respDTO.getPickerUserId())) {
+                userIds.add(respDTO.getPickerUserId());
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(userIds)) {
+            Map<String, String> userNameMap = userService.getUserNamesByIds(userIds);
+            for (OrderSubPageRespDTO respDTO : resultPage.getRecords()) {
+                respDTO.setCreateUserName(userNameMap.get(respDTO.getCreateUserId()));
+                respDTO.setPickerUserName(userNameMap.get(respDTO.getPickerUserId()));
+            }
+        }
+
+        return PageRespDTO.build(resultPage, queryDTO);
+    }
+
+    @Override
+    public OrderSubDetailDTO getDetail(String subId) {
+        if (!StringUtils.hasText(subId)) {
+            throw new BusinessException("子订单ID不能为空");
+        }
+
+        OrderSubDetailDTO detailDTO = baseMapper.selectDetailBySubId(subId);
+        if (detailDTO == null) {
+            throw new BusinessException("子订单不存在");
+        }
+
+        detailDTO.setItems(orderItemService.listDetailBySubId(subId));
+
+        if (StringUtils.hasText(detailDTO.getPickerUserId())) {
+            Set<String> userIds = new HashSet<>();
+            userIds.add(detailDTO.getPickerUserId());
+            Map<String, String> userNameMap = userService.getUserNamesByIds(userIds);
+            detailDTO.setPickerUserName(userNameMap.get(detailDTO.getPickerUserId()));
+        }
+
+        return detailDTO;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void assignOrderToUser(String orderSubId, String userId) {
+        if (!StringUtils.hasText(orderSubId)) {
+            throw new BusinessException("子订单ID不能为空");
+        }
+        if (!StringUtils.hasText(userId)) {
+            throw new BusinessException("用户ID不能为空");
+        }
+
+        OrderSubDO orderSubDO = this.getOne(new LambdaQueryWrapper<OrderSubDO>()
+                .eq(OrderSubDO::getId, orderSubId)
+                .eq(OrderSubDO::getIsDelete, GlobalEnums.NO.getCode()));
+        if (orderSubDO == null) {
+            throw new BusinessException("子订单不存在");
+        }
+
+        OrderSubDO updateDO = new OrderSubDO();
+        updateDO.setId(orderSubId);
+        updateDO.setPickerUserId(userId);
+        if (OrderSubStatusEnums.WAIT_ALLOCATE.getCode().equals(orderSubDO.getStatus())) {
+            updateDO.setStatus(OrderSubStatusEnums.PICKING.getCode());
+        }
+        this.updateById(updateDO);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void completePicking(OrderSubPickingCompleteDTO dto) {
+        if (dto == null || !StringUtils.hasText(dto.getOrderSubId())) {
+            throw new BusinessException("子订单ID不能为空");
+        }
+        OrderSubDO orderSubDO = getSubOrderOrThrow(dto.getOrderSubId());
+        if (!OrderSubStatusEnums.PICKING.getCode().equals(orderSubDO.getStatus())) {
+            throw new BusinessException("仅“配货中”状态可操作配货完成");
+        }
+        if (!StringUtils.hasText(orderSubDO.getWarehouseId())) {
+            throw new BusinessException("子单未配置发货仓库");
+        }
+
+        Map<String, Integer> skuActualQtyMap = orderItemService.completePickingAndGetActualQtyMap(orderSubDO.getId());
+        for (Map.Entry<String, Integer> entry : skuActualQtyMap.entrySet()) {
+            stockService.consumeLockedStock(orderSubDO.getWarehouseId(), entry.getKey(), entry.getValue());
+        }
+
+        OrderSubDO updateDO = new OrderSubDO();
+        updateDO.setId(orderSubDO.getId());
+        updateDO.setStatus(OrderSubStatusEnums.PICKED.getCode());
+        this.updateById(updateDO);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void ship(OrderSubShipDTO dto) {
+        if (dto == null || !StringUtils.hasText(dto.getOrderSubId())) {
+            throw new BusinessException("子订单ID不能为空");
+        }
+        OrderSubDO orderSubDO = getSubOrderOrThrow(dto.getOrderSubId());
+
+        if (OrderSubStatusEnums.PICKING.getCode().equals(orderSubDO.getStatus())) {
+            OrderSubPickingCompleteDTO completeDTO = new OrderSubPickingCompleteDTO();
+            completeDTO.setOrderSubId(dto.getOrderSubId());
+            completePicking(completeDTO);
+            orderSubDO = getSubOrderOrThrow(dto.getOrderSubId());
+        }
+        if (!OrderSubStatusEnums.PICKED.getCode().equals(orderSubDO.getStatus())) {
+            throw new BusinessException("仅“配货完成”状态可发货");
+        }
+
+        Integer effectiveDeliveryType = dto.getDeliveryType() != null ? dto.getDeliveryType() : orderSubDO.getDeliveryType();
+        String effectiveExpressNo = StringUtils.hasText(dto.getExpressNo()) ? dto.getExpressNo() : orderSubDO.getExpressNo();
+        String effectiveDriverPhone = StringUtils.hasText(dto.getDriverPhone()) ? dto.getDriverPhone() : orderSubDO.getDriverPhone();
+        if (effectiveDeliveryType == null) {
+            throw new BusinessException("配送方式不能为空");
+        }
+        DeliveryTypeEnums deliveryTypeEnums = DeliveryTypeEnums.getByCode(effectiveDeliveryType);
+        if (deliveryTypeEnums == null) {
+            throw new BusinessException("配送方式不合法");
+        }
+        if (DeliveryTypeEnums.EXPRESS.equals(deliveryTypeEnums) && !StringUtils.hasText(effectiveExpressNo)) {
+            throw new BusinessException("快递配送必须填写快递单号");
+        }
+        if ((DeliveryTypeEnums.INSTANT_FREIGHT.equals(deliveryTypeEnums) || DeliveryTypeEnums.SELF_PICKUP.equals(deliveryTypeEnums))
+                && !StringUtils.hasText(effectiveDriverPhone)) {
+            throw new BusinessException("即时货运/自提配送必须填写司机/自提手机号");
+        }
+
+        OrderSubDO updateDO = new OrderSubDO();
+        updateDO.setId(orderSubDO.getId());
+        updateDO.setStatus(OrderSubStatusEnums.SHIPPED.getCode());
+        if (dto.getDeliveryType() != null) {
+            updateDO.setDeliveryType(dto.getDeliveryType());
+        }
+        if (StringUtils.hasText(dto.getExpressNo())) {
+            updateDO.setExpressNo(dto.getExpressNo());
+        }
+        if (StringUtils.hasText(dto.getDriverPhone())) {
+            updateDO.setDriverPhone(dto.getDriverPhone());
+        }
+        if (StringUtils.hasText(dto.getDeliveryRemark())) {
+            updateDO.setDeliveryRemark(dto.getDeliveryRemark());
+        }
+        updateDO.setActualSendDate(parseActualSendDate(dto.getActualSendDate()));
+        this.updateById(updateDO);
+
+        long totalSubCount = this.count(new LambdaQueryWrapper<OrderSubDO>()
+                .eq(OrderSubDO::getMasterId, orderSubDO.getMasterId())
+                .eq(OrderSubDO::getIsDelete, GlobalEnums.NO.getCode()));
+        long shippedSubCount = this.count(new LambdaQueryWrapper<OrderSubDO>()
+                .eq(OrderSubDO::getMasterId, orderSubDO.getMasterId())
+                .eq(OrderSubDO::getIsDelete, GlobalEnums.NO.getCode())
+                .eq(OrderSubDO::getStatus, OrderSubStatusEnums.SHIPPED.getCode()));
+        orderMasterService.syncStatusAfterSubShipped(orderSubDO.getMasterId(), totalSubCount, shippedSubCount);
+    }
+
+    @Override
+    public boolean hasFinishedOrShippedSubOrder(String masterId) {
+        if (!StringUtils.hasText(masterId)) {
+            throw new BusinessException("母单ID不能为空");
+        }
+        return this.count(new LambdaQueryWrapper<OrderSubDO>()
+                .eq(OrderSubDO::getMasterId, masterId)
+                .eq(OrderSubDO::getIsDelete, GlobalEnums.NO.getCode())
+                .in(OrderSubDO::getStatus, OrderSubStatusEnums.PICKED.getCode(), OrderSubStatusEnums.SHIPPED.getCode())) > 0;
+    }
+
     private int parseSubOrderSeq(String subOrderNo, String orderNo) {
         String subOrderPrefix = orderNo + SUB_ORDER_NO_SPLIT;
         if (!StringUtils.hasText(subOrderNo) || !subOrderNo.startsWith(subOrderPrefix)) {
@@ -142,6 +333,28 @@ public class OrderSubServiceImpl extends BaseReadonlyServiceImpl<OrderSubMapper,
             return 0;
         }
         return Integer.parseInt(seqPart);
+    }
+
+    private Date parseActualSendDate(String actualSendDate) {
+        if (!StringUtils.hasText(actualSendDate)) {
+            return new Date();
+        }
+        try {
+            LocalDate localDate = LocalDate.parse(actualSendDate);
+            return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        } catch (Exception e) {
+            throw new BusinessException("实际发货日期格式错误，应为yyyy-MM-dd");
+        }
+    }
+
+    private OrderSubDO getSubOrderOrThrow(String subId) {
+        OrderSubDO orderSubDO = this.getOne(new LambdaQueryWrapper<OrderSubDO>()
+                .eq(OrderSubDO::getId, subId)
+                .eq(OrderSubDO::getIsDelete, GlobalEnums.NO.getCode()));
+        if (orderSubDO == null) {
+            throw new BusinessException("子订单不存在");
+        }
+        return orderSubDO;
     }
 
     private void handleDeletedSubOrders(List<OrderSubDO> dbSubOrders, List<String> needDeleteIds, Integer isDraft) {

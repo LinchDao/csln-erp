@@ -32,13 +32,13 @@ public class OrderSubDTO {
     @Schema(description = "子单状态")
     private Integer status;
 
-    @Schema(description = "配送方式")
+    @Schema(description = "配送方式 0快递 1即时货运 3自提")
     private Integer deliveryType;
 
     @Schema(description = "快递单号")
     private String expressNo;
 
-    @Schema(description = "司机/自提手机号")
+    @Schema(description = "即时货运/自提手机号")
     private String driverPhone;
 
     @Schema(description = "配送备注")

@@ -126,6 +126,7 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
                 && !OrderMasterStatusEnums.WAREHOUSE_PREPARING.getCode().equals(dbOrder.getStatus())) {
             throw new BusinessException("仅“待审核/仓库准备中可编辑”");
         }
+        validateMasterEditable(id);
 
         BeanUtil.copyProperties(dto, dbOrder);
         dbOrder.setIsDraft(GlobalEnums.NO.getCode());
@@ -189,6 +190,37 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
         submitUpdate.setIsDraft(GlobalEnums.NO.getCode());
         submitUpdate.setStatus(OrderMasterStatusEnums.WAREHOUSE_PREPARING.getCode());
         baseMapper.updateById(submitUpdate);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void syncStatusAfterSubShipped(String masterId, long totalSubCount, long shippedSubCount) {
+        if (!StringUtils.hasText(masterId)) {
+            throw new BusinessException("母单ID不能为空");
+        }
+        if (totalSubCount <= 0 || shippedSubCount <= 0) {
+            return;
+        }
+
+        Integer targetStatus = null;
+        if (shippedSubCount >= totalSubCount) {
+            targetStatus = OrderMasterStatusEnums.FINISHED.getCode();
+        } else if (shippedSubCount > 0) {
+            targetStatus = OrderMasterStatusEnums.PART_SHIPPED.getCode();
+        }
+        if (targetStatus == null) {
+            return;
+        }
+
+        OrderMasterDO dbOrder = getOrderOrThrow(masterId);
+        if (targetStatus.equals(dbOrder.getStatus())) {
+            return;
+        }
+
+        OrderMasterDO updateDO = new OrderMasterDO();
+        updateDO.setId(masterId);
+        updateDO.setStatus(targetStatus);
+        baseMapper.updateById(updateDO);
     }
 
     private void validateOrderMaster(OrderMasterDTO dto) {
@@ -301,6 +333,13 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
             throw new BusinessException("订单不存在");
         }
         return dbOrder;
+    }
+
+    private void validateMasterEditable(String masterId) {
+        if (orderSubService.hasFinishedOrShippedSubOrder(masterId)) {
+            // TODO: 后续支持“部分子单已配货完成/已发货时仍可编辑主单”：前端需禁用对应子单，后端保存时跳过 PICKED/SHIPPED 子单，仅处理可编辑子单。
+            throw new BusinessException("已有子单配货完成或已发货，主单不可编辑");
+        }
     }
 
     private OrderMasterDTO buildOrderMasterDTOFromDb(String masterId) {

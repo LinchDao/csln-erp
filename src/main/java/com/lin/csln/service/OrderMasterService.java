@@ -25,4 +25,6 @@ public interface OrderMasterService extends IService<OrderMasterDO> {
     void editDraftOrderMaster(String id, OrderMasterDTO dto);
 
     void submitOrderMaster(String id, OrderMasterDTO dto);
+
+    void syncStatusAfterSubShipped(String masterId, long totalSubCount, long shippedSubCount);
 }

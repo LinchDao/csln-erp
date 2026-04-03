@@ -17,4 +17,6 @@ public interface OrderItemMapper extends BaseMapper<OrderItemDO> {
 
     List<OrderItemDetailRespDTO> selectDetailListByMasterId(@Param("masterId") String masterId);
 
+    List<OrderItemDetailRespDTO> selectDetailListBySubId(@Param("subId") String subId);
+
 }

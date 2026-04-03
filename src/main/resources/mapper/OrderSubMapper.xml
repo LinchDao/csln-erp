@@ -51,4 +51,71 @@
         ORDER BY os.sub_order_no ASC
     </select>
 
+    <select id="selectDetailBySubId" resultType="com.lin.csln.dto.order.OrderSubDetailDTO">
+        SELECT
+            os.id,
+            om.order_no AS orderNo,
+            os.sub_order_no AS subOrderNo,
+            c.name AS customerName,
+            w.warehouse_name AS warehouseName,
+            os.delivery_type AS deliveryType,
+            os.status,
+            DATE_FORMAT(os.expect_send_date, '%Y-%m-%d') AS expectSendDate,
+            DATE_FORMAT(os.actual_send_date, '%Y-%m-%d') AS actualSendDate,
+            os.picker_user_id AS pickerUserId,
+            os.express_no AS expressNo,
+            os.delivery_remark AS deliveryRemark,
+            os.remark,
+            os.amount
+        FROM order_sub os
+                 INNER JOIN order_master om ON os.master_id = om.id
+                 LEFT JOIN customer c ON om.customer_id = c.id
+                 LEFT JOIN warehouse w ON os.warehouse_id = w.id AND w.is_delete = 0
+        WHERE os.id = #{subId}
+          AND os.is_delete = 0
+    </select>
+
+    <select id="pageQuery" resultType="com.lin.csln.dto.order.OrderSubPageRespDTO">
+        SELECT
+            os.id,
+            om.order_no AS orderNo,
+            os.sub_order_no AS subOrderNo,
+            c.name AS customerName,
+            om.create_user_id AS createUserId,
+            om.order_type AS orderType,
+            om.status,
+            om.remark,
+            os.status AS subOrderStatus,
+            os.delivery_type AS deliveryType,
+            os.delivery_remark AS deliveryRemark,
+            DATE_FORMAT(os.expect_send_date, '%Y-%m-%d') AS expectSendDate,
+            DATE_FORMAT(os.actual_send_date, '%Y-%m-%d') AS actualSendDate,
+            os.picker_user_id AS pickerUserId,
+            os.remark AS subRemark
+        FROM order_sub os
+                 INNER JOIN order_master om ON os.master_id = om.id
+                 LEFT JOIN customer c ON om.customer_id = c.id
+        WHERE os.is_delete = 0
+          AND om.is_draft = 0
+        <if test="query.subOrderNo != null and query.subOrderNo != ''">
+            AND os.sub_order_no LIKE CONCAT('%', #{query.subOrderNo}, '%')
+        </if>
+        <if test="query.customerId != null and query.customerId != ''">
+            AND om.customer_id = #{query.customerId}
+        </if>
+        <if test="query.createUserId != null and query.createUserId != ''">
+            AND om.create_user_id = #{query.createUserId}
+        </if>
+        <if test="query.subOrderStatus != null">
+            AND os.status = #{query.subOrderStatus}
+        </if>
+        <if test="query.sendDateStart != null and query.sendDateStart != ''">
+            AND os.expect_send_date &gt;= #{query.sendDateStart}
+        </if>
+        <if test="query.sendDateEnd != null and query.sendDateEnd != ''">
+            AND os.expect_send_date &lt;= #{query.sendDateEnd}
+        </if>
+        ORDER BY os.expect_send_date ASC, os.sub_order_no ASC
+    </select>
+
 </mapper>

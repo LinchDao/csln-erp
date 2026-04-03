@@ -22,7 +22,7 @@ public class OrderSubDetailRespDTO {
     @Schema(description = "子订单金额")
     private BigDecimal amount;
 
-    @Schema(description = "配送方式编码")
+    @Schema(description = "配送方式 0快递 1即时货运 3自提")
     private Integer deliveryType;
 
     @Schema(description = "配送备注")

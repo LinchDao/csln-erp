@@ -178,4 +178,49 @@ public class OrderItemServiceImpl extends BaseReadonlyServiceImpl<OrderItemMappe
         }
         return baseMapper.selectDetailListByMasterId(masterId);
     }
+
+    @Override
+    public List<OrderItemDetailRespDTO> listDetailBySubId(String subId) {
+        if (!StringUtils.hasText(subId)) {
+            throw new BusinessException("子单ID不能为空");
+        }
+        return baseMapper.selectDetailListBySubId(subId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Integer> completePickingAndGetActualQtyMap(String subId) {
+        if (!StringUtils.hasText(subId)) {
+            throw new BusinessException("子单ID不能为空");
+        }
+        List<OrderItemDO> itemList = this.listBySubId(subId);
+        if (CollectionUtils.isEmpty(itemList)) {
+            throw new BusinessException("子单明细不能为空");
+        }
+
+        Map<String, Integer> skuActualQtyMap = new HashMap<>();
+        List<OrderItemDO> updateList = new ArrayList<>();
+        for (OrderItemDO itemDO : itemList) {
+            Integer qty = itemDO.getQty();
+            if (qty == null || qty <= 0) {
+                throw new BusinessException("子单明细数量异常，明细ID：" + itemDO.getId());
+            }
+
+            // TODO 分批配货功能开发时，此处改为使用前端传入的发货明细 actualQty（按 itemId 维度）并做差量处理。
+            int actualQty = qty;
+            skuActualQtyMap.merge(itemDO.getSkuId(), actualQty, Integer::sum);
+
+            if (!Integer.valueOf(actualQty).equals(itemDO.getActualQty())) {
+                OrderItemDO updateItem = new OrderItemDO();
+                updateItem.setId(itemDO.getId());
+                updateItem.setActualQty(actualQty);
+                updateList.add(updateItem);
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(updateList)) {
+            this.updateBatchById(updateList);
+        }
+        return skuActualQtyMap;
+    }
 }
