@@ -1,12 +1,13 @@
 package com.lin.csln.service;
 
-import com.lin.csln.entity.UserRoleDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.entity.UserRoleDO;
 
-/**
- * 用户角色关联表 服务接口
- * @author 系统生成器
- */
+import java.util.List;
+
 public interface UserRoleService extends IService<UserRoleDO> {
 
+    List<String> listRoleIdsByUserId(String userId);
+
+    void replaceRoles(String userId, List<String> roleIds);
 }

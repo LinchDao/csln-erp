@@ -1,5 +1,6 @@
 package com.lin.csln.service;
 
+import com.lin.csln.dto.sys.role.RoleListDTO;
 import com.lin.csln.entity.RoleDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,4 +13,6 @@ import java.util.List;
 public interface RoleService extends IService<RoleDO> {
 
     List<RoleDO> listRolesByUserId(String id);
+
+    List<RoleListDTO> listRoleForSelect();
 }
