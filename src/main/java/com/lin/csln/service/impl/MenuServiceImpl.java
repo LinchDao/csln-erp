@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO> implements MenuService {
+    private static final Comparator<MenuDTO> MENU_SORT_COMPARATOR =
+            Comparator.comparing(MenuDTO::getSort, Comparator.nullsLast(Integer::compareTo))
+                    .thenComparing(MenuDTO::getId, Comparator.nullsLast(String::compareTo));
 
     @Override
     public List<MenuDTO> treeMenuByRoleCode(List<String> roles) {
@@ -47,6 +50,7 @@ public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO>
         return menuList.stream()
                 .filter(menu -> menu.getParentId() == null)
                 .peek(menu -> menu.setChildren(getChildren(menu, menuMap)))
+                .sorted(MENU_SORT_COMPARATOR)
                 .collect(Collectors.toList());
     }
 
@@ -54,6 +58,7 @@ public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO>
         return menuMap.values().stream()
                 .filter(menu -> parent.getId().equals(menu.getParentId()))
                 .peek(menu -> menu.setChildren(getChildren(menu, menuMap)))
+                .sorted(MENU_SORT_COMPARATOR)
                 .collect(Collectors.toList());
     }
 }
