@@ -60,7 +60,7 @@ public class LoginController {
             return Result.fail(ResultCode.USER_DISABLED);
         }
 
-        String token = jwtTokenUtil.generateToken(user.getId().toString(), loginRequest.getRememberMe());
+        String token = jwtTokenUtil.generateToken(user.getId(), loginRequest.getRememberMe());
 
         return Result.success("登录成功", token);
     }

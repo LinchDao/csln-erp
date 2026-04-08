@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lin.csln.common.cache.UserCache;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.common.exception.BusinessException;
@@ -15,6 +16,7 @@ import com.lin.csln.entity.ShopDO;
 import com.lin.csln.entity.UserDO;
 import com.lin.csln.entity.WarehouseDO;
 import com.lin.csln.enums.GlobalEnums;
+import com.lin.csln.enums.RoleEnums;
 import com.lin.csln.mapper.UserMapper;
 import com.lin.csln.service.*;
 import com.lin.csln.utils.JwtTokenUtil;
@@ -195,8 +197,8 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void changePassword(UserPasswordUpdateDTO dto) {
-        UserDO user = this.getById(dto.getUserId());
+    public void changePassword(UserPasswordUpdateDTO dto, String userId) {
+        UserDO user = this.getById(userId);
         if (user == null) {
             throw new BusinessException("未找到该用户");
         }
@@ -207,9 +209,43 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
         }
 
         UserDO updateUser = new UserDO();
-        updateUser.setId(dto.getUserId());
+        updateUser.setId(userId);
         updateUser.setPassword(encryptPassword(dto.getNewPassword()));
         this.updateById(updateUser);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resetUserPassword(String targetUserId, String operatorUserId) {
+        if (!StringUtils.hasText(operatorUserId)) {
+            throw new BusinessException("未登录或Token过期");
+        }
+        if (!StringUtils.hasText(targetUserId)) {
+            throw new BusinessException("用户ID为必填项");
+        }
+        if (operatorUserId.equals(targetUserId)) {
+            throw new BusinessException("不允许重置当前登录用户密码");
+        }
+
+        List<RoleDO> operatorRoles = roleService.listRolesByUserId(operatorUserId);
+        boolean isSuperAdmin = operatorRoles.stream()
+                .filter(Objects::nonNull)
+                .anyMatch(role -> RoleEnums.SUPER_ADMIN.getCode().equals(role.getRoleCode()));
+        if (!isSuperAdmin) {
+            throw new BusinessException("无权限执行重置密码操作");
+        }
+
+        UserDO targetUser = this.getById(targetUserId);
+        if (targetUser == null) {
+            throw new BusinessException("用户不存在");
+        }
+
+        UserDO updateUser = new UserDO();
+        updateUser.setId(targetUserId);
+        updateUser.setPassword(encryptPassword(getDefaultPassword()));
+        this.updateById(updateUser);
+
+        UserCache.deleteUserInfo(targetUserId);
     }
 
     @Override

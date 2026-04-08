@@ -37,7 +37,9 @@ public interface UserService extends IService<UserDO> {
 
     UserDetailRespDTO getUserDetail(String userId);
 
-    void changePassword(UserPasswordUpdateDTO dto);
+    void changePassword(UserPasswordUpdateDTO dto, String userId);
+
+    void resetUserPassword(String targetUserId, String operatorUserId);
 
     void updateUserStatus(UserStatusUpdateDTO dto);
 }

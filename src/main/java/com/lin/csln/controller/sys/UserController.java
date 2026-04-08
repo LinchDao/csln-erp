@@ -5,25 +5,14 @@ import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.common.dto.UserInfoDTO;
-import com.lin.csln.dto.sys.user.UserDetailRespDTO;
-import com.lin.csln.dto.sys.user.UserPageRespDTO;
-import com.lin.csln.dto.sys.user.UserPasswordUpdateDTO;
-import com.lin.csln.dto.sys.user.UserQueryParamDTO;
-import com.lin.csln.dto.sys.user.UserSaveReqDTO;
-import com.lin.csln.dto.sys.user.UserStatusUpdateDTO;
+import com.lin.csln.dto.sys.user.*;
 import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Tag(name = "用户管理", description = "用户相关接口")
@@ -80,7 +69,14 @@ public class UserController {
     @PutMapping("/password")
     @Operation(summary = "修改用户密码")
     public Result<Void> changePassword(@Valid @RequestBody UserPasswordUpdateDTO dto) {
-        userService.changePassword(dto);
+        userService.changePassword(dto, JwtTokenUtil.getUserId());
+        return Result.success();
+    }
+
+    @PutMapping("/password/reset/{userId}")
+    @Operation(summary = "重置用户密码")
+    public Result<Void> resetUserPassword(@PathVariable String userId) {
+        userService.resetUserPassword(userId, JwtTokenUtil.getUserId());
         return Result.success();
     }
 

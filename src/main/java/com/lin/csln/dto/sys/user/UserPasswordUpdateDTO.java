@@ -9,9 +9,6 @@ import lombok.Data;
 @Schema(description = "用户修改密码请求对象")
 public class UserPasswordUpdateDTO {
 
-    @Schema(description = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String userId;
-
     @Schema(description = "旧密码", requiredMode = Schema.RequiredMode.REQUIRED)
     private String oldPassword;
 

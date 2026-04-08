@@ -25,9 +25,6 @@ public class UserInfoDTO {
     @Schema(description = "姓名")
     private String realName;
 
-    @Schema(description = "密码")
-    private String password;
-
     @Schema(description = "电话")
     private String phone;
 
