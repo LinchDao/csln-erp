@@ -43,6 +43,8 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
     private UserRoleService userRoleService;
     @Resource
     private AppSecurityProperties securityProperties;
+    @Resource
+    private AuthRedisService authRedisService;
 
     @Override
     public UserDO getUserByUsername(String username) {
@@ -212,6 +214,8 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
         updateUser.setId(userId);
         updateUser.setPassword(encryptPassword(dto.getNewPassword()));
         this.updateById(updateUser);
+        UserCache.deleteUserInfo(userId);
+        authRedisService.deleteUserSessions(userId);
     }
 
     @Override
@@ -246,6 +250,7 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
         this.updateById(updateUser);
 
         UserCache.deleteUserInfo(targetUserId);
+        authRedisService.deleteUserSessions(targetUserId);
     }
 
     @Override
@@ -278,6 +283,9 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
         updateUser.setId(dto.getUserId());
         updateUser.setStatus(status);
         this.updateById(updateUser);
+        if (Objects.equals(status, GlobalEnums.NO.getCode())) {
+            authRedisService.deleteUserSessions(dto.getUserId());
+        }
     }
 
     private void checkUnique(String username, String phone, String excludeUserId) {

@@ -2,16 +2,17 @@ package com.lin.csln.controller.login;
 
 import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.dto.Result;
-import com.lin.csln.config.AppSecurityProperties;
+import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.login.LoginReqDTO;
-import com.lin.csln.entity.UserDO;
-import com.lin.csln.service.UserService;
+import com.lin.csln.dto.login.LoginRespDTO;
+import com.lin.csln.dto.login.RefreshTokenReqDTO;
+import com.lin.csln.service.AuthService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.apache.commons.codec.digest.DigestUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,48 +28,38 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Resource
-    private UserService userService;
+    private AuthService authService;
     @Resource
     private JwtTokenUtil jwtTokenUtil;
-    @Resource
-    private AppSecurityProperties securityProperties;
 
 
     @PostMapping("/login")
     @Operation(summary = "用户登录", description = "账号密码登录，返回JWT Token")
-    public Result<String> login(@Valid @RequestBody LoginReqDTO loginRequest) {
-
-        UserDO user = userService.getUserByUsername(loginRequest.getUsername());
-        if (user == null) {
-            return Result.fail(ResultCode.USER_NOT_EXIST);
+    public Result<LoginRespDTO> login(@Valid @RequestBody LoginReqDTO loginRequest) {
+        try {
+            return Result.success("登录成功", authService.login(loginRequest));
+        } catch (BusinessException ex) {
+            return Result.fail(ex.getCode(), ex.getMessage());
         }
+    }
 
-        String salt = securityProperties.getPasswordSalt();
-        boolean saltEnabled = securityProperties.getSaltEnabled();
-        String encryptPwd;
-        if (saltEnabled) {
-            encryptPwd = DigestUtils.md5Hex(loginRequest.getPassword() + salt);
-        } else {
-            encryptPwd = DigestUtils.md5Hex(loginRequest.getPassword());
+    @PostMapping("/auth/refresh")
+    @Operation(summary = "刷新令牌", description = "使用refreshToken续期，返回新的accessToken和refreshToken")
+    public Result<LoginRespDTO> refresh(@Valid @RequestBody RefreshTokenReqDTO reqDTO) {
+        try {
+            return Result.success(authService.refresh(reqDTO.getRefreshToken()));
+        } catch (BusinessException ex) {
+            return Result.fail(ex.getCode(), ex.getMessage());
+        } catch (Exception ex) {
+            return Result.fail(ResultCode.UNAUTHORIZED);
         }
-
-        if (!encryptPwd.equals(user.getPassword())) {
-            return Result.fail(ResultCode.PASSWORD_ERROR);
-        }
-
-        if (user.getStatus() == 0) {
-            return Result.fail(ResultCode.USER_DISABLED);
-        }
-
-        String token = jwtTokenUtil.generateToken(user.getId(), loginRequest.getRememberMe());
-
-        return Result.success("登录成功", token);
     }
 
     @PostMapping("/logout")
-    @Operation(summary = "退出登录", description = "通知客户端清理本地Token；服务端不做Token吊销")
-    public Result<String> logout() {
-        // 当前系统使用无状态JWT，登出由客户端删除本地token实现
+    @Operation(summary = "退出登录", description = "服务端吊销当前会话并清理Token")
+    public Result<String> logout(HttpServletRequest request) {
+        String token = jwtTokenUtil.resolveToken(request);
+        authService.logout(token);
         return Result.success("退出登录成功");
     }
 }

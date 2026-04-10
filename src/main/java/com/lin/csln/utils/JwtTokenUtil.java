@@ -1,6 +1,7 @@
 package com.lin.csln.utils;
 
 
+import com.lin.csln.common.auth.CurrentUserContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -16,6 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @Description:
@@ -24,7 +26,13 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-    // 设置有效期30min
+    public static final String TOKEN_TYPE_ACCESS = "access";
+    public static final String TOKEN_TYPE_REFRESH = "refresh";
+    public static final String CLAIM_UID = "uid";
+    public static final String CLAIM_SID = "sid";
+    public static final String CLAIM_TYPE = "type";
+    public static final String CLAIM_RM = "rm";
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -50,21 +58,29 @@ public class JwtTokenUtil {
         JwtTokenUtil.setJwtTokenUtil(this);
     }
 
-    /**
-     * 生成Token
-     *
-     * @param userId     用户ID
-     * @param rememberMe 是否记住我
-     * @return JWT Token
-     */
-    public String generateToken(String userId, boolean rememberMe) {
-        long expireTime = rememberMe ? rememberExpireTime : normalExpireTime;
-        return Jwts.builder()
+    public String generateAccessToken(String userId, String sessionId, String jti, long expireMillis) {
+        return generateToken(userId, sessionId, jti, TOKEN_TYPE_ACCESS, expireMillis, null);
+    }
+
+    public String generateRefreshToken(String userId, String sessionId, String jti, long expireMillis, boolean rememberMe) {
+        return generateToken(userId, sessionId, jti, TOKEN_TYPE_REFRESH, expireMillis, Map.of(CLAIM_RM, rememberMe));
+    }
+
+    private String generateToken(String userId, String sessionId, String jti, String tokenType,
+                                 long expireMillis, Map<String, Object> extClaims) {
+        var builder = Jwts.builder()
+                .id(jti)
                 .subject(userId)
+                .claim(CLAIM_UID, userId)
+                .claim(CLAIM_SID, sessionId)
+                .claim(CLAIM_TYPE, tokenType)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expireTime))
-                .signWith(key)
-                .compact();
+                .expiration(new Date(System.currentTimeMillis() + expireMillis))
+                .signWith(key);
+        if (extClaims != null && !extClaims.isEmpty()) {
+            builder.claims(extClaims);
+        }
+        return builder.compact();
     }
 
     /**
@@ -82,16 +98,49 @@ public class JwtTokenUtil {
         }
     }
 
-    /**
-     * 从Token中获取用户ID
-     */
-    public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
+    public Claims parseClaims(String token) {
+        return Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return String.valueOf(claims.getSubject());
+    }
+
+    public Claims parseClaimsSafely(String token) {
+        if (!StringUtils.hasText(token)) {
+            return null;
+        }
+        try {
+            return parseClaims(token);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public long getRemainingMillis(Claims claims) {
+        if (claims == null || claims.getExpiration() == null) {
+            return 0;
+        }
+        return Math.max(claims.getExpiration().getTime() - System.currentTimeMillis(), 0);
+    }
+
+    /**
+     * 从Token中获取用户ID
+     */
+    public String getUserIdFromToken(String token) {
+        Claims claims = parseClaims(token);
+        return getUserId(claims);
+    }
+
+    public String resolveToken(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        String token = request.getHeader(tokenKey);
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            return token.substring(7);
+        }
+        return token;
     }
 
     private static String getTokenFromRequest() {
@@ -99,26 +148,73 @@ public class JwtTokenUtil {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             if (attributes != null) {
                 HttpServletRequest request = attributes.getRequest();
-                // 使用配置的tokenKey获取token
-                String token = request.getHeader(jwtTokenUtil.tokenKey);
-                // 如果token以Bearer开头，去掉前缀
-                if (token != null && token.startsWith("Bearer ")) {
-                    return token.substring(7);
+                if (jwtTokenUtil == null) {
+                    return null;
                 }
-                return token;
+                return jwtTokenUtil.resolveToken(request);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
         return null;
     }
 
     public static String getUserId() {
+        String userId = CurrentUserContext.getUserId();
+        if (StringUtils.hasText(userId)) {
+            return userId;
+        }
         String token = getTokenFromRequest();
-        if (StringUtils.hasLength(token)) {
-            return jwtTokenUtil.getUserIdFromToken(token);
+        if (StringUtils.hasLength(token) && jwtTokenUtil != null) {
+            Claims claims = jwtTokenUtil.parseClaimsSafely(token);
+            return getUserId(claims);
         }
         return null;
     }
 
+    public static String getUserId(Claims claims) {
+        if (claims == null) {
+            return null;
+        }
+        Object uid = claims.get(CLAIM_UID);
+        if (uid != null) {
+            return String.valueOf(uid);
+        }
+        return claims.getSubject();
+    }
+
+    public static String getSessionId(Claims claims) {
+        if (claims == null) {
+            return null;
+        }
+        Object sid = claims.get(CLAIM_SID);
+        return sid == null ? null : String.valueOf(sid);
+    }
+
+    public static String getTokenType(Claims claims) {
+        if (claims == null) {
+            return null;
+        }
+        Object type = claims.get(CLAIM_TYPE);
+        return type == null ? null : String.valueOf(type);
+    }
+
+    public static String getJti(Claims claims) {
+        if (claims == null) {
+            return null;
+        }
+        return claims.getId();
+    }
+
+    public long getNormalExpireTime() {
+        return normalExpireTime;
+    }
+
+    public long getRememberExpireTime() {
+        return rememberExpireTime;
+    }
+
+    public String getTokenKey() {
+        return tokenKey;
+    }
 }
