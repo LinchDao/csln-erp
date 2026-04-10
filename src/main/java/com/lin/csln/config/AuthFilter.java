@@ -113,7 +113,7 @@ public class AuthFilter extends OncePerRequestFilter {
         if (response.isCommitted()) {
             return;
         }
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(JSON_UTF8);
         response.getWriter().write(JSON.toJSONString(Result.fail(ResultCode.UNAUTHORIZED)));
