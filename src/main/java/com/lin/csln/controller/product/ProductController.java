@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,6 @@ import java.util.List;
 @RequestMapping("/product")
 @Tag(name = "商品管理接口", description = "商品的增删改查及分页查询接口")
 public class ProductController {
-
     @Resource
     private ProductService productService;
     @Resource
@@ -79,6 +79,13 @@ public class ProductController {
         } catch (Exception e) {
             return Result.fail("分页查询商品失败：" + e.getMessage());
         }
+    }
+
+    @PostMapping("/export")
+    @Operation(summary = "导出商品", description = "根据条件导出商品列表（XLSX）")
+    public void exportProduct(@RequestBody(required = false) ProductQueryParamDTO queryDTO,
+                              HttpServletResponse response) {
+        productService.exportProduct(queryDTO, response);
     }
 
     @PostMapping("/no/name/list")

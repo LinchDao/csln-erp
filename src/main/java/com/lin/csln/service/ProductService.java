@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.dto.product.*;
 import com.lin.csln.entity.ProductDO;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface ProductService extends IService<ProductDO> {
     PageRespDTO<ProductPageRespDTO> pageProduct(ProductQueryParamDTO queryDTO);
 
     List<ProductSelectDTO> listProductSelect(String productNo);
+
+    void exportProduct(ProductQueryParamDTO queryDTO, HttpServletResponse response);
 }

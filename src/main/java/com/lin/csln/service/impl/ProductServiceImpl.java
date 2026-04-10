@@ -1,5 +1,8 @@
 package com.lin.csln.service.impl;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,11 +17,19 @@ import com.lin.csln.service.ProductColorImageService;
 import com.lin.csln.service.ProductService;
 import com.lin.csln.service.ProductSkuService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,6 +41,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProductServiceImpl extends BaseReadonlyServiceImpl<ProductMapper, ProductDO> implements ProductService {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Resource
     private ProductColorImageService productColorImageService;
@@ -125,6 +137,78 @@ public class ProductServiceImpl extends BaseReadonlyServiceImpl<ProductMapper, P
             BeanUtils.copyProperties(p, vo);
             return vo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void exportProduct(ProductQueryParamDTO queryDTO, HttpServletResponse response) {
+        ProductQueryParamDTO exportQuery = queryDTO == null ? new ProductQueryParamDTO() : queryDTO;
+        int page = 1;
+        int pageSize = 500;
+
+        String fileName = "商品列表_" + LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ".xlsx";
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("+", "%20");
+
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + encodedFileName);
+
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(response.getOutputStream(), ProductExportExcelDTO.class)
+                    .autoCloseStream(Boolean.FALSE)
+                    .build();
+            WriteSheet writeSheet = EasyExcel.writerSheet("商品列表").build();
+
+            while (true) {
+                exportQuery.setPage(page);
+                exportQuery.setLimit(pageSize);
+                PageRespDTO<ProductPageRespDTO> pageResp = pageProduct(exportQuery);
+                List<ProductPageRespDTO> rows = pageResp.getRows();
+                if (rows == null || rows.isEmpty()) {
+                    break;
+                }
+
+                List<ProductExportExcelDTO> exportRows = rows.stream()
+                        .map(this::convertToExportDTO)
+                        .collect(Collectors.toList());
+                excelWriter.write(exportRows, writeSheet);
+
+                if (page >= pageResp.getTotalPages()) {
+                    break;
+                }
+                page++;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("导出商品失败：" + e.getMessage(), e);
+        } finally {
+            if (excelWriter != null) {
+                excelWriter.finish();
+            }
+        }
+    }
+
+    private ProductExportExcelDTO convertToExportDTO(ProductPageRespDTO row) {
+        ProductExportExcelDTO dto = new ProductExportExcelDTO();
+        dto.setProductNo(row.getProductNo());
+        dto.setName(row.getName());
+        dto.setBrand(row.getBrand());
+        dto.setSeason(row.getSeason());
+        dto.setYear(row.getYear());
+        dto.setSeries(row.getSeries());
+        dto.setCostPrice(row.getCostPrice());
+        dto.setWholesalePrice(row.getWholesalePrice());
+        dto.setRetailPrice(row.getRetailPrice());
+        dto.setStatusText(row.getStatus() == null ? "" : (row.getStatus() == 1 ? "启用" : "禁用"));
+        dto.setCreateTime(formatDate(row.getCreateTime()));
+        return dto;
+    }
+
+    private String formatDate(Date date) {
+        if (date == null) {
+            return "";
+        }
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return localDateTime.format(DATE_TIME_FORMATTER);
     }
 
 
