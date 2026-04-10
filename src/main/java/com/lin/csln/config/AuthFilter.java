@@ -25,6 +25,7 @@ import java.util.List;
 
 @Component
 public class AuthFilter extends OncePerRequestFilter {
+    private static final String JSON_UTF8 = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8";
 
     private static final List<String> WHITE_LIST = List.of(
             "/login",
@@ -67,19 +68,19 @@ public class AuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = jwtTokenUtil.resolveToken(request);
         if (!StringUtils.hasText(token)) {
-            unauthorized(response);
+            writeUnauthorizedResult(response);
             return;
         }
 
         Claims claims = jwtTokenUtil.parseClaimsSafely(token);
         if (claims == null) {
-            unauthorized(response);
+            writeUnauthorizedResult(response);
             return;
         }
 
         String tokenType = JwtTokenUtil.getTokenType(claims);
         if (!JwtTokenUtil.TOKEN_TYPE_ACCESS.equals(tokenType)) {
-            unauthorized(response);
+            writeUnauthorizedResult(response);
             return;
         }
 
@@ -87,16 +88,16 @@ public class AuthFilter extends OncePerRequestFilter {
         String sessionId = JwtTokenUtil.getSessionId(claims);
         String jti = JwtTokenUtil.getJti(claims);
         if (!StringUtils.hasText(userId) || !StringUtils.hasText(sessionId) || !StringUtils.hasText(jti)) {
-            unauthorized(response);
+            writeUnauthorizedResult(response);
             return;
         }
         if (authRedisService.isBlacklisted(jti)) {
-            unauthorized(response);
+            writeUnauthorizedResult(response);
             return;
         }
         AuthSessionInfo sessionInfo = authRedisService.getSession(sessionId);
         if (sessionInfo == null || !userId.equals(sessionInfo.getUserId())) {
-            unauthorized(response);
+            writeUnauthorizedResult(response);
             return;
         }
 
@@ -108,10 +109,13 @@ public class AuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private void unauthorized(HttpServletResponse response) throws IOException {
+    private void writeUnauthorizedResult(HttpServletResponse response) throws IOException {
+        if (response.isCommitted()) {
+            return;
+        }
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(JSON_UTF8);
         response.getWriter().write(JSON.toJSONString(Result.fail(ResultCode.UNAUTHORIZED)));
     }
 }
