@@ -1,5 +1,6 @@
 package com.lin.csln.service.impl;
 
+import com.lin.csln.common.cache.CacheClient;
 import com.lin.csln.dto.sys.DailySalesDTO;
 import com.lin.csln.dto.sys.GlobalSummaryDTO;
 import com.lin.csln.dto.sys.TopCustomerOrderAmountDTO;
@@ -15,6 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 核心统计服务实现 (NamedParameterJdbcTemplate 实现)
@@ -29,12 +32,72 @@ public class StatisticsServiceImpl implements StatisticsService {
     private static final int TOP_CUSTOMER_LIMIT = 3;
     private static final int TOP_CUSTOMER_PRODUCT_LIMIT = 3;
     private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("MM-dd");
+    private static final String STATISTICS_CACHE_KEY_PREFIX = "statistics:";
+    private static final String GLOBAL_SUMMARY_CACHE_KEY = STATISTICS_CACHE_KEY_PREFIX + "summary";
+    private static final String DAILY_SALES_CACHE_KEY_PREFIX = STATISTICS_CACHE_KEY_PREFIX + "daily-sales:";
+    private static final String TOP_PRODUCTS_CACHE_KEY = STATISTICS_CACHE_KEY_PREFIX + "top-products-last-month";
+    private static final String TOP_CUSTOMERS_CACHE_KEY = STATISTICS_CACHE_KEY_PREFIX + "top-customers-last-month";
+    private static final String CACHE_LOCK_KEY_PREFIX = "lock:statistics:";
+    private static final long CACHE_TTL_MIN_SECONDS = 300L;
+    private static final long CACHE_TTL_MAX_SECONDS = 600L;
 
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Resource
+    private CacheClient cacheClient;
+
     @Override
     public GlobalSummaryDTO getGlobalSummary() {
+        return cacheClient.getOrLoadObjectWithMutex(
+                GLOBAL_SUMMARY_CACHE_KEY,
+                GlobalSummaryDTO.class,
+                this::queryGlobalSummary,
+                randomTtlSeconds(),
+                TimeUnit.SECONDS,
+                CACHE_LOCK_KEY_PREFIX
+        );
+    }
+
+    @Override
+    public List<DailySalesDTO> getDailySales(Integer days) {
+        int queryDays = (days == null || days <= 0) ? DEFAULT_DAILY_SALES_DAYS : days;
+        String cacheKey = DAILY_SALES_CACHE_KEY_PREFIX + queryDays;
+        return cacheClient.getOrLoadListWithMutex(
+                cacheKey,
+                DailySalesDTO.class,
+                () -> queryDailySales(queryDays),
+                randomTtlSeconds(),
+                TimeUnit.SECONDS,
+                CACHE_LOCK_KEY_PREFIX
+        );
+    }
+
+    @Override
+    public List<TopProductOrderQtyDTO> getTopProductsByOrderQtyInLastMonth() {
+        return cacheClient.getOrLoadListWithMutex(
+                TOP_PRODUCTS_CACHE_KEY,
+                TopProductOrderQtyDTO.class,
+                this::queryTopProductsByOrderQtyInLastMonth,
+                randomTtlSeconds(),
+                TimeUnit.SECONDS,
+                CACHE_LOCK_KEY_PREFIX
+        );
+    }
+
+    @Override
+    public List<TopCustomerOrderAmountDTO> getTopCustomersWithTopProductsInLastMonth() {
+        return cacheClient.getOrLoadListWithMutex(
+                TOP_CUSTOMERS_CACHE_KEY,
+                TopCustomerOrderAmountDTO.class,
+                this::queryTopCustomersWithTopProductsInLastMonth,
+                randomTtlSeconds(),
+                TimeUnit.SECONDS,
+                CACHE_LOCK_KEY_PREFIX
+        );
+    }
+
+    private GlobalSummaryDTO queryGlobalSummary() {
         // 核心 SQL：跨表聚合
         // 1. 客户总数
         // 2. 订单总金额 (排除草稿单状态 4)
@@ -52,10 +115,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 new BeanPropertyRowMapper<>(GlobalSummaryDTO.class));
     }
 
-    @Override
-    public List<DailySalesDTO> getDailySales(Integer days) {
-
-        int queryDays = (days == null || days <= 0) ? DEFAULT_DAILY_SALES_DAYS : days;
+    private List<DailySalesDTO> queryDailySales(int queryDays) {
 
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(queryDays - 1L);
@@ -73,8 +133,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         return buildDailySalesResult(startDate, endDate, queryDays, salesAmountByDay, salesQtyByDay, shipmentQtyByDay);
     }
 
-    @Override
-    public List<TopProductOrderQtyDTO> getTopProductsByOrderQtyInLastMonth() {
+    private List<TopProductOrderQtyDTO> queryTopProductsByOrderQtyInLastMonth() {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(TOP_PRODUCT_QUERY_DAYS - 1L);
 
@@ -104,8 +163,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 new BeanPropertyRowMapper<>(TopProductOrderQtyDTO.class));
     }
 
-    @Override
-    public List<TopCustomerOrderAmountDTO> getTopCustomersWithTopProductsInLastMonth() {
+    private List<TopCustomerOrderAmountDTO> queryTopCustomersWithTopProductsInLastMonth() {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(TOP_CUSTOMER_QUERY_DAYS - 1L);
 
@@ -215,6 +273,10 @@ public class StatisticsServiceImpl implements StatisticsService {
             topProducts.add(productDTO);
         }
         return grouped;
+    }
+
+    private long randomTtlSeconds() {
+        return ThreadLocalRandom.current().nextLong(CACHE_TTL_MIN_SECONDS, CACHE_TTL_MAX_SECONDS + 1);
     }
 
 
