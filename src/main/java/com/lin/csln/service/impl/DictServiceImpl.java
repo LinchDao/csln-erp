@@ -1,10 +1,11 @@
 package com.lin.csln.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
+import com.lin.csln.common.cache.CacheClient;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.sys.dict.DictDTO;
@@ -13,6 +14,7 @@ import com.lin.csln.dto.sys.dict.DictQueryParamDTO;
 import com.lin.csln.entity.DictDO;
 import com.lin.csln.mapper.DictMapper;
 import com.lin.csln.service.DictService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +22,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +36,16 @@ import java.util.stream.Collectors;
  */
 @Service
 public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO> implements DictService {
+
+    private static final String DICT_CACHE_KEY_PREFIX = "dict:detail:";
+    private static final String DICT_CACHE_LOCK_PREFIX = "lock:dict:";
+    private static final long CACHE_TTL_MIN_SECONDS = 1800L;
+    private static final long CACHE_TTL_MAX_SECONDS = 3600L;
+    private static final long NULL_CACHE_TTL_SECONDS = 60L;
+    private static final String NULL_CACHE_MARKER = "__NULL__";
+
+    @Resource
+    private CacheClient cacheClient;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -83,6 +98,7 @@ public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO>
                 baseMapper.updateById(child);
             }
         }
+        evictDictCache(mainDictId);
     }
 
     @Override
@@ -105,6 +121,7 @@ public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO>
             baseMapper.insert(child);
         }
 
+        evictDictCache(mainDictId);
         return mainDictId;
     }
 
@@ -115,10 +132,19 @@ public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO>
             throw new BusinessException("字典ID不能为空");
         }
 
+        DictDO dictDO = baseMapper.selectById(id);
+
         LambdaUpdateWrapper<DictDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(DictDO::getId, id);
         updateWrapper.set(DictDO::getIsDelete, 1);
         baseMapper.update(null, updateWrapper);
+
+        Set<String> affectedIds = new HashSet<>();
+        affectedIds.add(id);
+        if (dictDO != null && StringUtils.hasText(dictDO.getParentId()) && !"0".equals(dictDO.getParentId())) {
+            affectedIds.add(dictDO.getParentId());
+        }
+        evictDictCache(id);
     }
 
     @Override
@@ -128,10 +154,24 @@ public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO>
             throw new BusinessException("批量删除：字典ID集合不能为空");
         }
 
+        LambdaQueryWrapper<DictDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(DictDO::getId, ids);
+        queryWrapper.select(DictDO::getId, DictDO::getParentId);
+        List<DictDO> dictList = baseMapper.selectList(queryWrapper);
+
         LambdaUpdateWrapper<DictDO> wrapper = new LambdaUpdateWrapper<>();
         wrapper.in(DictDO::getId, ids);
         wrapper.set(DictDO::getIsDelete, 1);
         baseMapper.update(null, wrapper);
+
+        Set<String> affectedIds = new HashSet<>(ids);
+        if (!CollectionUtils.isEmpty(dictList)) {
+            dictList.stream()
+                    .map(DictDO::getParentId)
+                    .filter(parentId -> StringUtils.hasText(parentId) && !"0".equals(parentId))
+                    .forEach(affectedIds::add);
+        }
+        evictDictCache(affectedIds);
     }
 
     @Override
@@ -174,6 +214,32 @@ public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO>
             throw new BusinessException("字典ID不能为空");
         }
 
+        String cacheKey = buildDictCacheKey(id);
+        String cachedJson = cacheClient.getString(cacheKey);
+        if (StringUtils.hasText(cachedJson)) {
+            if (NULL_CACHE_MARKER.equals(cachedJson)) {
+                return null;
+            }
+            return JSON.parseObject(cachedJson, DictDTO.class);
+        }
+
+        DictDTO dictDTO = cacheClient.getOrLoadObjectWithMutex(
+                cacheKey,
+                DictDTO.class,
+                () -> queryDictByIdFromDb(id),
+                randomTtlSeconds(),
+                TimeUnit.SECONDS,
+                DICT_CACHE_LOCK_PREFIX
+        );
+        if (dictDTO != null) {
+            return dictDTO;
+        }
+
+        cacheClient.setString(cacheKey, NULL_CACHE_MARKER, NULL_CACHE_TTL_SECONDS, TimeUnit.SECONDS);
+        return null;
+    }
+
+    private DictDTO queryDictByIdFromDb(String id) {
         DictDO mainDict = baseMapper.selectById(id);
         if (mainDict == null || mainDict.getIsDelete() == 1) {
             return null;
@@ -201,6 +267,32 @@ public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO>
         }
 
         return dictDTO;
+    }
+
+    private long randomTtlSeconds() {
+        return ThreadLocalRandom.current().nextLong(CACHE_TTL_MIN_SECONDS, CACHE_TTL_MAX_SECONDS + 1);
+    }
+
+    private String buildDictCacheKey(String id) {
+        return DICT_CACHE_KEY_PREFIX + id;
+    }
+
+    private void evictDictCache(String id) {
+        if (!StringUtils.hasText(id)) {
+            return;
+        }
+        cacheClient.delete(buildDictCacheKey(id));
+    }
+
+    private void evictDictCache(Set<String> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return;
+        }
+        List<String> keys = ids.stream()
+                .filter(StringUtils::hasText)
+                .map(this::buildDictCacheKey)
+                .collect(Collectors.toList());
+        cacheClient.delete(keys);
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +46,20 @@ public class CacheClient {
         } else {
             redisTemplate.opsForValue().set(key, value);
         }
+    }
+
+    public void delete(String key) {
+        if (!StringUtils.hasText(key)) {
+            return;
+        }
+        redisTemplate.delete(key);
+    }
+
+    public void delete(Collection<String> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return;
+        }
+        redisTemplate.delete(keys);
     }
 
     public <T> T getJson(String key, Class<T> clazz) {
