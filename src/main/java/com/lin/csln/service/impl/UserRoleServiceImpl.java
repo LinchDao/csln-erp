@@ -59,4 +59,14 @@ public class UserRoleServiceImpl extends BaseReadonlyServiceImpl<UserRoleMapper,
             this.saveBatch(saveList);
         }
     }
+
+    @Override
+    public long countByRoleId(String roleId) {
+        if (!StringUtils.hasText(roleId)) {
+            return 0L;
+        }
+        LambdaQueryWrapper<UserRoleDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserRoleDO::getRoleId, roleId);
+        return this.count(wrapper);
+    }
 }

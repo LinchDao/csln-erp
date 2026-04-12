@@ -23,7 +23,7 @@ public class MenuDO {
     private String id;
 
     /**
-     * 父菜单ID，顶级菜单为0
+     * 父菜单ID，顶级菜单为null
      */
     private String parentId;
 

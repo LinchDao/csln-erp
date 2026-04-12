@@ -10,4 +10,6 @@ public interface UserRoleService extends IService<UserRoleDO> {
     List<String> listRoleIdsByUserId(String userId);
 
     void replaceRoles(String userId, List<String> roleIds);
+
+    long countByRoleId(String roleId);
 }

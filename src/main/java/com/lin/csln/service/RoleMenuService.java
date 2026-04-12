@@ -1,12 +1,13 @@
 package com.lin.csln.service;
 
-import com.lin.csln.entity.RoleMenuDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.entity.RoleMenuDO;
 
-/**
- * 角色菜单关联表 服务接口
- * @author 系统生成器
- */
+import java.util.List;
+
 public interface RoleMenuService extends IService<RoleMenuDO> {
 
+    List<String> listMenuIdsByRoleId(String roleId);
+
+    void replaceMenus(String roleId, List<String> menuIds);
 }

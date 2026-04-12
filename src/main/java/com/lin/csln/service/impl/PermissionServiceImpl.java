@@ -1,6 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lin.csln.dto.sys.permission.PermissionListDTO;
 import com.lin.csln.entity.PermissionDO;
 import com.lin.csln.mapper.PermissionMapper;
 import com.lin.csln.service.PermissionService;
@@ -40,5 +41,19 @@ public class PermissionServiceImpl extends BaseReadonlyServiceImpl<PermissionMap
                 .filter(StringUtils::hasText)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
         return new ArrayList<>(permCodeSet);
+    }
+
+    @Override
+    public List<PermissionListDTO> listPermissionForSelect() {
+        LambdaQueryWrapper<PermissionDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByAsc(PermissionDO::getPermName);
+
+        List<PermissionDO> permissionList = this.list(wrapper);
+        return permissionList.stream().map(permission -> {
+            PermissionListDTO dto = new PermissionListDTO();
+            dto.setId(permission.getId());
+            dto.setPermName(permission.getPermName());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
