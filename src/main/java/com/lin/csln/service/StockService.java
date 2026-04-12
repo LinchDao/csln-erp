@@ -1,6 +1,9 @@
 package com.lin.csln.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.common.dto.PageRespDTO;
+import com.lin.csln.dto.stock.ProductStockPageRespDTO;
+import com.lin.csln.dto.stock.ProductStockQueryParamDTO;
 import com.lin.csln.entity.StockDO;
 
 /**
@@ -15,4 +18,6 @@ public interface StockService extends IService<StockDO> {
     void adjustLockQty(String warehouseId, String skuId, int delta);
 
     void consumeLockedStock(String warehouseId, String skuId, int qty);
+
+    PageRespDTO<ProductStockPageRespDTO> pageProductStock(ProductStockQueryParamDTO queryDTO);
 }

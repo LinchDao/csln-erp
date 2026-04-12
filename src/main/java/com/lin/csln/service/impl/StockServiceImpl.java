@@ -1,8 +1,12 @@
 package com.lin.csln.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
-import com.lin.csln.service.impl.BaseReadonlyServiceImpl;
+import com.lin.csln.dto.stock.ProductStockPageRespDTO;
+import com.lin.csln.dto.stock.ProductStockQueryParamDTO;
 import com.lin.csln.entity.PurchaseInItemDO;
 import com.lin.csln.entity.StockDO;
 import com.lin.csln.mapper.StockMapper;
@@ -73,8 +77,9 @@ public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, Stock
         }
         int currentLockQty = stock.getLockQty() == null ? 0 : stock.getLockQty();
         int targetLockQty = currentLockQty + delta;
-        if (targetLockQty < 0) {
-            throw new BusinessException("锁定库存不足，仓库：" + warehouseId + "，SKU：" + skuId);
+        //todo  是否放开限制 锁定库存>现有库存 = 货品不足
+        if (targetLockQty > stock.getQty()) {
+            throw new BusinessException("库存不足，仓库：" + warehouseId + "，SKU：" + skuId);
         }
         StockDO updateStock = new StockDO();
         updateStock.setId(stock.getId());
@@ -111,5 +116,13 @@ public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, Stock
         updateStock.setQty(targetQty);
         updateStock.setLockQty(targetLockQty);
         baseMapper.updateById(updateStock);
+    }
+
+    @Override
+    public PageRespDTO<ProductStockPageRespDTO> pageProductStock(ProductStockQueryParamDTO queryDTO) {
+        ProductStockQueryParamDTO query = queryDTO == null ? new ProductStockQueryParamDTO() : queryDTO;
+        IPage<ProductStockPageRespDTO> page = new Page<>(query.getPage(), query.getLimit());
+        IPage<ProductStockPageRespDTO> resultPage = baseMapper.pageProductStock(page, query);
+        return PageRespDTO.build(resultPage, query);
     }
 }
