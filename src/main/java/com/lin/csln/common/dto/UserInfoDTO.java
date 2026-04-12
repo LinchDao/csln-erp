@@ -45,4 +45,10 @@ public class UserInfoDTO {
 
     @Schema(description = "角色编码列表")
     private List<String> roles;
+
+    @Schema(description = "是否管理员")
+    private Boolean isAdmin;
+
+    @Schema(description = "权限编码列表")
+    private List<String> permissionList;
 }

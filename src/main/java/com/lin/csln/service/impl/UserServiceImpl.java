@@ -42,6 +42,8 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
     @Resource
     private UserRoleService userRoleService;
     @Resource
+    private UserPermissionService userPermissionService;
+    @Resource
     private AppSecurityProperties securityProperties;
     @Resource
     private AuthRedisService authRedisService;
@@ -81,7 +83,12 @@ public class UserServiceImpl extends BaseReadonlyServiceImpl<UserMapper, UserDO>
         if (!CollectionUtils.isEmpty(roles)) {
             List<String> roleCodes = roles.stream().map(RoleDO::getRoleCode).collect(Collectors.toList());
             userInfoDTO.setRoles(roleCodes);
+            userInfoDTO.setIsAdmin(roleCodes.stream().anyMatch(RoleEnums.SUPER_ADMIN.getCode()::equals));
+        } else {
+            userInfoDTO.setIsAdmin(false);
         }
+        Set<String> permissionSet = userPermissionService.listPermCodesByUserId(id);
+        userInfoDTO.setPermissionList(new ArrayList<>(permissionSet));
 
         return userInfoDTO;
     }

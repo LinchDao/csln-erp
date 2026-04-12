@@ -1,5 +1,6 @@
 package com.lin.csln.config;
 
+import com.lin.csln.filter.AuthFilter;
 import jakarta.annotation.Resource;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

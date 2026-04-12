@@ -1,4 +1,4 @@
-package com.lin.csln.config;
+package com.lin.csln.filter;
 
 import com.alibaba.fastjson2.JSON;
 import com.lin.csln.common.auth.AuthSessionInfo;
