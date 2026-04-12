@@ -1,6 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.lin.csln.common.auth.AuthSessionInfo;
+import com.lin.csln.common.cache.UserCache;
 import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.config.AppSecurityProperties;
@@ -63,6 +64,8 @@ public class AuthServiceImpl implements AuthService {
         sessionInfo.setRefreshJti(refreshJti);
         sessionInfo.setRememberMe(rememberMe);
         authRedisService.saveSession(sessionInfo, refreshExpireMillis);
+
+        UserCache.deleteUserInfo(user.getId());
 
         return buildTokenResp(accessToken, refreshToken, accessExpireMillis);
     }
