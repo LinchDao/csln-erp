@@ -1,6 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.lin.csln.common.cache.CacheClient;
+import com.lin.csln.common.constants.RedisKeyPrefixConstants;
 import com.lin.csln.dto.sys.DailySalesDTO;
 import com.lin.csln.dto.sys.GlobalSummaryDTO;
 import com.lin.csln.dto.sys.TopCustomerOrderAmountDTO;
@@ -32,12 +33,12 @@ public class StatisticsServiceImpl implements StatisticsService {
     private static final int TOP_CUSTOMER_LIMIT = 3;
     private static final int TOP_CUSTOMER_PRODUCT_LIMIT = 3;
     private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("MM-dd");
-    private static final String STATISTICS_CACHE_KEY_PREFIX = "statistics:";
+    private static final String STATISTICS_CACHE_KEY_PREFIX = RedisKeyPrefixConstants.STATISTICS;
     private static final String GLOBAL_SUMMARY_CACHE_KEY = STATISTICS_CACHE_KEY_PREFIX + "summary";
     private static final String DAILY_SALES_CACHE_KEY_PREFIX = STATISTICS_CACHE_KEY_PREFIX + "daily-sales:";
     private static final String TOP_PRODUCTS_CACHE_KEY = STATISTICS_CACHE_KEY_PREFIX + "top-products-last-month";
     private static final String TOP_CUSTOMERS_CACHE_KEY = STATISTICS_CACHE_KEY_PREFIX + "top-customers-last-month";
-    private static final String CACHE_LOCK_KEY_PREFIX = "lock:statistics:";
+    private static final String CACHE_LOCK_KEY_PREFIX = RedisKeyPrefixConstants.LOCK_STATISTICS;
     private static final long CACHE_TTL_MIN_SECONDS = 300L;
     private static final long CACHE_TTL_MAX_SECONDS = 600L;
 

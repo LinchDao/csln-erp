@@ -2,6 +2,7 @@ package com.lin.csln.common.cache;
 
 
 import com.alibaba.fastjson2.JSON;
+import com.lin.csln.common.constants.RedisKeyPrefixConstants;
 import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.utils.JwtTokenUtil;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class UserCache {
     private static RedisTemplate<String, Object> redisTemplate;
 
     // 用户缓存key前缀
-    private static final String USER_KEY_PREFIX = "user:info:";
+    private static final String USER_KEY_PREFIX = RedisKeyPrefixConstants.USER_INFO;
 
     // 默认过期时间（秒）- 30分钟
     private static final long DEFAULT_EXPIRE = 1800;

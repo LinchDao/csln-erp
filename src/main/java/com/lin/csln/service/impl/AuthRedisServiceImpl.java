@@ -1,6 +1,7 @@
 package com.lin.csln.service.impl;
 
 import com.lin.csln.common.auth.AuthSessionInfo;
+import com.lin.csln.common.constants.RedisKeyPrefixConstants;
 import com.lin.csln.service.AuthRedisService;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,9 +15,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AuthRedisServiceImpl implements AuthRedisService {
 
-    private static final String SESSION_KEY_PREFIX = "auth:session:";
-    private static final String USER_SESSIONS_KEY_PREFIX = "auth:user:sessions:";
-    private static final String BLACKLIST_KEY_PREFIX = "auth:blacklist:";
+    private static final String SESSION_KEY_PREFIX = RedisKeyPrefixConstants.AUTH_SESSION;
+    private static final String USER_SESSIONS_KEY_PREFIX = RedisKeyPrefixConstants.AUTH_USER_SESSIONS;
+    private static final String BLACKLIST_KEY_PREFIX = RedisKeyPrefixConstants.AUTH_BLACKLIST;
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.csln.common.cache.CacheClient;
+import com.lin.csln.common.constants.RedisKeyPrefixConstants;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.sys.dict.DictDTO;
@@ -37,8 +38,8 @@ import java.util.stream.Collectors;
 @Service
 public class DictServiceImpl extends BaseReadonlyServiceImpl<DictMapper, DictDO> implements DictService {
 
-    private static final String DICT_CACHE_KEY_PREFIX = "dict:detail:";
-    private static final String DICT_CACHE_LOCK_PREFIX = "lock:dict:";
+    private static final String DICT_CACHE_KEY_PREFIX = RedisKeyPrefixConstants.DICT_DETAIL;
+    private static final String DICT_CACHE_LOCK_PREFIX = RedisKeyPrefixConstants.LOCK_DICT;
     private static final long CACHE_TTL_MIN_SECONDS = 1800L;
     private static final long CACHE_TTL_MAX_SECONDS = 3600L;
     private static final long NULL_CACHE_TTL_SECONDS = 60L;
