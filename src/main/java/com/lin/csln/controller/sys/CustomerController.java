@@ -8,6 +8,10 @@ import com.lin.csln.dto.sys.customer.CustomerPageRespDTO;
 import com.lin.csln.dto.sys.customer.CustomerQueryParamDTO;
 import com.lin.csln.dto.sys.customer.CustomerSaveReqDTO;
 import com.lin.csln.dto.sys.customer.CustomerStatusUpdateDTO;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,12 +46,24 @@ public class CustomerController {
 
     @PostMapping("/add")
     @Operation(summary = "新增客户")
+    @OperationLog(
+            module = OperationLogModuleEnum.CUSTOMER,
+            actionType = OperationLogActionEnum.CREATE,
+            bizIdSource = BizIdSourceEnum.RESULT_DATA,
+            bizIdField = "id"
+    )
     public Result<String> addCustomer(@Valid @RequestBody CustomerSaveReqDTO dto) {
         return Result.success(customerService.addCustomer(dto));
     }
 
     @PutMapping("/update")
     @Operation(summary = "修改客户")
+    @OperationLog(
+            module = OperationLogModuleEnum.CUSTOMER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "id"
+    )
     public Result<Void> updateCustomer(@Valid @RequestBody CustomerSaveReqDTO dto) {
         customerService.updateCustomer(dto);
         return Result.success();
@@ -55,6 +71,12 @@ public class CustomerController {
 
     @PutMapping("/status")
     @Operation(summary = "启用/禁用客户")
+    @OperationLog(
+            module = OperationLogModuleEnum.CUSTOMER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "customerId"
+    )
     public Result<Void> updateCustomerStatus(@Valid @RequestBody CustomerStatusUpdateDTO dto) {
         customerService.updateCustomerStatus(dto);
         return Result.success();

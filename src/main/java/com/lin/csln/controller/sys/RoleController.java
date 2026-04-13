@@ -7,6 +7,10 @@ import com.lin.csln.dto.sys.role.RoleListDTO;
 import com.lin.csln.dto.sys.role.RolePageRespDTO;
 import com.lin.csln.dto.sys.role.RoleQueryParamDTO;
 import com.lin.csln.dto.sys.role.RoleSaveReqDTO;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,12 +50,24 @@ public class RoleController {
 
     @PostMapping("/add")
     @Operation(summary = "新增角色（可配置菜单与权限）")
+    @OperationLog(
+            module = OperationLogModuleEnum.ROLE,
+            actionType = OperationLogActionEnum.CREATE,
+            bizIdSource = BizIdSourceEnum.RESULT_DATA,
+            bizIdField = "id"
+    )
     public Result<String> addRole(@RequestBody RoleSaveReqDTO dto) {
         return Result.success(roleService.addRole(dto));
     }
 
     @PutMapping("/update")
     @Operation(summary = "修改角色（可配置菜单与权限）")
+    @OperationLog(
+            module = OperationLogModuleEnum.ROLE,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "id"
+    )
     public Result<Void> updateRole(@RequestBody RoleSaveReqDTO dto) {
         roleService.updateRole(dto);
         return Result.success();
@@ -65,6 +81,12 @@ public class RoleController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除角色")
+    @OperationLog(
+            module = OperationLogModuleEnum.ROLE,
+            actionType = OperationLogActionEnum.DELETE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "id"
+    )
     public Result<Void> deleteRole(@PathVariable String id) {
         roleService.deleteRole(id);
         return Result.success();

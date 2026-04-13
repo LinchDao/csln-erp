@@ -19,29 +19,54 @@ public class LogDO {
     private String id;
 
     /**
-     * 操作人
+     * 业务主键
      */
-    private String userId;
+    private String bizId;
 
     /**
-     * 模块
+     * 所属模块
      */
     private String module;
 
     /**
-     * 操作内容
+     * 动作类型
      */
-    private String content;
+    private String actionType;
 
     /**
-     * 修改前
+     * 差异数据(JSON)
      */
-    private String beforeData;
+    private String diffData;
 
     /**
-     * 修改后
+     * 操作人ID
      */
-    private String afterData;
+    private String userId;
+
+    /**
+     * 请求URL
+     */
+    private String requestUrl;
+
+    /**
+     * 请求方法
+     */
+    private String requestMethod;
+
+    /**
+     * 执行状态 0-失败 1-成功
+     */
+    private Integer status;
+
+    /**
+     * 异常信息
+     */
+    private String errorMsg;
+
+    /**
+     * 执行耗时(毫秒)
+     */
+    private Integer costTime;
 
     /**
      * 操作时间

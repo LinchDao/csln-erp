@@ -3,12 +3,16 @@ package com.lin.csln.controller.order;
 
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.dto.order.OrderSubAssignDTO;
 import com.lin.csln.dto.order.OrderSubDetailDTO;
 import com.lin.csln.dto.order.OrderSubPickingCompleteDTO;
 import com.lin.csln.dto.order.OrderSubPageRespDTO;
 import com.lin.csln.dto.order.OrderSubQueryParamDTO;
 import com.lin.csln.dto.order.OrderSubShipDTO;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
 import com.lin.csln.service.OrderSubService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -44,6 +48,12 @@ public class OrderSubController {
 
     @PostMapping("/assign")
     @Operation(summary = "子订单分配人员")
+    @OperationLog(
+            module = OperationLogModuleEnum.ORDER_SUB,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "orderSubId"
+    )
     public Result<Void> assignOrderToUser(@Valid @RequestBody OrderSubAssignDTO dto) {
         orderSubService.assignOrderToUser(dto.getOrderSubId(), dto.getUserId());
         return Result.success();
@@ -51,6 +61,12 @@ public class OrderSubController {
 
     @PostMapping("/picking/complete")
     @Operation(summary = "子订单配货完成")
+    @OperationLog(
+            module = OperationLogModuleEnum.ORDER_SUB,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "orderSubId"
+    )
     public Result<Void> completePicking(@Valid @RequestBody OrderSubPickingCompleteDTO dto) {
         orderSubService.completePicking(dto);
         return Result.success();
@@ -58,6 +74,12 @@ public class OrderSubController {
 
     @PostMapping("/ship")
     @Operation(summary = "子订单发货")
+    @OperationLog(
+            module = OperationLogModuleEnum.ORDER_SUB,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "orderSubId"
+    )
     public Result<Void> ship(@Valid @RequestBody OrderSubShipDTO dto) {
         orderSubService.ship(dto);
         return Result.success();

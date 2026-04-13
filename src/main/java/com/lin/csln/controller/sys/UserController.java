@@ -6,6 +6,10 @@ import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.dto.sys.user.*;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,12 +53,24 @@ public class UserController {
 
     @PostMapping("/add")
     @Operation(summary = "添加用户")
+    @OperationLog(
+            module = OperationLogModuleEnum.USER,
+            actionType = OperationLogActionEnum.CREATE,
+            bizIdSource = BizIdSourceEnum.RESULT_DATA,
+            bizIdField = "id"
+    )
     public Result<String> addUser(@Valid @RequestBody UserSaveReqDTO dto) {
         return Result.success(userService.addUser(dto));
     }
 
     @PutMapping("/update")
     @Operation(summary = "修改用户信息")
+    @OperationLog(
+            module = OperationLogModuleEnum.USER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "id"
+    )
     public Result<Void> updateUser(@Valid @RequestBody UserSaveReqDTO dto) {
         userService.updateUser(dto);
         return Result.success();
@@ -75,6 +91,12 @@ public class UserController {
 
     @PutMapping("/password/reset/{userId}")
     @Operation(summary = "重置用户密码")
+    @OperationLog(
+            module = OperationLogModuleEnum.USER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "userId"
+    )
     public Result<Void> resetUserPassword(@PathVariable String userId) {
         userService.resetUserPassword(userId, JwtTokenUtil.getUserId());
         return Result.success();
@@ -82,6 +104,12 @@ public class UserController {
 
     @PutMapping("/status")
     @Operation(summary = "启用/禁用用户")
+    @OperationLog(
+            module = OperationLogModuleEnum.USER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "userId"
+    )
     public Result<Void> updateUserStatus(@Valid @RequestBody UserStatusUpdateDTO dto) {
         userService.updateUserStatus(dto);
         return Result.success();

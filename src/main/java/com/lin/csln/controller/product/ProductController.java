@@ -3,9 +3,13 @@ package com.lin.csln.controller.product;
 
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
+import com.lin.csln.log.annotation.OperationLog;
+import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.dto.product.*;
 import com.lin.csln.dto.stock.ProductStockPageRespDTO;
 import com.lin.csln.dto.stock.ProductStockQueryParamDTO;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
 import com.lin.csln.service.ProductService;
 import com.lin.csln.service.ProductSkuService;
 import com.lin.csln.service.StockService;
@@ -41,6 +45,12 @@ public class ProductController {
 
     @PostMapping("/add")
     @Operation(summary = "新增商品", description = "新增商品基础信息及关联的颜色图片、SKU信息")
+    @OperationLog(
+            module = OperationLogModuleEnum.PRODUCT,
+            actionType = OperationLogActionEnum.CREATE,
+            bizIdSource = BizIdSourceEnum.RESULT_DATA,
+            bizIdField = "id"
+    )
     public Result<String> addProduct(@Valid @RequestBody ProductDTO productDTO) {
         try {
             String productId = productService.addProduct(productDTO);
@@ -52,6 +62,12 @@ public class ProductController {
 
     @PutMapping("/{productId}")
     @Operation(summary = "修改商品", description = "根据ID修改商品信息及关联的颜色图片、SKU信息")
+    @OperationLog(
+            module = OperationLogModuleEnum.PRODUCT,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "productId"
+    )
     public Result<Boolean> updateProduct(
             @Parameter(description = "商品ID", required = true) @PathVariable String productId,
             @Valid @RequestBody ProductDTO productDTO) {
@@ -65,6 +81,12 @@ public class ProductController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除商品", description = "根据ID删除商品（级联删除关联的颜色图片、SKU）")
+    @OperationLog(
+            module = OperationLogModuleEnum.PRODUCT,
+            actionType = OperationLogActionEnum.DELETE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "id"
+    )
     public Result<Boolean> deleteProduct(@Parameter(description = "商品ID", required = true) @PathVariable String id) {
         try {
             String userId = JwtTokenUtil.getUserId();

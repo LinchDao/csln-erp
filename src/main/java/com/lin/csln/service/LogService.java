@@ -9,4 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface LogService extends IService<LogDO> {
 
+    void saveLog(LogDO logDO);
+
+    void saveFailLog(LogDO logDO);
 }

@@ -6,6 +6,10 @@ import com.lin.csln.common.dto.Result;
 import com.lin.csln.dto.sys.dict.DictDTO;
 import com.lin.csln.dto.sys.dict.DictPageRespDTO;
 import com.lin.csln.dto.sys.dict.DictQueryParamDTO;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.service.DictService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,11 +27,23 @@ public class DictController {
     private DictService dictService;
 
     @PostMapping("/add")
+    @OperationLog(
+            module = OperationLogModuleEnum.DICT,
+            actionType = OperationLogActionEnum.CREATE,
+            bizIdSource = BizIdSourceEnum.RESULT_DATA,
+            bizIdField = "id"
+    )
     public Result<String> add(@RequestBody DictDTO dict) {
         return Result.success(dictService.addDict(dict));
     }
 
     @PutMapping("/update")
+    @OperationLog(
+            module = OperationLogModuleEnum.DICT,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "id"
+    )
     public Result<Void> update(@RequestBody DictDTO dict) {
         dictService.updateDict(dict);
         return Result.success();
@@ -35,12 +51,24 @@ public class DictController {
 
 
     @DeleteMapping("/delete/{id}")
+    @OperationLog(
+            module = OperationLogModuleEnum.DICT,
+            actionType = OperationLogActionEnum.DELETE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "id"
+    )
     public Result<Void> delete(@PathVariable String id) {
         dictService.deleteDict(id);
         return Result.success();
     }
 
     @DeleteMapping("/batchDelete")
+    @OperationLog(
+            module = OperationLogModuleEnum.DICT,
+            actionType = OperationLogActionEnum.DELETE,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "ids"
+    )
     public Result<Void> batchDelete(@RequestBody List<String> ids) {
         dictService.batchDeleteDict(ids);
         return Result.success();

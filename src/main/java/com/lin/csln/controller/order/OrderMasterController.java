@@ -2,11 +2,15 @@ package com.lin.csln.controller.order;
 
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.dto.order.CustomerDTO;
 import com.lin.csln.dto.order.OrderMasterDetailRespDTO;
 import com.lin.csln.dto.order.OrderMasterDTO;
 import com.lin.csln.dto.order.OrderMasterPageRespDTO;
 import com.lin.csln.dto.order.OrderMasterQueryParamDTO;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
 import com.lin.csln.service.CustomerService;
 import com.lin.csln.service.OrderMasterService;
 import com.lin.csln.utils.JwtTokenUtil;
@@ -36,6 +40,12 @@ public class OrderMasterController {
 
     @PostMapping("/create")
     @Operation(summary = "创建订单主单")
+    @OperationLog(
+            module = OperationLogModuleEnum.ORDER_MASTER,
+            actionType = OperationLogActionEnum.CREATE,
+            bizIdSource = BizIdSourceEnum.RESULT_DATA,
+            bizIdField = "id"
+    )
     public Result<String> create(@RequestBody OrderMasterDTO dto) {
         String userId = JwtTokenUtil.getUserId();
         return Result.success(orderMasterService.createOrderMaster(dto, userId));
@@ -55,6 +65,12 @@ public class OrderMasterController {
 
     @PutMapping("/{id}")
     @Operation(summary = "编辑正式单")
+    @OperationLog(
+            module = OperationLogModuleEnum.ORDER_MASTER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "id"
+    )
     public Result<Void> edit(@Parameter(description = "订单主单ID", required = true) @PathVariable String id,
                              @RequestBody OrderMasterDTO dto) {
         orderMasterService.editOrderMaster(id, dto);
@@ -63,6 +79,12 @@ public class OrderMasterController {
 
     @PutMapping("/{id}/draft")
     @Operation(summary = "编辑草稿单")
+    @OperationLog(
+            module = OperationLogModuleEnum.ORDER_MASTER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "id"
+    )
     public Result<Void> editDraft(@Parameter(description = "订单主单ID", required = true) @PathVariable String id,
                                   @RequestBody OrderMasterDTO dto) {
         orderMasterService.editDraftOrderMaster(id, dto);
@@ -71,6 +93,12 @@ public class OrderMasterController {
 
     @PostMapping("/{id}/submit")
     @Operation(summary = "草稿单提交（可带最终内容）")
+    @OperationLog(
+            module = OperationLogModuleEnum.ORDER_MASTER,
+            actionType = OperationLogActionEnum.UPDATE,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "id"
+    )
     public Result<Void> submit(@Parameter(description = "订单主单ID", required = true) @PathVariable String id,
                                @RequestBody(required = false) OrderMasterDTO dto) {
         orderMasterService.submitOrderMaster(id, dto);

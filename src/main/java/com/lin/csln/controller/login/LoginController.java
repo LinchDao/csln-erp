@@ -3,9 +3,13 @@ package com.lin.csln.controller.login;
 import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.common.exception.BusinessException;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.dto.login.LoginReqDTO;
 import com.lin.csln.dto.login.LoginRespDTO;
 import com.lin.csln.dto.login.RefreshTokenReqDTO;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
 import com.lin.csln.service.AuthService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +39,11 @@ public class LoginController {
 
     @PostMapping("/login")
     @Operation(summary = "用户登录", description = "账号密码登录，返回JWT Token")
+    @OperationLog(module = OperationLogModuleEnum.AUTH,
+            actionType = OperationLogActionEnum.LOGIN,
+            bizIdSource = BizIdSourceEnum.REQUEST_BODY,
+            bizIdField = "username"
+    )
     public Result<LoginRespDTO> login(@Valid @RequestBody LoginReqDTO loginRequest) {
         try {
             return Result.success("登录成功", authService.login(loginRequest));

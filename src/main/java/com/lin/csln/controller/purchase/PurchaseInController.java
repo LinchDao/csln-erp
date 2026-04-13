@@ -3,9 +3,12 @@ package com.lin.csln.controller.purchase;
 
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
+import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.dto.purchase.in.*;
+import com.lin.csln.enums.BizIdSourceEnum;
+import com.lin.csln.enums.OperationLogActionEnum;
+import com.lin.csln.enums.OperationLogModuleEnum;
 import com.lin.csln.service.PurchaseInService;
-import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,6 +35,12 @@ public class PurchaseInController {
 
     @Operation(summary = "创建采购入库单", description = "根据采购单创建入库单，自动生成入库单号")
     @PostMapping("/create")
+    @OperationLog(
+            module = OperationLogModuleEnum.PURCHASE_IN,
+            actionType = OperationLogActionEnum.CREATE,
+            bizIdSource = BizIdSourceEnum.RESULT_DATA,
+            bizIdField = "id"
+    )
     public Result<String> createPurchaseIn(@Valid @RequestBody PurchaseInDTO dto) {
         String userId = JwtTokenUtil.getUserId();
         return Result.success(purchaseInService.createPurchaseIn(dto, userId));
@@ -62,6 +71,12 @@ public class PurchaseInController {
 
     @Operation(summary = "入库单审核通过", description = "审核通过：状态0 → 1")
     @PutMapping("/audit/pass/{inId}")
+    @OperationLog(
+            module = OperationLogModuleEnum.PURCHASE_IN,
+            actionType = OperationLogActionEnum.AUDIT,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "inId"
+    )
     public Result<String> auditPass(
             @Parameter(description = "入库单ID") @PathVariable String inId
     ) {
@@ -71,6 +86,12 @@ public class PurchaseInController {
 
     @Operation(summary = "入库单审核驳回", description = "审核驳回：状态0 → 0（仅记录操作）")
     @PutMapping("/audit/reject/{inId}")
+    @OperationLog(
+            module = OperationLogModuleEnum.PURCHASE_IN,
+            actionType = OperationLogActionEnum.AUDIT,
+            bizIdSource = BizIdSourceEnum.PATH_VARIABLE,
+            bizIdField = "inId"
+    )
     public Result<String> auditReject(
             @Parameter(description = "入库单ID") @PathVariable String inId
     ) {
