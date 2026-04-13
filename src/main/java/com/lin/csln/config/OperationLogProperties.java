@@ -17,5 +17,16 @@ public class OperationLogProperties {
      * 日志路由，默认同步写库
      */
     private OperationLogRouteEnum route = OperationLogRouteEnum.SYNC;
-}
 
+    /**
+     * MQ 配置
+     */
+    private Mq mq = new Mq();
+
+    @Data
+    public static class Mq {
+        private String topic = "erp_operation_log";
+        private String tag = "OP_LOG";
+        private String consumerGroup = "csln-erp-log-consumer";
+    }
+}
