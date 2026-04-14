@@ -1,5 +1,6 @@
 package com.lin.csln.controller.order;
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.log.annotation.OperationLog;
@@ -11,6 +12,7 @@ import com.lin.csln.dto.order.OrderMasterQueryParamDTO;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.service.CustomerService;
 import com.lin.csln.service.OrderMasterService;
 import com.lin.csln.utils.JwtTokenUtil;
@@ -29,8 +31,6 @@ public class OrderMasterController {
 
     @Resource
     private OrderMasterService orderMasterService;
-    @Resource
-    private CustomerService customerService;
 
     @PostMapping("/page")
     @Operation(summary = "订单主单分页查询")
@@ -39,6 +39,7 @@ public class OrderMasterController {
     }
 
     @PostMapping("/create")
+    @RequirePermission({PermissionGateEnum.ORDER_MASTER_CREATE})
     @Operation(summary = "创建订单主单")
     @OperationLog(
             module = OperationLogModuleEnum.ORDER_MASTER,
@@ -57,13 +58,8 @@ public class OrderMasterController {
         return Result.success(orderMasterService.getOrderMasterDetail(id));
     }
 
-    @GetMapping("/customer/list")
-    @Operation(summary = "客户下拉列表")
-    public Result<List<CustomerDTO>> listCustomer() {
-        return Result.success(customerService.listCustomerForSelect());
-    }
-
     @PutMapping("/{id}")
+    @RequirePermission({PermissionGateEnum.ORDER_MASTER_UPDATE})
     @Operation(summary = "编辑正式单")
     @OperationLog(
             module = OperationLogModuleEnum.ORDER_MASTER,
@@ -78,6 +74,7 @@ public class OrderMasterController {
     }
 
     @PutMapping("/{id}/draft")
+    @RequirePermission({PermissionGateEnum.ORDER_MASTER_UPDATE})
     @Operation(summary = "编辑草稿单")
     @OperationLog(
             module = OperationLogModuleEnum.ORDER_MASTER,
@@ -92,6 +89,7 @@ public class OrderMasterController {
     }
 
     @PostMapping("/{id}/submit")
+    @RequirePermission({PermissionGateEnum.ORDER_MASTER_UPDATE})
     @Operation(summary = "草稿单提交（可带最终内容）")
     @OperationLog(
             module = OperationLogModuleEnum.ORDER_MASTER,

@@ -1,5 +1,6 @@
 package com.lin.csln.controller.sys;
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.dto.sys.role.RoleDetailRespDTO;
@@ -10,6 +11,7 @@ import com.lin.csln.dto.sys.role.RoleSaveReqDTO;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,6 +52,7 @@ public class RoleController {
 
     @PostMapping("/add")
     @Operation(summary = "新增角色（可配置菜单与权限）")
+    @RequirePermission({PermissionGateEnum.ROLE_CREATE})
     @OperationLog(
             module = OperationLogModuleEnum.ROLE,
             actionType = OperationLogActionEnum.CREATE,
@@ -62,6 +65,7 @@ public class RoleController {
 
     @PutMapping("/update")
     @Operation(summary = "修改角色（可配置菜单与权限）")
+    @RequirePermission({PermissionGateEnum.ROLE_UPDATE})
     @OperationLog(
             module = OperationLogModuleEnum.ROLE,
             actionType = OperationLogActionEnum.UPDATE,
@@ -81,6 +85,7 @@ public class RoleController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除角色")
+    @RequirePermission({PermissionGateEnum.ROLE_DELETE})
     @OperationLog(
             module = OperationLogModuleEnum.ROLE,
             actionType = OperationLogActionEnum.DELETE,

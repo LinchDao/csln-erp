@@ -1,6 +1,7 @@
 package com.lin.csln.controller.purchase;
 
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.log.annotation.OperationLog;
@@ -8,6 +9,7 @@ import com.lin.csln.dto.purchase.order.*;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.service.PurchaseOrderService;
 import com.lin.csln.service.SupplierService;
 import com.lin.csln.utils.JwtTokenUtil;
@@ -54,6 +56,7 @@ public class PurchaseController {
 
 
     @PostMapping("/create")
+    @RequirePermission({PermissionGateEnum.PURCHASE_ORDER_CREATE})
     @Operation(summary = "创建采购单", description = "创建采购单")
     @OperationLog(
             module = OperationLogModuleEnum.PURCHASE_ORDER,
@@ -68,6 +71,7 @@ public class PurchaseController {
     }
 
     @PostMapping("/cancel/{id}")
+    @RequirePermission({PermissionGateEnum.PURCHASE_ORDER_UPDATE})
     @OperationLog(
             module = OperationLogModuleEnum.PURCHASE_ORDER,
             actionType = OperationLogActionEnum.UPDATE,
@@ -80,6 +84,7 @@ public class PurchaseController {
     }
 
     @PutMapping("/{id}")
+    @RequirePermission({PermissionGateEnum.PURCHASE_ORDER_UPDATE})
     @Operation(summary = "修改采购单", description = "根据ID查询采购单主信息+明细列表")
     @OperationLog(
             module = OperationLogModuleEnum.PURCHASE_ORDER,

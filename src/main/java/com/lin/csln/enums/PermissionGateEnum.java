@@ -39,6 +39,8 @@ public enum PermissionGateEnum {
     DICT_EXPORT("dict:export", "dict", "export", "字典-导出"),
     DICT_AUDIT("dict:audit", "dict", "audit", "字典-审核"),
 
+    MENU_UPDATE("menu:update", "menu", "update", "菜单-修改"),
+
     PRODUCT_CREATE("product:create", "product", "create", "商品-创建"),
     PRODUCT_UPDATE("product:update", "product", "update", "商品-修改"),
     PRODUCT_VIEW("product:view", "product", "view", "商品-查看"),
@@ -86,6 +88,7 @@ public enum PermissionGateEnum {
     ORDER_SUB_LIST("order-sub:list", "order-sub", "list", "订单子单-列表"),
     ORDER_SUB_EXPORT("order-sub:export", "order-sub", "export", "订单子单-导出"),
     ORDER_SUB_AUDIT("order-sub:audit", "order-sub", "audit", "订单子单-审核"),
+    ORDER_SUB_ASSIGN("order-sub:assign", "order-sub", "assign", "订单子单-分配"),
 
     PURCHASE_ORDER_CREATE("purchase-order:create", "purchase-order", "create", "采购单-创建"),
     PURCHASE_ORDER_UPDATE("purchase-order:update", "purchase-order", "update", "采购单-修改"),

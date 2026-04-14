@@ -1,14 +1,21 @@
 package com.lin.csln.controller.sys;
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.cache.UserCache;
 import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.common.dto.UserInfoDTO;
-import com.lin.csln.dto.sys.user.*;
+import com.lin.csln.dto.sys.user.UserDetailRespDTO;
+import com.lin.csln.dto.sys.user.UserPageRespDTO;
+import com.lin.csln.dto.sys.user.UserPasswordUpdateDTO;
+import com.lin.csln.dto.sys.user.UserQueryParamDTO;
+import com.lin.csln.dto.sys.user.UserSaveReqDTO;
+import com.lin.csln.dto.sys.user.UserStatusUpdateDTO;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
@@ -16,7 +23,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "用户管理", description = "用户相关接口")
@@ -53,6 +66,7 @@ public class UserController {
 
     @PostMapping("/add")
     @Operation(summary = "添加用户")
+    @RequirePermission({PermissionGateEnum.USER_CREATE})
     @OperationLog(
             module = OperationLogModuleEnum.USER,
             actionType = OperationLogActionEnum.CREATE,
@@ -65,6 +79,7 @@ public class UserController {
 
     @PutMapping("/update")
     @Operation(summary = "修改用户信息")
+    @RequirePermission({PermissionGateEnum.USER_UPDATE})
     @OperationLog(
             module = OperationLogModuleEnum.USER,
             actionType = OperationLogActionEnum.UPDATE,
@@ -91,6 +106,7 @@ public class UserController {
 
     @PutMapping("/password/reset/{userId}")
     @Operation(summary = "重置用户密码")
+    @RequirePermission({PermissionGateEnum.USER_UPDATE})
     @OperationLog(
             module = OperationLogModuleEnum.USER,
             actionType = OperationLogActionEnum.UPDATE,
@@ -104,6 +120,7 @@ public class UserController {
 
     @PutMapping("/status")
     @Operation(summary = "启用/禁用用户")
+    @RequirePermission({PermissionGateEnum.USER_UPDATE})
     @OperationLog(
             module = OperationLogModuleEnum.USER,
             actionType = OperationLogActionEnum.UPDATE,

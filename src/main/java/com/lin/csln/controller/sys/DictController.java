@@ -1,6 +1,7 @@
 package com.lin.csln.controller.sys;
 
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.dto.sys.dict.DictDTO;
@@ -9,6 +10,7 @@ import com.lin.csln.dto.sys.dict.DictQueryParamDTO;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.service.DictService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +29,7 @@ public class DictController {
     private DictService dictService;
 
     @PostMapping("/add")
+    @RequirePermission({PermissionGateEnum.DICT_CREATE})
     @OperationLog(
             module = OperationLogModuleEnum.DICT,
             actionType = OperationLogActionEnum.CREATE,
@@ -38,6 +41,7 @@ public class DictController {
     }
 
     @PutMapping("/update")
+    @RequirePermission({PermissionGateEnum.DICT_UPDATE})
     @OperationLog(
             module = OperationLogModuleEnum.DICT,
             actionType = OperationLogActionEnum.UPDATE,
@@ -51,6 +55,7 @@ public class DictController {
 
 
     @DeleteMapping("/delete/{id}")
+    @RequirePermission({PermissionGateEnum.DICT_DELETE})
     @OperationLog(
             module = OperationLogModuleEnum.DICT,
             actionType = OperationLogActionEnum.DELETE,
@@ -63,6 +68,7 @@ public class DictController {
     }
 
     @DeleteMapping("/batchDelete")
+    @RequirePermission({PermissionGateEnum.DICT_DELETE})
     @OperationLog(
             module = OperationLogModuleEnum.DICT,
             actionType = OperationLogActionEnum.DELETE,

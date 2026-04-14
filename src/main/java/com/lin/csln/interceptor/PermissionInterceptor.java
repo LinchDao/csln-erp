@@ -5,6 +5,7 @@ import com.lin.csln.common.cache.UserCache;
 import com.lin.csln.common.constants.ResultCode;
 import com.lin.csln.common.dto.UserInfoDTO;
 import com.lin.csln.common.exception.BusinessException;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.service.UserService;
 import com.lin.csln.utils.JwtTokenUtil;
 import jakarta.annotation.Resource;
@@ -39,6 +40,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         }
 
         List<String> requiredPermissions = Arrays.stream(requirePermission.value())
+                .map(PermissionGateEnum::getCode)
                 .filter(StringUtils::hasText)
                 .collect(Collectors.toList());
         if (requiredPermissions.isEmpty()) {

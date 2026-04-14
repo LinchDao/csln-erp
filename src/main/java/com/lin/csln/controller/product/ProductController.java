@@ -1,6 +1,7 @@
 package com.lin.csln.controller.product;
 
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.log.annotation.OperationLog;
@@ -10,6 +11,7 @@ import com.lin.csln.dto.stock.ProductStockPageRespDTO;
 import com.lin.csln.dto.stock.ProductStockQueryParamDTO;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.service.ProductService;
 import com.lin.csln.service.ProductSkuService;
 import com.lin.csln.service.StockService;
@@ -44,6 +46,7 @@ public class ProductController {
     private StockService stockService;
 
     @PostMapping("/add")
+    @RequirePermission({PermissionGateEnum.PRODUCT_CREATE})
     @Operation(summary = "新增商品", description = "新增商品基础信息及关联的颜色图片、SKU信息")
     @OperationLog(
             module = OperationLogModuleEnum.PRODUCT,
@@ -61,6 +64,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
+    @RequirePermission({PermissionGateEnum.PRODUCT_UPDATE})
     @Operation(summary = "修改商品", description = "根据ID修改商品信息及关联的颜色图片、SKU信息")
     @OperationLog(
             module = OperationLogModuleEnum.PRODUCT,
@@ -80,6 +84,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @RequirePermission({PermissionGateEnum.PRODUCT_DELETE})
     @Operation(summary = "删除商品", description = "根据ID删除商品（级联删除关联的颜色图片、SKU）")
     @OperationLog(
             module = OperationLogModuleEnum.PRODUCT,

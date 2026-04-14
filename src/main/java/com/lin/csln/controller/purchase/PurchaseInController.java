@@ -1,6 +1,7 @@
 package com.lin.csln.controller.purchase;
 
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.log.annotation.OperationLog;
@@ -8,6 +9,7 @@ import com.lin.csln.dto.purchase.in.*;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.service.PurchaseInService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +37,7 @@ public class PurchaseInController {
 
     @Operation(summary = "创建采购入库单", description = "根据采购单创建入库单，自动生成入库单号")
     @PostMapping("/create")
+    @RequirePermission({PermissionGateEnum.PURCHASE_IN_CREATE})
     @OperationLog(
             module = OperationLogModuleEnum.PURCHASE_IN,
             actionType = OperationLogActionEnum.CREATE,
@@ -71,6 +74,7 @@ public class PurchaseInController {
 
     @Operation(summary = "入库单审核通过", description = "审核通过：状态0 → 1")
     @PutMapping("/audit/pass/{inId}")
+    @RequirePermission({PermissionGateEnum.PURCHASE_IN_AUDIT})
     @OperationLog(
             module = OperationLogModuleEnum.PURCHASE_IN,
             actionType = OperationLogActionEnum.AUDIT,
@@ -86,6 +90,7 @@ public class PurchaseInController {
 
     @Operation(summary = "入库单审核驳回", description = "审核驳回：状态0 → 0（仅记录操作）")
     @PutMapping("/audit/reject/{inId}")
+    @RequirePermission({PermissionGateEnum.PURCHASE_IN_AUDIT})
     @OperationLog(
             module = OperationLogModuleEnum.PURCHASE_IN,
             actionType = OperationLogActionEnum.AUDIT,

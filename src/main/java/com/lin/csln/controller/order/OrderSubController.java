@@ -1,6 +1,7 @@
 package com.lin.csln.controller.order;
 
 
+import com.lin.csln.common.auth.annotation.RequirePermission;
 import com.lin.csln.common.dto.PageRespDTO;
 import com.lin.csln.common.dto.Result;
 import com.lin.csln.log.annotation.OperationLog;
@@ -13,6 +14,7 @@ import com.lin.csln.dto.order.OrderSubShipDTO;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
+import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.service.OrderSubService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -47,6 +49,7 @@ public class OrderSubController {
     }
 
     @PostMapping("/assign")
+    @RequirePermission({PermissionGateEnum.ORDER_SUB_UPDATE})
     @Operation(summary = "子订单分配人员")
     @OperationLog(
             module = OperationLogModuleEnum.ORDER_SUB,
@@ -60,6 +63,7 @@ public class OrderSubController {
     }
 
     @PostMapping("/picking/complete")
+    @RequirePermission({PermissionGateEnum.ORDER_SUB_UPDATE})
     @Operation(summary = "子订单配货完成")
     @OperationLog(
             module = OperationLogModuleEnum.ORDER_SUB,
@@ -73,6 +77,7 @@ public class OrderSubController {
     }
 
     @PostMapping("/ship")
+    @RequirePermission({PermissionGateEnum.ORDER_SUB_UPDATE})
     @Operation(summary = "子订单发货")
     @OperationLog(
             module = OperationLogModuleEnum.ORDER_SUB,
