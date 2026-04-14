@@ -6,10 +6,10 @@ import com.lin.csln.dto.stock.ProductStockPageRespDTO;
 import com.lin.csln.dto.stock.ProductStockQueryParamDTO;
 import com.lin.csln.entity.StockDO;
 
+import java.util.List;
+
 /**
- * 库存表 服务接口
- *
- * @author 系统生成器
+ * 库存服务接口
  */
 public interface StockService extends IService<StockDO> {
 
@@ -18,6 +18,8 @@ public interface StockService extends IService<StockDO> {
     void adjustLockQty(String warehouseId, String skuId, int delta);
 
     void consumeLockedStock(String warehouseId, String skuId, int qty);
+
+    boolean hasOccupiedStockBySkuIds(List<String> skuIds);
 
     PageRespDTO<ProductStockPageRespDTO> pageProductStock(ProductStockQueryParamDTO queryDTO);
 }

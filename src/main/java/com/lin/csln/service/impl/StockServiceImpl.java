@@ -19,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 库存表 服务实现类
- *
- * @author 系统生成器
+ * 库存服务实现
  */
 @Service
 public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, StockDO> implements StockService {
@@ -60,7 +58,6 @@ public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, Stock
                 baseMapper.insert(newStock);
             }
         }
-
     }
 
     @Override
@@ -116,6 +113,17 @@ public class StockServiceImpl extends BaseReadonlyServiceImpl<StockMapper, Stock
         updateStock.setQty(targetQty);
         updateStock.setLockQty(targetLockQty);
         baseMapper.updateById(updateStock);
+    }
+
+    @Override
+    public boolean hasOccupiedStockBySkuIds(List<String> skuIds) {
+        if (skuIds == null || skuIds.isEmpty()) {
+            return false;
+        }
+        LambdaQueryWrapper<StockDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(StockDO::getSkuId, skuIds)
+                .and(w -> w.gt(StockDO::getQty, 0).or().gt(StockDO::getLockQty, 0));
+        return baseMapper.selectCount(queryWrapper) > 0;
     }
 
     @Override

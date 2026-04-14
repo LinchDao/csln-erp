@@ -33,8 +33,8 @@
             oi.price,
             oi.amount
         FROM order_item oi
-                 LEFT JOIN product_sku ps ON oi.sku_id = ps.id AND ps.is_delete = 0
-                 LEFT JOIN product p ON ps.product_id = p.id AND p.is_delete = 0
+                 LEFT JOIN product_sku ps ON oi.sku_id = ps.id
+                 LEFT JOIN product p ON ps.product_id = p.id
         WHERE oi.master_id = #{masterId}
         ORDER BY oi.sub_id ASC, oi.id ASC
     </select>
@@ -53,8 +53,8 @@
             oi.price,
             oi.amount
         FROM order_item oi
-                 LEFT JOIN product_sku ps ON oi.sku_id = ps.id AND ps.is_delete = 0
-                 LEFT JOIN product p ON ps.product_id = p.id AND p.is_delete = 0
+                 LEFT JOIN product_sku ps ON oi.sku_id = ps.id
+                 LEFT JOIN product p ON ps.product_id = p.id
         WHERE oi.sub_id = #{subId}
         ORDER BY oi.id ASC
     </select>

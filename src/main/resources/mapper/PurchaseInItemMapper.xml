@@ -11,10 +11,10 @@
                ps.size_name  AS sizeName,
                poi.qty       AS purchaseQty,
                pi.qty        AS qty
-        FROM erp2.purchase_in_item pi
-                 LEFT JOIN erp2.product_sku ps ON pi.sku_id = ps.id
-                 LEFT JOIN erp2.product p ON ps.product_id = p.id
-                 LEFT JOIN erp2.purchase_order_item poi ON poi.purchase_id = #{purchaseId}
+        FROM purchase_in_item pi
+                 LEFT JOIN product_sku ps ON pi.sku_id = ps.id
+                 LEFT JOIN product p ON ps.product_id = p.id
+                 LEFT JOIN purchase_order_item poi ON poi.purchase_id = #{purchaseId}
             AND poi.sku_id = pi.sku_id
         WHERE pi.in_id = #{inId}
     </select>

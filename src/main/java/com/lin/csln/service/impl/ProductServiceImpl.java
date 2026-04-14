@@ -127,7 +127,8 @@ public class ProductServiceImpl extends BaseReadonlyServiceImpl<ProductMapper, P
     public List<ProductSelectDTO> listProductSelect(String productNo) {
         LambdaQueryWrapper<ProductDO> wrapper = new LambdaQueryWrapper<>();
 
-        wrapper.select(ProductDO::getId, ProductDO::getProductNo, ProductDO::getName, ProductDO::getMainImageId);
+        wrapper.select(ProductDO::getId, ProductDO::getProductNo, ProductDO::getName,
+                ProductDO::getWholesalePrice, ProductDO::getRetailPrice, ProductDO::getMainImageId);
         wrapper.like(StringUtils.hasText(productNo), ProductDO::getProductNo, productNo);
 
         List<ProductDO> products = baseMapper.selectList(wrapper);
