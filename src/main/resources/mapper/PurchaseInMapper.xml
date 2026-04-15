@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.PurchaseInMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.PurchaseInDO">
+        <id column="id" property="id"/>
+        <result column="in_no" property="inNo"/>
+        <result column="purchase_id" property="purchaseId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="status" property="status"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <select id="getMaxInNoByPrefix" resultType="java.lang.String">
+        SELECT MAX(in_no)
+        FROM purchase_in
+        WHERE in_no LIKE CONCAT(#{prefix}, '%')
+    </select>
+
+    <select id="selectSumInstockedQtyByPurchaseId" resultType="com.lin.csln.dto.purchase.in.PurchaseInstockedQtyDTO">
+        SELECT pii.sku_id   AS skuId,
+               SUM(pii.qty) AS qty
+        FROM purchase_in pi
+                 INNER JOIN purchase_in_item pii ON pi.id = pii.in_id
+        WHERE pi.purchase_id = #{purchaseId}
+          AND pi.status = 1
+        GROUP BY pii.sku_id
+    </select>
+
+    <select id="selectPurchaseInPage" parameterType="com.lin.csln.dto.purchase.in.PurchaseInQueryParamDTO"
+            resultType="com.lin.csln.dto.purchase.in.PurchaseInPageRespDTO">
+        SELECT
+        pi.id,
+        pi.in_no AS inNo,
+        pi.purchase_id AS purchaseId,
+        pi.warehouse_id AS warehouseId,
+        pi.total_qty AS totalQty,
+        pi.status,
+        pi.create_user_id AS createUserId,
+        pi.audit_user_id AS auditUserId,
+        pi.create_time AS createTime,
+        pi.remark,
+
+        po.purchase_no AS purchaseNo,
+        w.warehouse_name AS warehouseName
+
+        FROM purchase_in pi
+        LEFT JOIN purchase_order po ON pi.purchase_id = po.id
+        LEFT JOIN warehouse w ON pi.warehouse_id = w.id
+
+        WHERE 1=1
+        <if test="dto.inNo != null and dto.inNo != ''">
+            AND pi.in_no LIKE CONCAT('%', #{dto.inNo}, '%')
+        </if>
+        <if test="dto.purchaseNo != null and dto.purchaseNo != ''">
+            AND po.purchase_no LIKE CONCAT('%', #{dto.purchaseNo}, '%')
+        </if>
+        <if test="dto.warehouseId != null and dto.warehouseId != ''">
+            AND pi.warehouse_id = #{dto.warehouseId}
+        </if>
+        <if test="dto.status != null">
+            AND pi.status = #{dto.status}
+        </if>
+
+        ORDER BY pi.create_time DESC
+    </select>
+
+
+    <select id="selectPurchaseInDetail" resultType="com.lin.csln.dto.purchase.in.PurchaseInDetailRespDTO">
+        SELECT pi.id,
+               pi.in_no                                         AS inNo,
+               pi.purchase_id                                   AS purchaseId,
+               po.purchase_no                                   AS purchaseNo,
+               pi.warehouse_id                                  AS warehouseId,
+               w.warehouse_name                                 AS warehouseName,
+               pi.total_qty                                     AS totalQty,
+               pi.status,
+               pi.create_user_id                                AS createUserId,
+               pi.audit_user_id                                 AS auditUserId,
+               DATE_FORMAT(pi.create_time, '%Y-%m-%d %H:%i:%s') AS createTime,
+               pi.remark
+        FROM purchase_in pi
+                 LEFT JOIN purchase_order po ON pi.purchase_id = po.id
+                 LEFT JOIN warehouse w ON pi.warehouse_id = w.id
+        WHERE pi.id = #{inId}
+    </select>
+</mapper>

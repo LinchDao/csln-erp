@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.OrderMasterMapper">
+
+    <select id="pageOrderMaster" resultType="com.lin.csln.dto.order.OrderMasterPageRespDTO">
+        SELECT
+            om.id,
+            om.order_no AS orderNo,
+            om.shop_id AS shopId,
+            s.shop_name AS shopName,
+            om.customer_id AS customerId,
+            c.name AS customerName,
+            om.total_qty AS totalQty,
+            om.total_amount AS totalAmount,
+            om.order_type AS orderType,
+            om.status,
+            om.is_draft AS isDraft,
+            DATE_FORMAT(om.create_time, '%Y-%m-%d %H:%i:%s') AS createTime,
+            wh.warehouseNames
+        FROM order_master om
+                 LEFT JOIN shop s ON om.shop_id = s.id
+                 LEFT JOIN customer c ON om.customer_id = c.id
+                 LEFT JOIN (
+            SELECT
+                os.master_id,
+                GROUP_CONCAT(DISTINCT w.warehouse_name ORDER BY w.warehouse_name SEPARATOR ',') AS warehouseNames
+            FROM order_sub os
+                     LEFT JOIN warehouse w ON os.warehouse_id = w.id AND w.is_delete = 0
+            WHERE os.is_delete = 0
+            GROUP BY os.master_id
+        ) wh ON wh.master_id = om.id
+        WHERE 1 = 1
+        <if test="query.orderNo != null and query.orderNo != ''">
+            AND om.order_no LIKE CONCAT('%', #{query.orderNo}, '%')
+        </if>
+        <if test="query.orderType != null">
+            AND om.order_type = #{query.orderType}
+        </if>
+        <if test="query.status != null">
+            AND om.status = #{query.status}
+        </if>
+        <if test="query.isDraft != null">
+            AND om.is_draft = #{query.isDraft}
+        </if>
+        ORDER BY om.create_time DESC
+    </select>
+
+    <select id="selectMaxOrderNoByPrefix" resultType="java.lang.String">
+        SELECT MAX(order_no)
+        FROM order_master
+        WHERE order_no LIKE CONCAT(#{orderNoPrefix}, '%')
+    </select>
+
+    <select id="selectOrderMasterDetail" resultType="com.lin.csln.dto.order.OrderMasterDetailRespDTO">
+        SELECT
+            om.id,
+            om.order_no AS orderNo,
+            om.customer_id AS customerId,
+            c.name AS customerName,
+            c.phone AS customerPhone,
+            om.order_type AS orderType,
+            om.status,
+            om.total_qty AS totalQty,
+            om.total_amount AS totalAmount,
+            om.is_draft AS isDraft,
+            om.is_ar AS isAr,
+            om.allow_replace AS allowReplace,
+            om.remark,
+            DATE_FORMAT(om.create_time, '%Y-%m-%d %H:%i:%s') AS createTime
+        FROM order_master om
+                 LEFT JOIN customer c ON om.customer_id = c.id
+        WHERE om.id = #{id}
+    </select>
+
+</mapper>

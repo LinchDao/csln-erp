@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.PurchaseOrderItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.PurchaseOrderItemDO">
+        <id column="id" property="id"/>
+        <result column="purchase_id" property="purchaseId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="qty" property="qty"/>
+        <result column="price" property="price"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
+
+    <select id="listPurchaseOrderItemSku" resultType="com.lin.csln.dto.purchase.order.PurchaseOrderItemDTO">
+        SELECT poi.id,
+               poi.purchase_id AS purchaseId,
+               poi.sku_id      AS skuId,
+               p.id            AS productId,
+               p.product_no    AS productNo,
+               p.name          AS productName,
+               poi.price,
+               poi.qty,
+               poi.amount,
+               poi.is_delete   AS isDelete,
+               sku.color_name  AS colorName,
+               sku.size_name   AS sizeName
+        FROM purchase_order_item poi
+                 LEFT JOIN product_sku sku ON poi.sku_id = sku.id
+                 LEFT JOIN product p ON sku.product_id = p.id
+        WHERE poi.purchase_id = #{purchaseId}
+          and poi.is_delete = 0
+    </select>
+</mapper>

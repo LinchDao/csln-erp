@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.ProductSkuMapper">
+
+
+    <select id="listSkuWithStockByProductId" resultType="com.lin.csln.dto.product.ProductSkuDTO">
+        SELECT s.id,
+               s.product_id,
+               s.color_name,
+               s.size_name,
+               s.barcode,
+               IFNULL(t.qty, 0)          AS qty,
+               IFNULL(t.lock_qty, 0)     AS lock_qty,
+               IFNULL(t.recovery_qty, 0) AS recovery_qty,
+               IFNULL(t.warn_qty, 0)     AS warn_qty
+        FROM product_sku s
+                 LEFT JOIN stock t ON s.id = t.sku_id
+        WHERE s.product_id = #{productId}
+          and s.is_delete = 0
+    </select>
+
+</mapper>

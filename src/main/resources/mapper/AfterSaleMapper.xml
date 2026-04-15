@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.AfterSaleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.AfterSaleDO">
+        <id column="id" property="id"/>
+        <result column="as_no" property="asNo"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="sales_user_id" property="salesUserId"/>
+        <result column="as_type" property="asType"/>
+        <result column="status" property="status"/>
+        <result column="reason" property="reason"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, as_no, order_id, order_no, customer_id, shop_id, sales_user_id, as_type, status, reason, remark, create_time
+    </sql>
+
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.OrderSubMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.OrderSubDO">
+        <id column="id" property="id"/>
+        <result column="sub_order_no" property="subOrderNo"/>
+        <result column="master_id" property="masterId"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="amount" property="amount"/>
+        <result column="send_type" property="sendType"/>
+        <result column="from_warehouse_id" property="fromWarehouseId"/>
+        <result column="status" property="status"/>
+        <result column="delivery_type" property="deliveryType"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="driver_phone" property="driverPhone"/>
+        <result column="delivery_remark" property="deliveryRemark"/>
+        <result column="expect_send_date" property="expectSendDate"/>
+        <result column="actual_send_date" property="actualSendDate"/>
+        <result column="picker_user_id" property="pickerUserId"/>
+        <result column="remark" property="remark"/>
+        <result column="is_delete" property="isDelete"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, sub_order_no, master_id, warehouse_id, amount, send_type, from_warehouse_id, status, delivery_type, express_no, driver_phone, delivery_remark, expect_send_date, actual_send_date, picker_user_id, remark, is_delete
+    </sql>
+
+    <select id="selectMaxSubOrderNoByMasterIdAndPrefix" resultType="java.lang.String">
+        SELECT MAX(sub_order_no)
+        FROM order_sub
+        WHERE master_id = #{masterId}
+          AND sub_order_no LIKE CONCAT(#{subOrderPrefix}, '%')
+    </select>
+
+    <select id="selectDetailListByMasterId" resultType="com.lin.csln.dto.order.OrderSubDetailRespDTO">
+        SELECT
+            os.id,
+            os.warehouse_id AS warehouseId,
+            w.warehouse_name AS warehouseName,
+            os.amount,
+            os.delivery_type AS deliveryType,
+            os.delivery_remark AS deliveryRemark,
+            DATE_FORMAT(os.expect_send_date, '%Y-%m-%d') AS expectSendDate
+        FROM order_sub os
+                 LEFT JOIN warehouse w ON os.warehouse_id = w.id
+        WHERE os.master_id = #{masterId}
+          AND os.is_delete = 0
+        ORDER BY os.sub_order_no ASC
+    </select>
+
+    <select id="selectDetailBySubId" resultType="com.lin.csln.dto.order.OrderSubDetailDTO">
+        SELECT
+            os.id,
+            om.order_no AS orderNo,
+            os.sub_order_no AS subOrderNo,
+            c.name AS customerName,
+            w.warehouse_name AS warehouseName,
+            os.delivery_type AS deliveryType,
+            os.status,
+            DATE_FORMAT(os.expect_send_date, '%Y-%m-%d') AS expectSendDate,
+            DATE_FORMAT(os.actual_send_date, '%Y-%m-%d') AS actualSendDate,
+            os.picker_user_id AS pickerUserId,
+            os.express_no AS expressNo,
+            os.delivery_remark AS deliveryRemark,
+            os.remark,
+            os.amount
+        FROM order_sub os
+                 INNER JOIN order_master om ON os.master_id = om.id
+                 LEFT JOIN customer c ON om.customer_id = c.id
+                 LEFT JOIN warehouse w ON os.warehouse_id = w.id AND w.is_delete = 0
+        WHERE os.id = #{subId}
+          AND os.is_delete = 0
+    </select>
+
+    <select id="pageQuery" resultType="com.lin.csln.dto.order.OrderSubPageRespDTO">
+        SELECT
+            os.id,
+            om.order_no AS orderNo,
+            os.sub_order_no AS subOrderNo,
+            c.name AS customerName,
+            om.create_user_id AS createUserId,
+            om.order_type AS orderType,
+            om.status,
+            om.remark,
+            os.status AS subOrderStatus,
+            os.delivery_type AS deliveryType,
+            os.delivery_remark AS deliveryRemark,
+            DATE_FORMAT(os.expect_send_date, '%Y-%m-%d') AS expectSendDate,
+            DATE_FORMAT(os.actual_send_date, '%Y-%m-%d') AS actualSendDate,
+            os.picker_user_id AS pickerUserId,
+            os.remark AS subRemark
+        FROM order_sub os
+                 INNER JOIN order_master om ON os.master_id = om.id
+                 LEFT JOIN customer c ON om.customer_id = c.id
+        WHERE os.is_delete = 0
+          AND om.is_draft = 0
+        <if test="query.subOrderNo != null and query.subOrderNo != ''">
+            AND os.sub_order_no LIKE CONCAT('%', #{query.subOrderNo}, '%')
+        </if>
+        <if test="query.customerId != null and query.customerId != ''">
+            AND om.customer_id = #{query.customerId}
+        </if>
+        <if test="query.createUserId != null and query.createUserId != ''">
+            AND om.create_user_id = #{query.createUserId}
+        </if>
+        <if test="query.subOrderStatus != null">
+            AND os.status = #{query.subOrderStatus}
+        </if>
+        <if test="query.sendDateStart != null and query.sendDateStart != ''">
+            AND os.expect_send_date &gt;= #{query.sendDateStart}
+        </if>
+        <if test="query.sendDateEnd != null and query.sendDateEnd != ''">
+            AND os.expect_send_date &lt;= #{query.sendDateEnd}
+        </if>
+        ORDER BY os.expect_send_date ASC, os.sub_order_no ASC
+    </select>
+
+</mapper>

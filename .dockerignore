@@ -1,0 +1,12 @@
+.git
+.idea
+.vscode
+target
+data
+docs
+*.log
+*.tmp
+*.swp
+*.swo
+README.md
+AGENTS.md

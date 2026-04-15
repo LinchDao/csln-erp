@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.PriceLevelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.PriceLevelDO">
+        <id column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="level_id" property="levelId"/>
+        <result column="price" property="price"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, product_id, level_id, price
+    </sql>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.StockTransferItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.StockTransferItemDO">
+        <id column="id" property="id"/>
+        <result column="transfer_id" property="transferId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="qty" property="qty"/>
+        <result column="send_qty" property="sendQty"/>
+        <result column="receive_qty" property="receiveQty"/>
+        <result column="diff_qty" property="diffQty"/>
+        <result column="diff_type" property="diffType"/>
+        <result column="diff_remark" property="diffRemark"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, transfer_id, sku_id, qty, send_qty, receive_qty, diff_qty, diff_type, diff_remark
+    </sql>
+
+</mapper>

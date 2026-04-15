@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.ProductMapper">
+
+    <select id="pageProduct" parameterType="com.lin.csln.dto.product.ProductQueryParamDTO" resultType="com.lin.csln.dto.product.ProductPageRespDTO">
+        SELECT id id,
+        product_no productNo,
+        name name,
+        brand brand,
+        season season, year year, series series
+        , cost_price costPrice, wholesale_price wholesalePrice
+        , retail_price retailPrice, main_image_id mainImageId
+        , status status, create_time createTime
+        FROM product
+        <where>
+            is_delete = 0
+            <if test="params.productNo != null and params.productNo != ''">
+                AND product_no LIKE CONCAT('%', #{params.productNo}, '%')
+            </if>
+            <if test="params.name != null and params.name != ''">
+                AND name LIKE CONCAT('%', #{params.name}, '%')
+            </if>
+            <if test="params.status != null">
+                AND status = #{params.status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+
+</mapper>

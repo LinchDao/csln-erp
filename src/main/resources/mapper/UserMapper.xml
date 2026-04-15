@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.UserDO">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="real_name" property="realName"/>
+        <result column="phone" property="phone"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, password, real_name, phone, shop_id, warehouse_id, status, create_time, update_time
+    </sql>
+
+    <select id="pageUser" parameterType="com.lin.csln.dto.sys.user.UserQueryParamDTO"
+            resultType="com.lin.csln.dto.sys.user.UserPageRespDTO">
+        SELECT
+            u.id,
+            u.username,
+            u.real_name AS realName,
+            u.phone,
+            u.shop_id AS shopId,
+            s.shop_name AS shopName,
+            u.warehouse_id AS warehouseId,
+            w.warehouse_name AS warehouseName,
+            u.status,
+            u.create_time AS createTime
+        FROM sys_user u
+        LEFT JOIN shop s ON u.shop_id = s.id
+        LEFT JOIN warehouse w ON u.warehouse_id = w.id
+        <where>
+            <if test="params.realName != null and params.realName != ''">
+                AND u.real_name LIKE CONCAT('%', #{params.realName}, '%')
+            </if>
+            <if test="params.userKeyWord != null and params.userKeyWord != ''">
+                AND (
+                    u.username LIKE CONCAT('%', #{params.userKeyWord}, '%')
+                    OR u.real_name LIKE CONCAT('%', #{params.userKeyWord}, '%')
+                    OR u.phone LIKE CONCAT('%', #{params.userKeyWord}, '%')
+                )
+            </if>
+            <if test="params.storeWarehouseKeyword != null and params.storeWarehouseKeyword != ''">
+                AND (
+                    s.shop_name LIKE CONCAT('%', #{params.storeWarehouseKeyword}, '%')
+                    OR w.warehouse_name LIKE CONCAT('%', #{params.storeWarehouseKeyword}, '%')
+                )
+            </if>
+            <if test="params.status != null">
+                AND u.status = #{params.status}
+            </if>
+        </where>
+        ORDER BY u.create_time DESC
+    </select>
+
+</mapper>

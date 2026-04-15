@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.csln.mapper.OrderReplaceDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lin.csln.entity.OrderReplaceDetailDO">
+        <id column="id" property="id"/>
+        <result column="order_item_id" property="orderItemId"/>
+        <result column="product_id" property="productId"/>
+        <result column="color_id" property="colorId"/>
+        <result column="target_sku_id" property="targetSkuId"/>
+        <result column="real_sku_id" property="realSkuId"/>
+        <result column="qty" property="qty"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_item_id, product_id, color_id, target_sku_id, real_sku_id, qty, warehouse_id, create_time
+    </sql>
+
+</mapper>
