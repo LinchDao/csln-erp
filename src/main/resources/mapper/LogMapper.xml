@@ -22,11 +22,17 @@
             <if test="query.bizId != null and query.bizId != ''">
                 AND l.biz_id = #{query.bizId}
             </if>
-            <if test="query.module != null and query.module != ''">
-                AND l.module = #{query.module}
+            <if test="query.module != null and query.module.size() > 0">
+                AND l.module IN
+                <foreach collection="query.module" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
-            <if test="query.actionType != null and query.actionType != ''">
-                AND l.action_type = #{query.actionType}
+            <if test="query.actionType != null and query.actionType.size() > 0">
+                AND l.action_type IN
+                <foreach collection="query.actionType" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
             <if test="query.userId != null and query.userId != ''">
                 AND l.user_id = #{query.userId}
