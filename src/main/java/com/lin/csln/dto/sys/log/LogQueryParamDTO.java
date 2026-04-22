@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统操作日志分页查询参数
@@ -16,11 +17,11 @@ public class LogQueryParamDTO extends PageQueryParamDTO {
     @Schema(description = "业务主键")
     private String bizId;
 
-    @Schema(description = "所属模块")
-    private String module;
+    @Schema(description = "所属模块列表")
+    private List<String> module;
 
-    @Schema(description = "动作类型")
-    private String actionType;
+    @Schema(description = "动作类型列表")
+    private List<String> actionType;
 
     @Schema(description = "操作人ID")
     private String userId;
