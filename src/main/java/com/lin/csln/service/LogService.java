@@ -1,6 +1,9 @@
 package com.lin.csln.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.csln.common.dto.PageRespDTO;
+import com.lin.csln.dto.sys.log.LogPageRespDTO;
+import com.lin.csln.dto.sys.log.LogQueryParamDTO;
 import com.lin.csln.entity.LogDO;
 
 /**
@@ -13,4 +16,6 @@ public interface LogService extends IService<LogDO> {
     void saveFailLog(LogDO logDO);
 
     void saveLogIgnoreDuplicate(LogDO logDO);
+
+    PageRespDTO<LogPageRespDTO> pageLog(LogQueryParamDTO queryDTO);
 }

@@ -2,4 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lin.csln.mapper.LogMapper">
 
+    <select id="pageLog" resultType="com.lin.csln.dto.sys.log.LogPageRespDTO">
+        SELECT
+            l.id,
+            l.biz_id AS bizId,
+            l.module,
+            l.action_type AS actionType,
+            l.user_id AS userId,
+            u.real_name AS userName,
+            l.request_url AS requestUrl,
+            l.request_method AS requestMethod,
+            l.status,
+            l.error_msg AS errorMsg,
+            l.cost_time AS costTime,
+            DATE_FORMAT(l.create_time, '%Y-%m-%d %H:%i:%s') AS createTime
+        FROM sys_log l
+        LEFT JOIN sys_user u ON l.user_id = u.id
+        <where>
+            <if test="query.bizId != null and query.bizId != ''">
+                AND l.biz_id = #{query.bizId}
+            </if>
+            <if test="query.module != null and query.module != ''">
+                AND l.module = #{query.module}
+            </if>
+            <if test="query.actionType != null and query.actionType != ''">
+                AND l.action_type = #{query.actionType}
+            </if>
+            <if test="query.userId != null and query.userId != ''">
+                AND l.user_id = #{query.userId}
+            </if>
+            <if test="query.status != null">
+                AND l.status = #{query.status}
+            </if>
+            <if test="query.startTime != null">
+                AND l.create_time &gt;= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND l.create_time &lt;= #{query.endTime}
+            </if>
+        </where>
+        ORDER BY l.create_time DESC, l.id DESC
+    </select>
+
 </mapper>
