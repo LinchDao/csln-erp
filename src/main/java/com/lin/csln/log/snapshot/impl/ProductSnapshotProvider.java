@@ -20,7 +20,8 @@ public class ProductSnapshotProvider implements OperationSnapshotProvider {
 
     @Override
     public boolean supports(OperationLogModuleEnum module) {
-        return OperationLogModuleEnum.PRODUCT == module;
+        return OperationLogModuleEnum.PRODUCT == module
+                || OperationLogModuleEnum.PRODUCT_V2 == module;
     }
 
     @Override

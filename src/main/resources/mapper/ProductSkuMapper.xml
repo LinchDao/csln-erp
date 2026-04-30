@@ -19,4 +19,93 @@
           and s.is_delete = 0
     </select>
 
+    <select id="countDocumentReferenceBySkuIds" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM (
+                 SELECT oi.sku_id AS sku_id
+                 FROM order_item oi
+                 WHERE oi.sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT poi.sku_id AS sku_id
+                 FROM purchase_order_item poi
+                 WHERE poi.sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT pii.sku_id AS sku_id
+                 FROM purchase_in_item pii
+                 WHERE pii.sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT pri.sku_id AS sku_id
+                 FROM purchase_return_item pri
+                 WHERE pri.sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT sti.sku_id AS sku_id
+                 FROM stock_transfer_item sti
+                 WHERE sti.sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT sr.sku_id AS sku_id
+                 FROM stock_recovery sr
+                 WHERE sr.sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT asi.real_sku_id AS sku_id
+                 FROM after_sale_item asi
+                 WHERE asi.real_sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT asi.ship_sku_id AS sku_id
+                 FROM after_sale_item asi
+                 WHERE asi.ship_sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT asi.new_sku_id AS sku_id
+                 FROM after_sale_item asi
+                 WHERE asi.new_sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT asi.confirm_real_sku_id AS sku_id
+                 FROM after_sale_item asi
+                 WHERE asi.confirm_real_sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT ord.target_sku_id AS sku_id
+                 FROM order_replace_detail ord
+                 WHERE ord.target_sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+                 UNION ALL
+                 SELECT ord.real_sku_id AS sku_id
+                 FROM order_replace_detail ord
+                 WHERE ord.real_sku_id IN
+                       <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+                           #{skuId}
+                       </foreach>
+             ) t
+    </select>
+
 </mapper>

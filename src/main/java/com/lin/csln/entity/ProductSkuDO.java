@@ -26,6 +26,11 @@ public class ProductSkuDO {
     private String productId;
 
     /**
+     * V2商品ID
+     */
+    private String productV2Id;
+
+    /**
      * 颜色
      */
     private String colorName;
@@ -39,6 +44,12 @@ public class ProductSkuDO {
      * 条码
      */
     private String barcode;
+
+    /**
+     * 维度组合
+     */
+    private String dimensionSignature;
+
     private Integer isDelete;
 
 }

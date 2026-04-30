@@ -7,7 +7,7 @@ import lombok.Getter;
  */
 @Getter
 public enum OperationLogModuleEnum {
-
+    PRODUCT_V2("product_v2", "商品"),
     PRODUCT("product", "商品"),
     USER("user", "用户"),
     CUSTOMER("customer", "客户"),

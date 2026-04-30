@@ -17,4 +17,5 @@ import java.util.List;
 public interface ProductSkuMapper extends BaseMapper<ProductSkuDO> {
     List<ProductSkuDTO> listSkuWithStockByProductId(@Param("productId") String productId);
 
+    Integer countDocumentReferenceBySkuIds(@Param("skuIds") List<String> skuIds);
 }
