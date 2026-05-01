@@ -96,21 +96,8 @@ public class ProductV2ServiceImpl extends BaseReadonlyServiceImpl<ProductV2Mappe
     @Override
     public PageRespDTO<ProductPageV2RespDTO> pageProductV2(ProductV2QueryParamDTO queryDTO) {
         ProductV2QueryParamDTO query = queryDTO == null ? new ProductV2QueryParamDTO() : queryDTO;
-        IPage<ProductV2DO> page = new Page<>(query.getPage(), query.getLimit());
-        LambdaQueryWrapper<ProductV2DO> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(ProductV2DO::getIsDelete, GlobalEnums.NO.getCode());
-        wrapper.like(StringUtils.hasText(query.getProductNo()), ProductV2DO::getProductNo, query.getProductNo());
-        wrapper.like(StringUtils.hasText(query.getName()), ProductV2DO::getName, query.getName());
-        wrapper.eq(query.getStatus() != null, ProductV2DO::getStatus, query.getStatus());
-        wrapper.eq(StringUtils.hasText(query.getCategoryId()), ProductV2DO::getCategoryId, query.getCategoryId());
-        wrapper.orderByDesc(ProductV2DO::getCreateTime);
-
-        IPage<ProductV2DO> result = baseMapper.selectPage(page, wrapper);
-        IPage<ProductPageV2RespDTO> respPage = result.convert(item -> {
-            ProductPageV2RespDTO dto = new ProductPageV2RespDTO();
-            BeanUtils.copyProperties(item, dto);
-            return dto;
-        });
+        IPage<ProductPageV2RespDTO> page = new Page<>(query.getPage(), query.getLimit());
+        IPage<ProductPageV2RespDTO> respPage = baseMapper.pageProductV2(page, query);
         return PageRespDTO.build(respPage, query);
     }
 

@@ -64,19 +64,27 @@ public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO>
             throw new BusinessException("菜单树不能为空");
         }
 
-        List<MenuDO> dbMenus = lambdaQuery().eq(MenuDO::getIsDelete, GlobalEnums.NO.getCode()).list();
-        if (CollectionUtils.isEmpty(dbMenus)) {
+        List<MenuDO> allMenus = lambdaQuery()
+                .eq(MenuDO::getIsDelete, GlobalEnums.NO.getCode())
+                .list();
+        if (CollectionUtils.isEmpty(allMenus)) {
             throw new BusinessException("菜单不存在，无法保存排序");
         }
 
-        Map<String, MenuDO> dbMenuMap = dbMenus.stream()
+        Map<String, MenuDO> allMenuMap = allMenus.stream()
                 .collect(Collectors.toMap(MenuDO::getId, menu -> menu));
+        Map<String, MenuDO> enabledMenuMap = allMenus.stream()
+                .filter(menu -> Objects.equals(menu.getStatus(), GlobalEnums.YES.getCode()))
+                .collect(Collectors.toMap(MenuDO::getId, menu -> menu));
+        if (enabledMenuMap.isEmpty()) {
+            throw new BusinessException("启用菜单不存在，无法保存排序");
+        }
 
         Set<String> requestIds = new HashSet<>();
         List<MenuDO> updateList = new ArrayList<>();
-        collectSortUpdates(menus, null, dbMenuMap, requestIds, updateList);
+        collectSortUpdates(menus, null, enabledMenuMap, allMenuMap, requestIds, updateList);
 
-        if (requestIds.size() != dbMenuMap.size()) {
+        if (requestIds.size() != enabledMenuMap.size()) {
             throw new BusinessException("菜单树需全量提交");
         }
 
@@ -134,7 +142,8 @@ public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO>
 
     private void collectSortUpdates(List<MenuSortNodeDTO> nodes,
                                     String expectedParentId,
-                                    Map<String, MenuDO> dbMenuMap,
+                                    Map<String, MenuDO> enabledMenuMap,
+                                    Map<String, MenuDO> allMenuMap,
                                     Set<String> requestIds,
                                     List<MenuDO> updateList) {
         if (CollectionUtils.isEmpty(nodes)) {
@@ -151,9 +160,13 @@ public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO>
                 throw new BusinessException("菜单ID重复：" + menuId);
             }
 
-            MenuDO dbMenu = dbMenuMap.get(menuId);
+            MenuDO dbMenu = enabledMenuMap.get(menuId);
             if (dbMenu == null) {
-                throw new BusinessException("菜单不存在：" + menuId);
+                MenuDO allMenu = allMenuMap.get(menuId);
+                if (allMenu == null) {
+                    throw new BusinessException("菜单不存在：" + menuId);
+                }
+                throw new BusinessException("菜单已禁用，不能参与排序：" + menuId);
             }
 
             String dbParentId = normalizeParentId(dbMenu.getParentId());
@@ -167,7 +180,7 @@ public class MenuServiceImpl extends BaseReadonlyServiceImpl<MenuMapper, MenuDO>
             updateDO.setSort(i + 1);
             updateList.add(updateDO);
 
-            collectSortUpdates(node.getChildren(), menuId, dbMenuMap, requestIds, updateList);
+            collectSortUpdates(node.getChildren(), menuId, enabledMenuMap, allMenuMap, requestIds, updateList);
         }
     }
 
