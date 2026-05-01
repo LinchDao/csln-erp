@@ -5,7 +5,7 @@
 
     <select id="listSkuWithStockByProductId" resultType="com.lin.csln.dto.product.ProductSkuDTO">
         SELECT s.id,
-               s.product_id,
+               s.product_v2_id AS product_id,
                s.color_name,
                s.size_name,
                s.barcode,
@@ -15,7 +15,7 @@
                IFNULL(t.warn_qty, 0)     AS warn_qty
         FROM product_sku s
                  LEFT JOIN stock t ON s.id = t.sku_id
-        WHERE s.product_id = #{productId}
+        WHERE s.product_v2_id = #{productId}
           and s.is_delete = 0
     </select>
 

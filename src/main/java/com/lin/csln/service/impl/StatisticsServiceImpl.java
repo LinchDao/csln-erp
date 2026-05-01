@@ -151,7 +151,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 JOIN order_sub s ON oi.sub_id = s.id AND s.is_delete = 0
                 JOIN order_master om ON s.master_id = om.id
                 JOIN product_sku ps ON oi.sku_id = ps.id
-                JOIN product p ON ps.product_id = p.id
+                JOIN product_v2 p ON ps.product_v2_id = p.id
                 WHERE om.is_draft = 0
                   AND om.create_time >= :startDate
                   AND om.create_time < :endExclusive
@@ -245,7 +245,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 JOIN order_sub s ON oi.sub_id = s.id AND s.is_delete = 0
                 JOIN order_master om ON s.master_id = om.id
                 JOIN product_sku ps ON oi.sku_id = ps.id
-                JOIN product p ON ps.product_id = p.id
+                JOIN product_v2 p ON ps.product_v2_id = p.id
                 WHERE om.is_draft = 0
                   AND om.create_time >= :startDate
                   AND om.create_time < :endExclusive

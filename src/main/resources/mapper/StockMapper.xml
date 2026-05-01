@@ -25,8 +25,7 @@
                p.product_no       AS productNo,
                p.name             AS name,
                ps.id              AS skuId,
-               ps.color_name      AS colorName,
-               ps.size_name       AS sizeName,
+               ps.dimension_signature AS dimensionSignature,
                w.id               AS warehouseId,
                w.warehouse_name   AS warehouseName,
                s.qty              AS qty,
@@ -36,7 +35,7 @@
                s.update_time      AS updateTime
         FROM stock s
                  INNER JOIN product_sku ps ON ps.id = s.sku_id AND ps.is_delete = 0
-                 INNER JOIN product p ON p.id = ps.product_id AND p.is_delete = 0
+                 INNER JOIN product_v2 p ON p.id = ps.product_v2_id AND p.is_delete = 0
                  INNER JOIN warehouse w ON w.id = s.warehouse_id AND w.is_delete = 0
         <where>
             <if test="params.productNo != null and params.productNo != ''">

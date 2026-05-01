@@ -7,14 +7,11 @@ import com.lin.csln.common.dto.Result;
 import com.lin.csln.log.annotation.OperationLog;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.dto.product.*;
-import com.lin.csln.dto.stock.ProductStockPageRespDTO;
-import com.lin.csln.dto.stock.ProductStockQueryParamDTO;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
 import com.lin.csln.enums.PermissionGateEnum;
 import com.lin.csln.service.ProductService;
 import com.lin.csln.service.ProductSkuService;
-import com.lin.csln.service.StockService;
 import com.lin.csln.utils.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,13 +34,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 @Tag(name = "商品管理接口", description = "商品的增删改查及分页查询接口")
+@Deprecated
 public class ProductController {
     @Resource
     private ProductService productService;
     @Resource
     private ProductSkuService productSkuService;
-    @Resource
-    private StockService stockService;
 
     @PostMapping("/add")
     @RequirePermission({PermissionGateEnum.PRODUCT_CREATE})
@@ -111,12 +107,6 @@ public class ProductController {
         } catch (Exception e) {
             return Result.fail("分页查询商品失败：" + e.getMessage());
         }
-    }
-
-    @PostMapping("/stock/page")
-    @Operation(summary = "分页查询商品库存", description = "按商品、SKU、仓库维度分页查询库存")
-    public Result<PageRespDTO<ProductStockPageRespDTO>> pageProductStock(@RequestBody(required = false) ProductStockQueryParamDTO queryDTO) {
-        return Result.success(stockService.pageProductStock(queryDTO));
     }
 
     @PostMapping("/export")

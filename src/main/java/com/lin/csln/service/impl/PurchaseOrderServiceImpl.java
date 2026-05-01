@@ -67,6 +67,13 @@ public class PurchaseOrderServiceImpl extends BaseReadonlyServiceImpl<PurchaseOr
 
         PurchaseOrderDO order = new PurchaseOrderDO();
         BeanUtils.copyProperties(dto, order);
+        if (cn.hutool.core.util.StrUtil.isNotBlank(dto.getArrivalTime())) {
+            try {
+                order.setArrivalTime(DateUtil.parse(dto.getArrivalTime()));
+            } catch (Exception e) {
+                throw new BusinessException("预计到货时间格式错误");
+            }
+        }
         order.setCreateUserId(userId);
         order.setOrderTime(DateUtil.date());
         this.save(order);
@@ -104,6 +111,13 @@ public class PurchaseOrderServiceImpl extends BaseReadonlyServiceImpl<PurchaseOr
 
         PurchaseOrderDO order = new PurchaseOrderDO();
         BeanUtils.copyProperties(dto, order);
+        if (cn.hutool.core.util.StrUtil.isNotBlank(dto.getArrivalTime())) {
+            try {
+                order.setArrivalTime(DateUtil.parse(dto.getArrivalTime()));
+            } catch (Exception e) {
+                throw new BusinessException("预计到货时间格式错误");
+            }
+        }
         order.setId(id);
         baseMapper.updateById(order);
 

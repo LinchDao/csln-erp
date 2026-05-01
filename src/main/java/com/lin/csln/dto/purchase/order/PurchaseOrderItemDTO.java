@@ -16,8 +16,13 @@ import java.math.BigDecimal;
 public class PurchaseOrderItemDTO {
     @Schema(description = "主键")
     private String id;
+
     @Schema(description = "SKU主键ID")
     private String skuId;
+
+    @Schema(description = "SKU规格快照JSON")
+    private String skuSpecSnapshot;
+
     @Schema(description = "商品ID")
     private String productId;
 
@@ -26,12 +31,6 @@ public class PurchaseOrderItemDTO {
 
     @Schema(description = "商品名称")
     private String productName;
-
-    @Schema(description = "颜色名称")
-    private String colorName;
-
-    @Schema(description = "尺码名称")
-    private String sizeName;
 
     @Schema(description = "采购单价")
     private BigDecimal price;

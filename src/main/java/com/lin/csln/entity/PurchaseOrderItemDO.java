@@ -33,6 +33,11 @@ public class PurchaseOrderItemDO {
     private String skuId;
 
     /**
+     * SKU规格快照JSON
+     */
+    private String skuSpecSnapshot;
+
+    /**
      * 采购数量
      */
     private Integer qty;

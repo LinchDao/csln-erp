@@ -6,7 +6,11 @@ import com.lin.csln.dto.product.ProductDetailV2RespDTO;
 import com.lin.csln.dto.product.ProductPageV2RespDTO;
 import com.lin.csln.dto.product.ProductV2DTO;
 import com.lin.csln.dto.product.ProductV2QueryParamDTO;
+import com.lin.csln.dto.product.ProductV2SelectRespDTO;
+import com.lin.csln.dto.product.ProductSkuV2RespDTO;
 import com.lin.csln.entity.ProductV2DO;
+
+import java.util.List;
 
 public interface ProductV2Service extends IService<ProductV2DO> {
 
@@ -19,4 +23,8 @@ public interface ProductV2Service extends IService<ProductV2DO> {
     PageRespDTO<ProductPageV2RespDTO> pageProductV2(ProductV2QueryParamDTO queryDTO);
 
     boolean deleteProductV2(String productId);
+
+    List<ProductV2SelectRespDTO> listProductSelect(String keyword);
+
+    List<ProductSkuV2RespDTO> listSkuByProdcutId(String productId);
 }

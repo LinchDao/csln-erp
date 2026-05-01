@@ -7,6 +7,7 @@
         <id column="id" property="id"/>
         <result column="purchase_id" property="purchaseId"/>
         <result column="sku_id" property="skuId"/>
+        <result column="sku_spec_snapshot" property="skuSpecSnapshot"/>
         <result column="qty" property="qty"/>
         <result column="price" property="price"/>
         <result column="amount" property="amount"/>
@@ -16,6 +17,7 @@
         SELECT poi.id,
                poi.purchase_id AS purchaseId,
                poi.sku_id      AS skuId,
+               poi.sku_spec_snapshot AS skuSpecSnapshot,
                p.id            AS productId,
                p.product_no    AS productNo,
                p.name          AS productName,
@@ -27,7 +29,7 @@
                sku.size_name   AS sizeName
         FROM purchase_order_item poi
                  LEFT JOIN product_sku sku ON poi.sku_id = sku.id
-                 LEFT JOIN product p ON sku.product_id = p.id
+                 LEFT JOIN product_v2 p ON sku.product_v2_id = p.id
         WHERE poi.purchase_id = #{purchaseId}
           and poi.is_delete = 0
     </select>

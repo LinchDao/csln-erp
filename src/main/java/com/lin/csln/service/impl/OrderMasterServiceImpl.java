@@ -100,11 +100,6 @@ public class OrderMasterServiceImpl extends BaseReadonlyServiceImpl<OrderMasterM
         orderMasterDO.setSalesUserId(userId);
         this.save(orderMasterDO);
 
-        //todo 后续改为前端传参
-        dto.getSubOrders().forEach(orderSubDO -> {
-            orderSubDO.setWarehouseId(userinfo.getWarehouseId());
-        });
-
         orderSubService.saveSubOrder(orderMasterDO.getId(), orderNo, dto.getSubOrders(), dto.getIsDraft());
         return orderMasterDO.getId();
     }

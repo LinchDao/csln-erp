@@ -7,6 +7,9 @@ import com.lin.csln.dto.product.ProductDetailV2RespDTO;
 import com.lin.csln.dto.product.ProductPageV2RespDTO;
 import com.lin.csln.dto.product.ProductV2DTO;
 import com.lin.csln.dto.product.ProductV2QueryParamDTO;
+import com.lin.csln.dto.product.ProductV2SelectQueryDTO;
+import com.lin.csln.dto.product.ProductV2SelectRespDTO;
+import com.lin.csln.dto.product.ProductSkuV2RespDTO;
 import com.lin.csln.enums.BizIdSourceEnum;
 import com.lin.csln.enums.OperationLogActionEnum;
 import com.lin.csln.enums.OperationLogModuleEnum;
@@ -18,7 +21,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 商品管理V2控制器
@@ -85,6 +92,23 @@ public class ProductV2Controller {
         } catch (Exception e) {
             return Result.fail("分页查询商品失败：" + e.getMessage());
         }
+    }
+
+    @PostMapping("/select/list")
+    @Operation(summary = "商品V2下拉列表", description = "根据关键词模糊匹配款号和名称")
+    public Result<List<ProductV2SelectRespDTO>> listProductSelect(@RequestBody(required = false) ProductV2SelectQueryDTO queryDTO) {
+        String keyword = queryDTO == null ? null : queryDTO.getKeyword();
+        return Result.success(productV2Service.listProductSelect(keyword));
+    }
+
+    @PostMapping("/sku/list")
+    @Operation(summary = "采购填写SKU列表", description = "按商品ID返回采购用SKU列表（skuId、barcode、dims）")
+    public Result<List<ProductSkuV2RespDTO>> listSkuByProdcutId(@RequestBody Map<String, String> queryDTO) {
+        String productId = queryDTO == null ? null : queryDTO.get("productId");
+        if (!StringUtils.hasText(productId)) {
+            return Result.fail("商品ID不能为空");
+        }
+        return Result.success(productV2Service.listSkuByProdcutId(productId.trim()));
     }
 
     @DeleteMapping("/delete/{id}")

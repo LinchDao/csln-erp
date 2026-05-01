@@ -13,6 +13,7 @@ import java.util.List;
  *
  * @author 系统生成器
  */
+@Deprecated
 public interface ProductService extends IService<ProductDO> {
 
     String addProduct(ProductDTO productDTO);

@@ -21,17 +21,14 @@ public class OrderItemDetailRespDTO {
     @Schema(description = "SKU 主键 ID")
     private String skuId;
 
+    @Schema(description = "SKU规格快照JSON")
+    private String skuSpecSnapshot;
+
     @Schema(description = "款号")
     private String productNo;
 
     @Schema(description = "商品名称")
     private String productName;
-
-    @Schema(description = "颜色名称")
-    private String colorName;
-
-    @Schema(description = "尺码名称")
-    private String sizeName;
 
     @Schema(description = "商品数量")
     private Integer qty;

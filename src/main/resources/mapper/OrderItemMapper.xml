@@ -8,6 +8,7 @@
         <result column="master_id" property="masterId"/>
         <result column="sub_id" property="subId"/>
         <result column="sku_id" property="skuId"/>
+        <result column="sku_spec_snapshot" property="skuSpecSnapshot"/>
         <result column="qty" property="qty"/>
         <result column="price" property="price"/>
         <result column="amount" property="amount"/>
@@ -16,15 +17,16 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, master_id, sub_id, sku_id, qty, price, amount, actual_qty
+        id, master_id, sub_id, sku_id, sku_spec_snapshot, qty, price, amount, actual_qty
     </sql>
 
     <select id="selectDetailListByMasterId" resultType="com.lin.csln.dto.order.OrderItemDetailRespDTO">
         SELECT
             oi.id,
             oi.sub_id AS subId,
-            ps.product_id AS productId,
+            ps.product_v2_id AS productId,
             oi.sku_id AS skuId,
+            oi.sku_spec_snapshot AS skuSpecSnapshot,
             p.product_no AS productNo,
             p.name AS productName,
             ps.color_name AS colorName,
@@ -34,7 +36,7 @@
             oi.amount
         FROM order_item oi
                  LEFT JOIN product_sku ps ON oi.sku_id = ps.id
-                 LEFT JOIN product p ON ps.product_id = p.id
+                 LEFT JOIN product_v2 p ON ps.product_v2_id = p.id
         WHERE oi.master_id = #{masterId}
         ORDER BY oi.sub_id ASC, oi.id ASC
     </select>
@@ -43,8 +45,9 @@
         SELECT
             oi.id,
             oi.sub_id AS subId,
-            ps.product_id AS productId,
+            ps.product_v2_id AS productId,
             oi.sku_id AS skuId,
+            oi.sku_spec_snapshot AS skuSpecSnapshot,
             p.product_no AS productNo,
             p.name AS productName,
             ps.color_name AS colorName,
@@ -54,7 +57,7 @@
             oi.amount
         FROM order_item oi
                  LEFT JOIN product_sku ps ON oi.sku_id = ps.id
-                 LEFT JOIN product p ON ps.product_id = p.id
+                 LEFT JOIN product_v2 p ON ps.product_v2_id = p.id
         WHERE oi.sub_id = #{subId}
         ORDER BY oi.id ASC
     </select>

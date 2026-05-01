@@ -8,6 +8,7 @@ import com.lin.csln.common.exception.BusinessException;
 import com.lin.csln.dto.product.ProductDetailV2RespDTO;
 import com.lin.csln.dto.product.ProductPageV2RespDTO;
 import com.lin.csln.dto.product.ProductV2QueryParamDTO;
+import com.lin.csln.dto.product.ProductV2SelectRespDTO;
 import com.lin.csln.dto.product.ProductSkuV2RespDTO;
 import com.lin.csln.dto.product.ProductV2DTO;
 import com.lin.csln.entity.ProductDimImageConfigDO;
@@ -143,6 +144,37 @@ public class ProductV2ServiceImpl extends BaseReadonlyServiceImpl<ProductV2Mappe
         product.setIsDelete(GlobalEnums.YES.getCode());
         baseMapper.updateById(product);
         return true;
+    }
+
+    @Override
+    public List<ProductV2SelectRespDTO> listProductSelect(String keyword) {
+        LambdaQueryWrapper<ProductV2DO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(ProductV2DO::getId, ProductV2DO::getProductNo, ProductV2DO::getName,
+                ProductV2DO::getCostPrice, ProductV2DO::getWholesalePrice, ProductV2DO::getRetailPrice, ProductV2DO::getMainImageId);
+        wrapper.eq(ProductV2DO::getIsDelete, GlobalEnums.NO.getCode());
+        wrapper.and(StringUtils.hasText(keyword), w -> w
+                .like(ProductV2DO::getProductNo, keyword)
+                .or()
+                .like(ProductV2DO::getName, keyword));
+        wrapper.orderByDesc(ProductV2DO::getCreateTime);
+
+        List<ProductV2DO> productList = baseMapper.selectList(wrapper);
+        return productList.stream().map(item -> {
+            ProductV2SelectRespDTO dto = new ProductV2SelectRespDTO();
+            BeanUtils.copyProperties(item, dto);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductSkuV2RespDTO> listSkuByProdcutId(String productId) {
+        return productSkuService.listSkuWithDimsByProductId(productId).stream().map(item -> {
+            ProductSkuV2RespDTO dto = new ProductSkuV2RespDTO();
+            dto.setId(item.getId());
+            dto.setBarcode(item.getBarcode());
+            dto.setDims(item.getDims());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     private void softDeleteSkuDims(List<String> skuIds) {

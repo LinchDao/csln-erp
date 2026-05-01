@@ -42,6 +42,7 @@ public class PurchaseInItemServiceImpl extends BaseReadonlyServiceImpl<PurchaseI
         for (PurchaseInItemDTO dto : itemList) {
             String skuId = dto.getSkuId();
             Integer qty = dto.getQty();
+            String skuSpecSnapshot = dto.getSkuSpecSnapshot();
 
             PurchaseInItemDO dbItem = dbMap.get(skuId);
 
@@ -51,9 +52,11 @@ public class PurchaseInItemServiceImpl extends BaseReadonlyServiceImpl<PurchaseI
                 newItem.setInId(id);
                 newItem.setSkuId(skuId);
                 newItem.setQty(qty);
+                newItem.setSkuSpecSnapshot(skuSpecSnapshot);
                 baseMapper.insert(newItem);
             } else {
                 dbItem.setQty(qty);
+                dbItem.setSkuSpecSnapshot(skuSpecSnapshot);
                 baseMapper.updateById(dbItem);
                 dbMap.remove(skuId);
             }

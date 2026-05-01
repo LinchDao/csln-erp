@@ -22,4 +22,7 @@ public class PurchaseInItemDTO {
     @NotNull(message = "入库数量不能为空")
     @Schema(description = "入库数量")
     private Integer qty;
+
+    @Schema(description = "SKU规格快照JSON")
+    private String skuSpecSnapshot;
 }

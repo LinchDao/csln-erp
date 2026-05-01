@@ -214,6 +214,8 @@ public class ProductSkuServiceImpl extends BaseReadonlyServiceImpl<ProductSkuMap
         LambdaQueryWrapper<ProductSkuDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ProductSkuDO::getProductV2Id, productId);
         List<ProductSkuDO> existSkuList = baseMapper.selectList(queryWrapper);
+        Map<String, ProductSkuDO> existById = existSkuList.stream()
+                .collect(Collectors.toMap(ProductSkuDO::getId, i -> i, (a, b) -> a));
 
         Map<String, List<ProductSkuDO>> existBySignature = existSkuList.stream()
                 .collect(Collectors.groupingBy(ProductSkuDO::getDimensionSignature));
@@ -225,22 +227,29 @@ public class ProductSkuServiceImpl extends BaseReadonlyServiceImpl<ProductSkuMap
         List<ProductSkuDO> needUpdateList = new ArrayList<>();
 
         for (NormalizedSku normalizedSku : normalizedSkuList) {
-            ProductSkuDO targetSku = pickSkuBySignature(existBySignature.get(normalizedSku.signature), usedSkuIds);
+            ProductSkuDO targetSku = null;
+            if (StringUtils.hasText(normalizedSku.skuId)) {
+                ProductSkuDO skuById = existById.get(normalizedSku.skuId);
+                if (skuById != null && !usedSkuIds.contains(skuById.getId())) {
+                    targetSku = skuById;
+                }
+            }
+            if (targetSku == null) {
+                targetSku = pickSkuBySignature(existBySignature.get(normalizedSku.signature), usedSkuIds);
+            }
             if (targetSku == null) {
                 ProductSkuDO newSku = new ProductSkuDO();
-                newSku.setProductId("");
                 newSku.setProductV2Id(productId);
-                newSku.setBarcode(resolveNewBarcode(normalizedSku.barcode));
-                newSku.setColorName("");
-                newSku.setSizeName("");
+                newSku.setBarcode(resolveNewBarcode(normalizedSku.barcode, null));
                 newSku.setDimensionSignature(normalizedSku.signature);
                 newSku.setIsDelete(GlobalEnums.NO.getCode());
                 needInsertList.add(newSku);
             } else {
                 targetSku.setProductId(StringUtils.hasText(targetSku.getProductId()) ? targetSku.getProductId() : "");
                 targetSku.setProductV2Id(productId);
-                targetSku.setColorName("");
-                targetSku.setSizeName("");
+                if (StringUtils.hasText(normalizedSku.barcode)) {
+                    targetSku.setBarcode(resolveNewBarcode(normalizedSku.barcode, targetSku.getId()));
+                }
                 targetSku.setDimensionSignature(normalizedSku.signature);
                 targetSku.setIsDelete(GlobalEnums.NO.getCode());
                 needUpdateList.add(targetSku);
@@ -406,6 +415,7 @@ public class ProductSkuServiceImpl extends BaseReadonlyServiceImpl<ProductSkuMap
                 .collect(Collectors.joining("|"));
 
         NormalizedSku normalizedSku = new NormalizedSku();
+        normalizedSku.skuId = StringUtils.hasText(sku.getId()) ? sku.getId().trim() : null;
         normalizedSku.barcode = StringUtils.hasText(sku.getBarcode()) ? sku.getBarcode().trim() : null;
         normalizedSku.signature = signature;
         normalizedSku.dims = dims;
@@ -477,24 +487,28 @@ public class ProductSkuServiceImpl extends BaseReadonlyServiceImpl<ProductSkuMap
     }
 
     private static class NormalizedSku {
+        private String skuId;
         private String barcode;
         private String signature;
         private List<ProductSkuDimV2DTO> dims;
     }
 
-    private String resolveNewBarcode(String inputBarcode) {
+    private String resolveNewBarcode(String inputBarcode, String excludeSkuId) {
         if (StringUtils.hasText(inputBarcode)) {
             String normalized = inputBarcode.trim();
-            ensureBarcodeAvailable(normalized);
+            ensureBarcodeAvailable(normalized, excludeSkuId);
             return normalized;
         }
         return generateBarcode();
     }
 
-    private void ensureBarcodeAvailable(String barcode) {
+    private void ensureBarcodeAvailable(String barcode, String excludeSkuId) {
         LambdaQueryWrapper<ProductSkuDO> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ProductSkuDO::getBarcode, barcode)
                 .eq(ProductSkuDO::getIsDelete, GlobalEnums.NO.getCode());
+        if (StringUtils.hasText(excludeSkuId)) {
+            wrapper.ne(ProductSkuDO::getId, excludeSkuId);
+        }
         if (baseMapper.selectCount(wrapper) > 0) {
             throw new BusinessException("条码已存在：" + barcode);
         }

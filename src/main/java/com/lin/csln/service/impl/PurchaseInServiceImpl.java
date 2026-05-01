@@ -70,7 +70,12 @@ public class PurchaseInServiceImpl extends BaseReadonlyServiceImpl<PurchaseInMap
             throw new BusinessException("当前采购单存在待审核或已驳回的入库单，请先处理后再入库");
         }
 
-        List<PurchaseInItemDTO> itemList = validateCreatePurchaseIn(dto);
+        PurchaseInCreateContext createContext = validateCreatePurchaseIn(dto);
+        List<PurchaseInItemDTO> itemList = createContext.getItemList();
+        Map<String, String> orderSkuSpecSnapshotMap = createContext.getOrderSkuSpecSnapshotMap();
+        for (PurchaseInItemDTO item : itemList) {
+            item.setSkuSpecSnapshot(orderSkuSpecSnapshotMap.get(item.getSkuId()));
+        }
 
         PurchaseInDO inDO = new PurchaseInDO();
         inDO.setInNo(genInNo());
@@ -183,7 +188,7 @@ public class PurchaseInServiceImpl extends BaseReadonlyServiceImpl<PurchaseInMap
         return purchaseIn;
     }
 
-    private List<PurchaseInItemDTO> validateCreatePurchaseIn(PurchaseInDTO dto) {
+    private PurchaseInCreateContext validateCreatePurchaseIn(PurchaseInDTO dto) {
         List<PurchaseInItemDTO> itemList = dto.getItemList();
         if (CollUtil.isEmpty(itemList)) {
             throw new BusinessException("入库明细不能为空");
@@ -207,9 +212,9 @@ public class PurchaseInServiceImpl extends BaseReadonlyServiceImpl<PurchaseInMap
             throw new BusinessException("入库明细中存在重复SKU，请先合并后再提交");
         }
 
-        Map<String, Integer> orderedQtyMap = purchaseOrderItemService.listOrderItemList(dto.getPurchaseId()).stream()
-                .collect(Collectors.toMap(PurchaseOrderItemDO::getSkuId, PurchaseOrderItemDO::getQty, Integer::sum));
-        if (CollUtil.isEmpty(orderedQtyMap)) {
+        Map<String, PurchaseOrderItemDO> orderItemMap = purchaseOrderItemService.listOrderItemList(dto.getPurchaseId()).stream()
+                .collect(Collectors.toMap(PurchaseOrderItemDO::getSkuId, i -> i, (a, b) -> a));
+        if (CollUtil.isEmpty(orderItemMap)) {
             throw new BusinessException("采购单明细不存在，无法创建入库单");
         }
 
@@ -220,11 +225,12 @@ public class PurchaseInServiceImpl extends BaseReadonlyServiceImpl<PurchaseInMap
 
         for (Map.Entry<String, Integer> entry : currentInQtyMap.entrySet()) {
             String skuId = entry.getKey();
-            Integer orderQty = orderedQtyMap.get(skuId);
-            if (orderQty == null) {
+            PurchaseOrderItemDO orderItem = orderItemMap.get(skuId);
+            if (orderItem == null) {
                 throw new BusinessException("入库商品不在采购单中，SKU: " + skuId);
             }
 
+            Integer orderQty = orderItem.getQty();
             int remainingQty = orderQty - instockedQtyMap.getOrDefault(skuId, 0);
             if (entry.getValue() > remainingQty) {
                 throw new BusinessException("SKU " + skuId + " 入库数量超过可入库数量，剩余可入库: "
@@ -232,7 +238,9 @@ public class PurchaseInServiceImpl extends BaseReadonlyServiceImpl<PurchaseInMap
             }
         }
 
-        return itemList;
+        Map<String, String> orderSkuSpecSnapshotMap = orderItemMap.values().stream()
+                .collect(Collectors.toMap(PurchaseOrderItemDO::getSkuId, PurchaseOrderItemDO::getSkuSpecSnapshot, (a, b) -> a));
+        return new PurchaseInCreateContext(itemList, orderSkuSpecSnapshotMap);
     }
 
     private synchronized String genInNo() {
@@ -246,5 +254,23 @@ public class PurchaseInServiceImpl extends BaseReadonlyServiceImpl<PurchaseInMap
             seq = Integer.parseInt(seqStr) + 1;
         }
         return prefix + String.format("%04d", seq);
+    }
+
+    private static class PurchaseInCreateContext {
+        private final List<PurchaseInItemDTO> itemList;
+        private final Map<String, String> orderSkuSpecSnapshotMap;
+
+        private PurchaseInCreateContext(List<PurchaseInItemDTO> itemList, Map<String, String> orderSkuSpecSnapshotMap) {
+            this.itemList = itemList;
+            this.orderSkuSpecSnapshotMap = orderSkuSpecSnapshotMap;
+        }
+
+        private List<PurchaseInItemDTO> getItemList() {
+            return itemList;
+        }
+
+        private Map<String, String> getOrderSkuSpecSnapshotMap() {
+            return orderSkuSpecSnapshotMap;
+        }
     }
 }

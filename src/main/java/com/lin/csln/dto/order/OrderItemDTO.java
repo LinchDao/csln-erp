@@ -18,6 +18,9 @@ public class OrderItemDTO {
     @Schema(description = "SKU ID")
     private String skuId;
 
+    @Schema(description = "SKU规格快照JSON")
+    private String skuSpecSnapshot;
+
     @Schema(description = "下单数量")
     private Integer qty;
 

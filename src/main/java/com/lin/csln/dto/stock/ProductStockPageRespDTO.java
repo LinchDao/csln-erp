@@ -26,11 +26,8 @@ public class ProductStockPageRespDTO implements Serializable {
     @Schema(description = "SKU ID")
     private String skuId;
 
-    @Schema(description = "颜色")
-    private String colorName;
-
-    @Schema(description = "尺码")
-    private String sizeName;
+    @Schema(description = "SKU维度签名")
+    private String dimensionSignature;
 
     @Schema(description = "仓库ID")
     private String warehouseId;

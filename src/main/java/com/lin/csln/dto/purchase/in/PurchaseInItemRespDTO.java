@@ -21,15 +21,12 @@ public class PurchaseInItemRespDTO {
     @Schema(description = "商品名称")
     private String productName;
 
-    @Schema(description = "颜色名称")
-    private String colorName;
-
-    @Schema(description = "尺码名称")
-    private String sizeName;
-
     @Schema(description = "采购数量")
     private Integer purchaseQty;
 
     @Schema(description = "本次入库数量")
     private Integer qty;
+
+    @Schema(description = "SKU规格快照JSON")
+    private String skuSpecSnapshot;
 }

@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
  * @author 系统生成器
  */
 @Service
+@Deprecated
 public class ProductServiceImpl extends BaseReadonlyServiceImpl<ProductMapper, ProductDO> implements ProductService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 

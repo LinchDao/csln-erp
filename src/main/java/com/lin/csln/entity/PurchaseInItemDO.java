@@ -33,4 +33,9 @@ public class PurchaseInItemDO {
      */
     private Integer qty;
 
+    /**
+     * SKU规格快照JSON
+     */
+    private String skuSpecSnapshot;
+
 }
